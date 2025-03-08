@@ -8,5 +8,5 @@ public interface SecurityService {
 
     User register(String login, String password);
 
-    Optional<User> authorize(String login, String password);
+    User authorize(String login, String password);
 }

@@ -2,11 +2,9 @@ package com.financeTracker.service;
 
 import com.financeTracker.model.entity.Goal;
 
-import java.util.List;
-
 public interface GoalService {
 
-    void addBudget(Goal goal);
+    Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount);
 
     Goal getGoal(long userId);
 
@@ -15,8 +13,4 @@ public interface GoalService {
     void deleteGoal(long userId);
 
     double getGoalProgress();
-
-    List<Goal> getArchivedGoals();
-
-    void cleanArchivedGoals();
 }

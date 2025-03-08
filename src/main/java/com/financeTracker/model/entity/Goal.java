@@ -17,9 +17,10 @@ public class Goal extends BaseEntity {
 
     double targetAmount;
 
-    boolean goalCompleted;
+    @Builder.Default
+    boolean goalCompleted = false;
 
-    public Goal(Long id, boolean goalCompleted, Long userId, String name, double targetAmount) {
+    public Goal(Long id, Long userId, boolean goalCompleted, String name, double targetAmount) {
         super(id);
         this.goalCompleted = goalCompleted;
         this.userId = userId;

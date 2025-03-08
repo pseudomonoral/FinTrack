@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface TransactionService {
 
-    void addTransaction(Transaction transaction);
+    Transaction createTransaction(Long userId,
+                           double amount, String category,
+                           String description,
+                           TransactionType type);
 
     List<Transaction> getTransactions(int userId);
 

@@ -5,10 +5,13 @@ import com.financeTracker.exception.AuthorizeException;
 import com.financeTracker.exception.NotValidArgumentException;
 import com.financeTracker.exception.RegisterException;
 import com.financeTracker.model.entity.User;
+import com.financeTracker.model.type.UserStatus;
 import com.financeTracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
+
+import static com.financeTracker.model.type.UserStatus.BLOCKED;
 
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
@@ -54,12 +57,14 @@ public class SecurityServiceImpl implements SecurityService {
      * @return an Optional containing the authorized user if successful, or empty if not
      */
     @Override
-    public Optional<User> authorize(String login, String password) {
-        Optional<User> user = userDAO.findByLogin(login);
-        if (user.isEmpty()) {
-            throw new AuthorizeException("Нет пользователя с таким логином");
+    public User authorize(String login, String password) {
+        User user = userDAO.findByLogin(login)
+                .orElseThrow(()-> new AuthorizeException("Нет пользователя с таким логином"));
+        if(user.getUserStatus().equals(BLOCKED)){
+            throw new AuthorizeException("YOU ARE BLOCKED");
         }
-        if (!user.get().getPassword().equals(password)) {
+
+        if (!user.getPassword().equals(password)) {
             throw new AuthorizeException("Не правильный пароль");
         }
         return user;

@@ -16,8 +16,20 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionDao transactionDao;
 
     @Override
-    public void addTransaction(Transaction transaction) {
-        transactionDao.save(transaction);
+    public Transaction createTransaction(Long userId,
+                                  double amount, String category,
+                                  String description,
+                                  TransactionType type) {
+        Transaction transaction = Transaction.builder()
+                .amount(amount)
+                .userId(userId)
+                .category(category)
+                .description(description)
+                .type(type)
+                .build();
+        //TODO: связь с goal и budget
+        transaction.onCreate();
+        return transactionDao.save(transaction);
     }
 
     @Override
@@ -29,7 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
                         transaction.getUserId() == userId)
                 .collect(Collectors.toList());
     }
-    //TODO:создание транзакции
+
     @Override
     public List<Transaction> getAllTransactions() {
         return transactionDao.findAll();
