@@ -10,20 +10,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+//TODO: убрать
 public abstract class BaseEntity {
 
     Long id;
-
-    Long userId;
 
     LocalDateTime createdAt;
 
     LocalDateTime updatedAt;
 
-    public BaseEntity(Long id, Long userId) {
+    public BaseEntity(Long id) {
         this.id = id;
-        this.userId = userId;
-
     }
 
     public void onCreate() {

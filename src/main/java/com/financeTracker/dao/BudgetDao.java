@@ -9,7 +9,5 @@ import com.financeTracker.model.entity.Budget;
  */
 
 public interface BudgetDao extends MainDao<Long, Budget>{
-
-    boolean overLimit(Budget budget);
-
+    //TODO: update
 }

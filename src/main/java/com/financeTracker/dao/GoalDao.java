@@ -9,7 +9,4 @@ import com.financeTracker.model.entity.Goal;
  */
 
 public interface GoalDao extends MainDao<Long, Goal> {
-
-    void addGoal(Long id, Goal goal);
-
 }

@@ -19,6 +19,4 @@ public interface UserDao extends MainDao<Long, User>{
 
     User update(User user);
 
-    User delete(User user);
-
 }

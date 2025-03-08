@@ -13,6 +13,4 @@ public interface TransactionDao extends MainDao<Long, Transaction>{
 
     Transaction updateTransaction(Transaction transaction);
 
-    Transaction deleteTransaction(Transaction transaction);
-
 }

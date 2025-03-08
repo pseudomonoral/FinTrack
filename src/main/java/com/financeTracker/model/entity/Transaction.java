@@ -13,6 +13,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Transaction extends BaseEntity{
 
+    Long userId;
+
     double amount;
 
     String category;
@@ -21,4 +23,15 @@ public class Transaction extends BaseEntity{
 
     TransactionType type;
 
+    public Transaction(Long id, Long userId,
+                       double amount, String category,
+                       String description,
+                       TransactionType type) {
+        super(id);
+        this.userId = userId;
+        this.amount = amount;
+        this.category = category;
+        this.description = description;
+        this.type = type;
+    }
 }
