@@ -34,7 +34,7 @@ public class UserDaoImpl implements UserDao {
             users.put(id, user);
             return users.get(id);
         } else {
-            throw new IllegalArgumentException("User: \"" + user.toString() + "\" doesn't exist");
+            throw new IllegalArgumentException("User: \"" + user + "\" doesn't exist");
         }
     }
 

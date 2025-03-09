@@ -1,7 +1,7 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.BudgetDao;
-import com.financeTracker.exception.EntityNotFoundException;
+import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;

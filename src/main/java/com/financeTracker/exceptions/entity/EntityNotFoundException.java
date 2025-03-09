@@ -1,4 +1,4 @@
-package com.financeTracker.exception;
+package com.financeTracker.exceptions.entity;
 
 import com.financeTracker.model.type.EntityName;
 

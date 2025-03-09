@@ -1,11 +1,16 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.UserDao;
-import com.financeTracker.exception.AuthorizeException;
-import com.financeTracker.exception.NotValidArgumentException;
-import com.financeTracker.exception.RegisterException;
+import com.financeTracker.exceptions.authorization.AuthorizationException;
+import com.financeTracker.exceptions.authorization.InvalidPasswordException;
+import com.financeTracker.exceptions.authorization.UserBlockedException;
+import com.financeTracker.exceptions.authorization.UserNotFoundException;
+import com.financeTracker.exceptions.registration.UserAlreadyExistsException;
+import com.financeTracker.exceptions.validation.EmptyCredentialsException;
+import com.financeTracker.exceptions.validation.NotValidArgumentException;
+import com.financeTracker.exceptions.registration.RegistrationException;
+import com.financeTracker.exceptions.validation.WeakPasswordException;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.UserStatus;
 import com.financeTracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 
@@ -28,18 +33,17 @@ public class SecurityServiceImpl implements SecurityService {
      * @return the registered user
      */
     @Override
-    public User register(String login, String password) {
-        if (login == null || password == null || login.isEmpty()
-                || password.isEmpty() || login.isBlank() || password.isBlank()) {
-            throw new NotValidArgumentException("логин и пароль не должны быть пустыми");
+    public User registeration(String login, String password) {
+        if (login == null || password == null || login.isBlank() || password.isBlank()) {
+            throw new EmptyCredentialsException();
         }
         if (password.length() < 5) {
-            throw new NotValidArgumentException("Длина пароля должна составлять не менее 5 символов.");
+            throw new WeakPasswordException();
         }
-        Optional<User> optionalUser = userDAO.findByLogin(login);
-        if (optionalUser.isPresent()) {
-            throw new RegisterException("Пользователь с таким логином уже существует.");
+        if (userDAO.findByLogin(login).isPresent()) {
+            throw new UserAlreadyExistsException();
         }
+
         User newUser = User.builder()
                 .login(login)
                 .password(password)
@@ -47,6 +51,7 @@ public class SecurityServiceImpl implements SecurityService {
         newUser.onCreate();
         return userDAO.save(newUser);
     }
+
 
     /**
      * Authorizes a user with the provided login and password.
@@ -59,15 +64,18 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public User authorize(String login, String password) {
         User user = userDAO.findByLogin(login)
-                .orElseThrow(()-> new AuthorizeException("Нет пользователя с таким логином"));
-        if(user.getUserStatus().equals(BLOCKED)){
-            throw new AuthorizeException("YOU ARE BLOCKED");
+                .orElseThrow(UserNotFoundException::new);
+
+        if (user.getUserStatus().equals(BLOCKED)) {
+            throw new UserBlockedException();
         }
 
         if (!user.getPassword().equals(password)) {
-            throw new AuthorizeException("Не правильный пароль");
+            throw new InvalidPasswordException();
         }
+
         return user;
     }
+
 
 }
