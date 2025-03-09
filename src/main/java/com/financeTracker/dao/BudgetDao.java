@@ -9,5 +9,5 @@ import com.financeTracker.model.entity.Budget;
  */
 
 public interface BudgetDao extends MainDao<Long, Budget>{
-    //TODO: update
+    Budget updateBudget(Budget budget);
 }

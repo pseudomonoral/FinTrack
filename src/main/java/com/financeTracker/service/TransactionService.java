@@ -13,6 +13,10 @@ public interface TransactionService {
                            String description,
                            TransactionType type);
 
+    void deleteTransaction(Long transactionId);
+
+    void updateTransaction(Transaction transaction);
+
     List<Transaction> getTransactions(int userId);
 
     List<Transaction> getAllTransactions();

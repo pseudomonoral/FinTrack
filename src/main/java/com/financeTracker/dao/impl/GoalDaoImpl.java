@@ -44,4 +44,14 @@ public class GoalDaoImpl implements GoalDao {
                     + entity.toString() + "\" doesn't exist");
         }
     }
+
+    @Override
+    public Goal updateGoal(Goal entity) {
+        if (goals.containsValue(entity)) {
+            return goals.put(entity.getId(), entity);
+        } else {
+            throw new IllegalArgumentException("Goal: \""
+                    + entity.toString() + "\" doesn't exist");
+        }
+    }
 }

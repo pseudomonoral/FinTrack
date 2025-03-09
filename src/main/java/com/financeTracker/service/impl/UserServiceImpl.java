@@ -3,7 +3,6 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.exception.EntityNotFoundException;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.EntityName;
 import com.financeTracker.model.type.UserStatus;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;

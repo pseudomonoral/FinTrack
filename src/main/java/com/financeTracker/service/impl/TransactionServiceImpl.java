@@ -1,7 +1,9 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.TransactionDao;
+import com.financeTracker.exception.EntityNotFoundException;
 import com.financeTracker.model.entity.Transaction;
+import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.financeTracker.model.type.EntityName.TRANSACTION;
 
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
@@ -27,9 +31,25 @@ public class TransactionServiceImpl implements TransactionService {
                 .description(description)
                 .type(type)
                 .build();
-        //TODO: связь с goal и budget
+        //TODO: взаимодействие с сервисом бюджета и целей
         transaction.onCreate();
         return transactionDao.save(transaction);
+    }
+
+    @Override
+    public void deleteTransaction(Long id) {
+        Transaction transaction = transactionDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(TRANSACTION, id));
+        transactionDao.delete(transaction);
+    }
+
+    @Override
+    public void updateTransaction(Transaction transaction) {
+        if (transactionDao.findById(transaction.getId()).isPresent()){
+            transactionDao.updateTransaction(transaction);
+        }else {
+            throw new EntityNotFoundException(TRANSACTION, transaction.getId());
+        }
     }
 
     @Override

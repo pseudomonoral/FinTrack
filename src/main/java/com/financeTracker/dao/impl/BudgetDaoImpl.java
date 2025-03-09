@@ -43,4 +43,15 @@ public class BudgetDaoImpl implements BudgetDao {
                     + entity.toString() + "\" doesn't exist");
         }
     }
+
+
+    @Override
+    public Budget updateBudget(Budget entity) {
+        if (budgets.containsKey(entity.getId())) {
+            return budgets.put(entity.getId(), entity);
+        }else {
+            throw new IllegalArgumentException("Budget: \""
+                    + entity.toString() + "\" doesn't exist");
+        }
+    }
 }
