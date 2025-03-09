@@ -5,17 +5,13 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-
+@EqualsAndHashCode(callSuper=true)
 public class Budget extends BaseEntity {
 
-    Long userId;
+    private Long userId;
 
-    double limit;
+    private double limit;
 
     public Budget(Long id, Long userId, double limit) {
         super(id);

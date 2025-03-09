@@ -1,5 +1,6 @@
 package com.financeTracker.service;
 
+
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
 
@@ -8,22 +9,19 @@ import java.util.List;
 
 public interface TransactionService {
 
-    Transaction createTransaction(Long userId,
-                           double amount, String category,
-                           String description,
-                           TransactionType type);
+    Transaction createTransaction(double amount, String category, String description, TransactionType type);
 
     void deleteTransaction(Long transactionId);
 
     void updateTransaction(Transaction transaction);
 
-    List<Transaction> getTransactions(int userId);
+    List<Transaction> getTransactions(Long userId);
 
     List<Transaction> getAllTransactions();
 
-    List<Transaction> getTransactionsByDate(int userId, LocalDateTime date);
+    List<Transaction> getTransactionsByDate(Long userId, LocalDateTime date);
 
-    List<Transaction> getTransactionsByCategory(int userId, String category);
+    List<Transaction> getTransactionsByCategory(Long userId, String category);
 
-    List<Transaction> getTransactionsByType(int userId, TransactionType type);
+    List<Transaction> getTransactionsByType(Long userId, TransactionType type);
 }

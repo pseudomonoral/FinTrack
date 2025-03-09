@@ -1,6 +1,9 @@
 package com.financeTracker.dao;
 
+import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
+
+import java.util.Optional;
 
 /**
  * - Редактирование транзакции: Возможность изменения суммы, категории и описания.
@@ -13,4 +16,5 @@ public interface TransactionDao extends MainDao<Long, Transaction>{
 
     Transaction updateTransaction(Transaction transaction);
 
+    Optional<Transaction> findByUserId(Long userId);
 }

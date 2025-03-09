@@ -3,13 +3,13 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.UserStatus;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 import static com.financeTracker.model.type.EntityName.USER;
+import static com.financeTracker.model.type.UserStatus.*;
 
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -31,10 +31,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateUser(User user) {
+        if (userDao.findById(user.getId()).isPresent()) {
+            userDao.update(user);
+        }else {
+            throw new EntityNotFoundException(USER, user.getId());
+        }
+    }
+
+    @Override
     public void blockedUserById(Long id) {
         User user = userDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER, id));
-        user.setUserStatus(UserStatus.BLOCKED);
+        user.setUserStatus(BLOCKED);
+        userDao.update(user);
+    }
+
+    @Override
+    public void unblockedUserById(Long id) {
+        User user = userDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(USER, id));
+        user.setUserStatus(ACTIVE);
         userDao.update(user);
     }
 

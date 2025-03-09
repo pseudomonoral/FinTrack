@@ -1,7 +1,6 @@
 package com.financeTracker.service;
 
 import com.financeTracker.model.entity.Goal;
-import com.financeTracker.model.entity.Transaction;
 
 import java.util.Optional;
 
@@ -9,11 +8,16 @@ public interface GoalService {
 
     Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount);
 
-    Optional<Goal> getGoal(long userId);
+    Goal getGoal(String nameGoal, Long userId);
 
-    void deleteGoal(long userId);
+    void deleteGoal(String nameGoal, Long userId);
 
-    void updateGoal(Goal goal);
+    void updateGoal(Long userId, String nameGoal, double targetAmount,
+                    boolean goalActual);
 
-    double getGoalProgress();
+    Optional<Goal> getActualGoalByUserId(Long userId);
+
+    void deactivateGoalByUserId(Long userId);
+
+    double getGoalProgress(Goal goal);
 }

@@ -1,37 +1,42 @@
 package com.financeTracker.model.entity;
 
 
+import com.financeTracker.model.type.BudgetStatus;
+import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
+import static com.financeTracker.model.type.BudgetStatus.*;
+import static com.financeTracker.model.type.GoalStatus.NOT_ACHIEVED;
 import static com.financeTracker.model.type.UserRole.USER;
 import static com.financeTracker.model.type.UserStatus.ACTIVE;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper=true)
 public class User extends BaseEntity {
 
-    String login;
+    private String login;
 
-    String password;
-
-    @Builder.Default
-    UserRole userRole = USER;
+    private String password;
 
     @Builder.Default
-    UserStatus userStatus = ACTIVE;
+    private UserRole userRole = USER;
 
-    public User(Long id, String login, String password, UserRole userRole, UserStatus userStatus) {
+    @Builder.Default
+    private UserStatus userStatus = ACTIVE;
+
+    @Builder.Default
+    private GoalStatus goalStatus = NOT_ACHIEVED;
+
+    @Builder.Default
+    private BudgetStatus budgetStatus = WITHIN_BUDGET;
+
+    public User(Long id, String login, String password, UserRole userRole) {
         super(id);
         this.login = login;
         this.password = password;
         this.userRole = userRole;
-        this.userStatus = userStatus;
     }
 }

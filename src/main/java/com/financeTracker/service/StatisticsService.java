@@ -3,25 +3,16 @@ package com.financeTracker.service;
 import java.time.LocalDate;
 import java.util.Map;
 
-/**
- * - Подсчёт текущего баланса.
- *
- * - Расчёт суммарного дохода и расхода за определённый период.
- *
- * - Анализ расходов по категориям.
- *
- * - Формирование отчёта для пользователя по финансовому состоянию.
- */
+
 public interface StatisticsService {
 
-    double calculateCurrentBalance();
+    double calculateCurrentBalance(Long userId);
 
-    double calculateMonthlySummary();
-
-    double calculateSummaryForPeriod(LocalDate startDate,
+    double calculateIncomeForPeriod(Long userId, LocalDate startDate,
                                      LocalDate endDate);
 
-    Map<String, Double> analyzeExpensesByCategory();
+    double calculateExpenseForPeriod(Long userId, LocalDate startDate,
+                                    LocalDate endDate);
 
-    String generateFinancialReport();
+    Map<String, Double> analyzeExpensesByCategory(Long userId);
 }

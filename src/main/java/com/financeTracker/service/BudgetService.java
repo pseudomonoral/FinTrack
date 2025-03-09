@@ -1,7 +1,6 @@
 package com.financeTracker.service;
 
 import com.financeTracker.model.entity.Budget;
-import com.financeTracker.model.entity.Transaction;
 
 import java.util.Optional;
 
@@ -11,7 +10,7 @@ public interface BudgetService {
 
     Optional<Budget> getBudget(long userId);
 
-    void updateBudget(Budget budget);
+    void updateBudget(Long userId, double limit);
 
     void deleteBudget(long userId);
 

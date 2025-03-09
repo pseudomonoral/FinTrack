@@ -1,6 +1,7 @@
 package com.financeTracker.dao.impl;
 
 import com.financeTracker.dao.TransactionDao;
+import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 
 import java.util.HashMap;
@@ -14,7 +15,11 @@ public class TransactionDaoImpl implements TransactionDao {
 
     private Long id = 1L;
 
-    public TransactionDaoImpl() {
+    @Override
+    public Optional<Transaction> findByUserId(Long userId) {
+        return transactions.values().stream()
+                .filter(goal-> goal.getUserId().equals(userId))
+                .findFirst();
     }
 
     @Override

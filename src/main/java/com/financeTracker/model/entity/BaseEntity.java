@@ -1,7 +1,6 @@
 package com.financeTracker.model.entity;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
@@ -9,15 +8,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-//TODO: убрать
 public abstract class BaseEntity {
 
-    Long id;
+    private Long id;
 
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     public BaseEntity(Long id) {
         this.id = id;

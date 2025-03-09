@@ -1,20 +1,16 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.UserDao;
-import com.financeTracker.exceptions.authorization.AuthorizationException;
 import com.financeTracker.exceptions.authorization.InvalidPasswordException;
 import com.financeTracker.exceptions.authorization.UserBlockedException;
 import com.financeTracker.exceptions.authorization.UserNotFoundException;
 import com.financeTracker.exceptions.registration.UserAlreadyExistsException;
 import com.financeTracker.exceptions.validation.EmptyCredentialsException;
-import com.financeTracker.exceptions.validation.NotValidArgumentException;
-import com.financeTracker.exceptions.registration.RegistrationException;
 import com.financeTracker.exceptions.validation.WeakPasswordException;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
 
 import static com.financeTracker.model.type.UserStatus.BLOCKED;
 
@@ -33,7 +29,7 @@ public class SecurityServiceImpl implements SecurityService {
      * @return the registered user
      */
     @Override
-    public User registeration(String login, String password) {
+    public User registration(String login, String password) {
         if (login == null || password == null || login.isBlank() || password.isBlank()) {
             throw new EmptyCredentialsException();
         }
@@ -76,6 +72,4 @@ public class SecurityServiceImpl implements SecurityService {
 
         return user;
     }
-
-
 }

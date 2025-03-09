@@ -18,6 +18,13 @@ public class BudgetDaoImpl implements BudgetDao {
     }
 
     @Override
+    public Optional<Budget> findByUserId(Long userId) {
+        return budgets.values().stream()
+                .filter(budget -> budget.getUserId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
     public Optional<Budget> findById(Long id) {
         return Optional.ofNullable(budgets.get(id));
     }
@@ -40,7 +47,7 @@ public class BudgetDaoImpl implements BudgetDao {
             budgets.remove(entity.getId());
         } else {
             throw new IllegalArgumentException("budget: \""
-                    + entity.toString() + "\" doesn't exist");
+                    + entity + "\" doesn't exist");
         }
     }
 
@@ -49,9 +56,9 @@ public class BudgetDaoImpl implements BudgetDao {
     public Budget updateBudget(Budget entity) {
         if (budgets.containsKey(entity.getId())) {
             return budgets.put(entity.getId(), entity);
-        }else {
+        } else {
             throw new IllegalArgumentException("Budget: \""
-                    + entity.toString() + "\" doesn't exist");
+                    + entity + "\" doesn't exist");
         }
     }
 }

@@ -1,9 +1,10 @@
 package com.financeTracker.service;
 
+import com.financeTracker.model.entity.User;
+
 public interface NotificationService {
 
-    void notifySpendingLimitExceeded(Long userId);
+    boolean notifyGoalAchieved(User user);
 
-    void notifySpendingLimitExceededByEmail(Long userId,
-                                              String email);
+    boolean notifyBudgetExceeded(User user);
 }

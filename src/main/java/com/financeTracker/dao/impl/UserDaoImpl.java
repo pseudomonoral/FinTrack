@@ -14,7 +14,7 @@ public class UserDaoImpl implements UserDao {
     private Long id = 1L;
 
     public UserDaoImpl() {
-        save(new User("Admin", "12345", UserRole.ADMIN, UserStatus.ACTIVE));
+        save(new User(id, "Admin", "12345", UserRole.ADMIN));
     }
 
     @Override

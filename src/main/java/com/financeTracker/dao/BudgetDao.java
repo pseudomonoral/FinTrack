@@ -2,6 +2,8 @@ package com.financeTracker.dao;
 
 import com.financeTracker.model.entity.Budget;
 
+import java.util.Optional;
+
 /**
  * Общее:
  * - Установка месячного бюджета.
@@ -9,5 +11,8 @@ import com.financeTracker.model.entity.Budget;
  */
 
 public interface BudgetDao extends MainDao<Long, Budget>{
+
     Budget updateBudget(Budget budget);
+
+    Optional<Budget> findByUserId(Long userId);
 }

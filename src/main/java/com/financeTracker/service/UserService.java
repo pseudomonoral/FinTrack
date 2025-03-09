@@ -10,7 +10,11 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
+    void updateUser(User user);
+
     void blockedUserById(Long id);
+
+    void unblockedUserById(Long id);
 
     List<User> showAll();
 }

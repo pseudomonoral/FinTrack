@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GoalDaoImpl implements GoalDao {
 
@@ -14,9 +15,20 @@ public class GoalDaoImpl implements GoalDao {
 
     private Long id = 1L;
 
-    public GoalDaoImpl() {
+    @Override
+    public List<Goal> findAllByUserId(Long userId) {
+        return goals.values().stream()
+                .filter(goal-> goal.getUserId().equals(userId))
+                .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<Goal> findGoalByNameAndId(String goalName, Long userId) {
+        return goals.values().stream()
+                .filter(goal-> goal.getName().equals(goalName)
+                && goal.getUserId().equals(userId))
+                .findFirst();
+    }
 
     @Override
     public Optional<Goal> findById(Long id) {
@@ -47,7 +59,7 @@ public class GoalDaoImpl implements GoalDao {
 
     @Override
     public Goal updateGoal(Goal entity) {
-        if (goals.containsValue(entity)) {
+        if (goals.containsKey(entity.getId())) {
             return goals.put(entity.getId(), entity);
         } else {
             throw new IllegalArgumentException("Goal: \""
