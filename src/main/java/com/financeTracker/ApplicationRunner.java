@@ -40,6 +40,7 @@ public class ApplicationRunner {
         goalController = (GoalController) ApplicationContext.getBean("goalController");
         statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
         transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
+        userController = (UserController) ApplicationContext.getBean("userController");
 
         userLocation = SECURITY_LOC;
 
@@ -116,14 +117,14 @@ public class ApplicationRunner {
     private static void handleUserMenu(Input inputData, OutputData outputData) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
         while (true) {
-            outputData.output(USER_MENU_LOC);
+            outputData.output(USER_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> userLocation = UserHandler.editProfileName(inputData, outputData, userController, userId);
                 case "2" -> userLocation = UserHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
                 case "3" -> userLocation = UserHandler.deleteProfile(inputData, outputData, userController, userId);
                 case "0" -> {
-                    userLocation = SECURITY_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -161,7 +162,7 @@ public class ApplicationRunner {
                 case "5" -> userLocation = BudgetHandler.handleCheckBudgetExceeded(outputData, budgetController,
                         statisticsController);
                 case "0" -> {
-                    userLocation = ADMIN_MENU_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -171,7 +172,7 @@ public class ApplicationRunner {
 
     private static void handleGoalMenu(Input inputData, OutputData outputData) {
         while (true) {
-            outputData.output(GOALS_MENU_LOC);
+            outputData.output(GOAL_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
@@ -180,7 +181,7 @@ public class ApplicationRunner {
                 case "4" -> userLocation = GoalHandler.handleDeleteGoal(inputData, outputData, goalController);
                 case "5" -> userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
                 case "0" -> {
-                    userLocation = ADMIN_MENU_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -199,7 +200,7 @@ public class ApplicationRunner {
                 case "4" -> userLocation = TransactionHandler.handleDeleteTransaction(inputData, outputData, transactionController);
                 case "5" -> userLocation = TransactionHandler.handleFilterTransactionsByCategory(inputData, outputData, transactionController);
                 case "0" -> {
-                    userLocation = ADMIN_MENU_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -217,7 +218,7 @@ public class ApplicationRunner {
                 case "3" -> userLocation = StatisticsHandler.handleExpenseForPeriod(inputData, outputData, statisticsController);
                 case "4" -> userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
                 case "0" -> {
-                    userLocation = ADMIN_MENU_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
