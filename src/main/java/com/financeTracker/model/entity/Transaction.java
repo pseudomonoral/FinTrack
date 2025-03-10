@@ -2,36 +2,21 @@ package com.financeTracker.model.entity;
 
 import com.financeTracker.model.type.TransactionType;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 
 @Data
-@EqualsAndHashCode(callSuper=true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class Transaction extends BaseEntity{
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class Transaction extends BaseEntity {
 
-    Long userId;
+    private Long userId;
 
-    double amount;
+    private double amount;
 
-    String category;
+    private String category;
 
-    String description;
+    private String description;
 
-    TransactionType type;
-
-    public Transaction(Long id, Long userId,
-                       double amount, String category,
-                       String description,
-                       TransactionType type) {
-        super(id);
-        this.userId = userId;
-        this.amount = amount;
-        this.category = category;
-        this.description = description;
-        this.type = type;
-    }
+    private TransactionType type;
 }

@@ -6,17 +6,12 @@ import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import static com.financeTracker.model.type.BudgetStatus.*;
-import static com.financeTracker.model.type.GoalStatus.NOT_ACHIEVED;
-import static com.financeTracker.model.type.UserRole.USER;
-import static com.financeTracker.model.type.UserStatus.ACTIVE;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper=true)
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
     private String login;
@@ -26,21 +21,14 @@ public class User extends BaseEntity {
     private String name;
 
     @Builder.Default
-    private UserRole userRole = USER;
+    private UserRole userRole = UserRole.USER;
 
     @Builder.Default
-    private UserStatus userStatus = ACTIVE;
+    private UserStatus userStatus = UserStatus.ACTIVE;
 
     @Builder.Default
-    private GoalStatus goalStatus = NOT_ACHIEVED;
+    private GoalStatus goalStatus = GoalStatus.NOT_ACHIEVED;
 
     @Builder.Default
-    private BudgetStatus budgetStatus = WITHIN_BUDGET;
-
-    public User(Long id, String login, String password, UserRole userRole) {
-        super(id);
-        this.login = login;
-        this.password = password;
-        this.userRole = userRole;
-    }
+    private BudgetStatus budgetStatus = BudgetStatus.WITHIN_BUDGET;
 }

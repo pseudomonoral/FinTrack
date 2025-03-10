@@ -2,10 +2,11 @@ package com.financeTracker.dao.impl;
 
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.UserRole;
-import com.financeTracker.model.type.UserStatus;
+
 
 import java.util.*;
+
+import static com.financeTracker.model.type.UserRole.*;
 
 public class UserDaoImpl implements UserDao {
 
@@ -14,7 +15,13 @@ public class UserDaoImpl implements UserDao {
     private Long id = 1L;
 
     public UserDaoImpl() {
-        save(new User(id, "Admin", "12345", UserRole.ADMIN));
+        User adminUser = User.builder()
+                .id(1L)
+                .userRole(ADMIN)
+                .login("admin")
+                .password("12345")
+                .build();
+        save(adminUser);
     }
 
     @Override

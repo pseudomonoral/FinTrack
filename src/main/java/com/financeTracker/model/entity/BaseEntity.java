@@ -1,12 +1,12 @@
 package com.financeTracker.model.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@SuperBuilder
 public abstract class BaseEntity {
 
     private Long id;
@@ -14,10 +14,6 @@ public abstract class BaseEntity {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    public BaseEntity(Long id) {
-        this.id = id;
-    }
 
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -28,4 +24,11 @@ public abstract class BaseEntity {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public BaseEntity() {}
+
+    public BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

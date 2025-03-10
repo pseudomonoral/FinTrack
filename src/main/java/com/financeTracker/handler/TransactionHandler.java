@@ -81,8 +81,14 @@ public class TransactionHandler {
         outputData.output("Введите новое описание транзакции:");
         String description = inputData.in().toString();
 
-        Transaction transaction = new Transaction(transactionId, amount, category, description,
-                amount > 0 ? INCOME : EXPENSE);
+        Transaction transaction = Transaction.builder()
+                .id(transactionId)
+                .amount(amount)
+                .category(category)
+                .description(description)
+                .type(amount > 0 ? TransactionType.INCOME : TransactionType.EXPENSE)
+                .build();
+
         controller.updateTransaction(transaction);
 
         outputData.output("Транзакция успешно обновлена.");

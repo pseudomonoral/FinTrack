@@ -9,13 +9,35 @@ import com.financeTracker.model.type.UserRole;
 
 public interface TestConstants {
 
-    User USER = new User(1L, "login", "password", UserRole.USER);
+    User USER = User.builder()
+            .id(1L)
+            .login("login")
+            .password("password")
+            .userRole(UserRole.USER)
+            .build();
 
-    Budget BUDGET = new Budget(1L, 1L, 1000.0);
+    Budget BUDGET = Budget.builder()
+            .id(1L)
+            .userId(1L)
+            .limit(1000.0)
+            .build();
 
-    Goal GOAL = new Goal(1L, 1L, false, "Buy BMW x5",
-            2000.0, true);
+    Goal GOAL = Goal.builder()
+            .id(1L)
+            .userId(1L)
+            .goalCompleted(false)
+            .name("Buy BMW x5")
+            .targetAmount(2000.0)
+            .goalActual(true)
+            .build();
 
-    Transaction TRANSACTION = new Transaction(1L, 1L, 100L,
-            "savings", "some description", TransactionType.INCOME);
+    Transaction TRANSACTION = Transaction.builder()
+            .id(1L)
+            .userId(1L)
+            .amount(100L)
+            .category("savings")
+            .description("some description")
+            .type(TransactionType.INCOME)
+            .build();
+
 }
