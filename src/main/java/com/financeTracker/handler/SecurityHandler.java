@@ -17,7 +17,7 @@ public class SecurityHandler {
         User registeredUser = controller.register(swRegister.getLogin(), swRegister.getPassword());
         ApplicationContext.loadAuthorizedUser(registeredUser);
 
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     public static UserLocation handleAuthorization(Input inputData, OutputData outputData, AuthController controller) {
@@ -26,10 +26,10 @@ public class SecurityHandler {
 
         if (authorizedUser != null) {
             ApplicationContext.loadAuthorizedUser(authorizedUser);
-            return isAdmin(authorizedUser) ? UserLocation.ADMIN_MENU : UserLocation.MAIN_MENU;
+            return isAdmin(authorizedUser) ? UserLocation.ADMIN_MENU_LOC : UserLocation.MAIN_MENU_LOC;
         }
 
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     /**

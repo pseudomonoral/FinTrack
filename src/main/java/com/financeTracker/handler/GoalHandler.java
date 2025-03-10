@@ -31,7 +31,7 @@ public class GoalHandler {
         Goal goal = controller.createGoal(userId, false, name, targetAmount);
 
         outputData.output("Цель успешно создана: " + formatGoal(goal, controller));
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
     /**
@@ -56,7 +56,7 @@ public class GoalHandler {
             outputData.output("Цель с таким названием не найдена.");
         }
 
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
     /**
@@ -76,7 +76,7 @@ public class GoalHandler {
         controller.deleteGoal(nameGoal, userId);
         outputData.output("Цель успешно удалена.");
 
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
     /**
@@ -102,7 +102,7 @@ public class GoalHandler {
         controller.updateGoal(userId, nameGoal, targetAmount, goalActual);
         outputData.output("Цель успешно обновлена.");
 
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
     /**
@@ -122,7 +122,7 @@ public class GoalHandler {
             outputData.output("У вас нет активных целей.");
         }
 
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
 
@@ -149,7 +149,7 @@ public class GoalHandler {
             outputData.output("Цель не найдена.");
         }
 
-        return UserLocation.GOALS_MENU;
+        return UserLocation.GOALS_MENU_LOC;
     }
 
     /**

@@ -25,7 +25,7 @@ public class StatisticsHandler {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
         double balance = controller.calculateCurrentBalance(userId);
         outputData.output("Текущий баланс: " + balance);
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     /**
@@ -41,7 +41,7 @@ public class StatisticsHandler {
         LocalDate endDate = askDate(inputData, outputData, "Введите дату окончания (ГГГГ-ММ-ДД):");
         double income = controller.calculateIncomeForPeriod(userId, startDate, endDate);
         outputData.output("Суммарный доход за период: " + income);
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     /**
@@ -57,7 +57,7 @@ public class StatisticsHandler {
         LocalDate endDate = askDate(inputData, outputData, "Введите дату окончания (ГГГГ-ММ-ДД):");
         double expense = controller.calculateExpenseForPeriod(userId, startDate, endDate);
         outputData.output("Суммарный расход за период: " + expense);
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     /**
@@ -72,7 +72,7 @@ public class StatisticsHandler {
         Map<String, Double> expenseAnalysis = controller.analyzeExpensesByCategory(userId);
         outputData.output("Анализ расходов по категориям:");
         expenseAnalysis.forEach((category, amount) -> outputData.output(category + ": " + amount));
-        return UserLocation.MAIN_MENU;
+        return UserLocation.MAIN_MENU_LOC;
     }
 
     /**

@@ -41,20 +41,20 @@ public class ApplicationRunner {
         statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
         transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
 
-        userLocation = UserLocation.SECURITY;
+        userLocation = SECURITY_LOC;
 
         boolean processIsRun = true;
         while (processIsRun) {
             try {
                 switch (userLocation) {
-                    case SECURITY -> handleSecurity(inputData, outputData);
-                    case MAIN_MENU -> handleMainMenu(inputData, outputData);
-                    case ADMIN_MENU -> handleAdminMenu(inputData, outputData);
-                    case USER_MENU -> handleUserMenu(inputData, outputData);
-                    case BUDGET_MENU -> handleBudgetMenu(inputData, outputData);
-                    case GOALS_MENU -> handleGoalMenu(inputData, outputData);
-                    case TRANSACTION_MENU -> handleTransactionMenu(inputData, outputData);
-                    case STATISTICS_MENU -> handleStatisticsMenu(inputData, outputData);
+                    case SECURITY_LOC -> handleSecurity(inputData, outputData);
+                    case MAIN_MENU_LOC -> handleMainMenu(inputData, outputData);
+                    case ADMIN_MENU_LOC -> handleAdminMenu(inputData, outputData);
+                    case USER_MENU_LOC -> handleUserMenu(inputData, outputData);
+                    case BUDGET_MENU_LOC -> handleBudgetMenu(inputData, outputData);
+                    case GOALS_MENU_LOC -> handleGoalMenu(inputData, outputData);
+                    case TRANSACTION_MENU_LOC -> handleTransactionMenu(inputData, outputData);
+                    case STATISTICS_MENU_LOC -> handleStatisticsMenu(inputData, outputData);
                     case EXIT -> {
                         exitProcess(outputData);
                         processIsRun = false;
@@ -77,13 +77,13 @@ public class ApplicationRunner {
             outputData.output(MAIN_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = USER_MENU;
-                case "2" -> userLocation = BUDGET_MENU;
-                case "3" -> userLocation = GOALS_MENU;
-                case "4" -> userLocation = TRANSACTION_MENU;
-                case "5" -> userLocation = STATISTICS_MENU;
+                case "1" -> userLocation = USER_MENU_LOC;
+                case "2" -> userLocation = BUDGET_MENU_LOC;
+                case "3" -> userLocation = GOALS_MENU_LOC;
+                case "4" -> userLocation = TRANSACTION_MENU_LOC;
+                case "5" -> userLocation = STATISTICS_MENU_LOC;
                 case "0" -> {
-                    userLocation = UserLocation.SECURITY;
+                    userLocation = SECURITY_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -105,7 +105,7 @@ public class ApplicationRunner {
                     return;
                 }
                 case "3" -> {
-                    userLocation = UserLocation.EXIT;
+                    userLocation = EXIT;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -116,14 +116,14 @@ public class ApplicationRunner {
     private static void handleUserMenu(Input inputData, OutputData outputData) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
         while (true) {
-            outputData.output(USER_MENU);
+            outputData.output(USER_MENU_LOC);
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> userLocation = UserHandler.editProfileName(inputData, outputData, userController, userId);
                 case "2" -> userLocation = UserHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
                 case "3" -> userLocation = UserHandler.deleteProfile(inputData, outputData, userController, userId);
                 case "0" -> {
-                    userLocation = UserLocation.SECURITY;
+                    userLocation = SECURITY_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -141,7 +141,7 @@ public class ApplicationRunner {
                 case "3" -> AdminHandler.handleBlockUser(inputData, outputData, userController);
                 case "4" -> AdminHandler.handleUnblockUser(inputData, outputData, userController);
                 case "0" -> {
-                    userLocation = UserLocation.SECURITY;
+                    userLocation = SECURITY_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -161,7 +161,7 @@ public class ApplicationRunner {
                 case "5" -> userLocation = BudgetHandler.handleCheckBudgetExceeded(outputData, budgetController,
                         statisticsController);
                 case "0" -> {
-                    userLocation = UserLocation.ADMIN_MENU;
+                    userLocation = ADMIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -171,7 +171,7 @@ public class ApplicationRunner {
 
     private static void handleGoalMenu(Input inputData, OutputData outputData) {
         while (true) {
-            outputData.output(GOALS_MENU);
+            outputData.output(GOALS_MENU_LOC);
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
@@ -180,7 +180,7 @@ public class ApplicationRunner {
                 case "4" -> userLocation = GoalHandler.handleDeleteGoal(inputData, outputData, goalController);
                 case "5" -> userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
                 case "0" -> {
-                    userLocation = UserLocation.ADMIN_MENU;
+                    userLocation = ADMIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -199,7 +199,7 @@ public class ApplicationRunner {
                 case "4" -> userLocation = TransactionHandler.handleDeleteTransaction(inputData, outputData, transactionController);
                 case "5" -> userLocation = TransactionHandler.handleFilterTransactionsByCategory(inputData, outputData, transactionController);
                 case "0" -> {
-                    userLocation = UserLocation.ADMIN_MENU;
+                    userLocation = ADMIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -217,7 +217,7 @@ public class ApplicationRunner {
                 case "3" -> userLocation = StatisticsHandler.handleExpenseForPeriod(inputData, outputData, statisticsController);
                 case "4" -> userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
                 case "0" -> {
-                    userLocation = UserLocation.ADMIN_MENU;
+                    userLocation = ADMIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");

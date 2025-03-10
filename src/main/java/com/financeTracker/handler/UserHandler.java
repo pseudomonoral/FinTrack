@@ -19,18 +19,18 @@ public class UserHandler {
 
         userController.updateUser(user);
 
-        return UserLocation.USER_MENU;
+        return UserLocation.USER_MENU_LOC;
     }
 
     public static UserLocation resetPasswordAndEmail(Input inputData, OutputData outputData, UserController userController, Long userId) {
         userController.deleteUserById(userId);
 
-        return UserLocation.SECURITY;
+        return UserLocation.SECURITY_LOC;
     }
 
     public static UserLocation deleteProfile(Input inputData, OutputData outputData, UserController userController, Long userId) {
         userController.deleteCascadeUserById(userId);
 
-        return UserLocation.SECURITY;
+        return UserLocation.SECURITY_LOC;
     }
 }

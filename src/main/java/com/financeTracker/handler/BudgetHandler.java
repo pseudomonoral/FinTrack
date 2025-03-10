@@ -3,7 +3,6 @@ package com.financeTracker.handler;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
-import com.financeTracker.controller.TransactionController;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.type.UserLocation;
@@ -32,7 +31,7 @@ public class BudgetHandler {
         controller.createBudget(userId, limit);
         outputData.output("Бюджет успешно создан с лимитом: " + limit);
 
-        return UserLocation.BUDGET_MENU;
+        return UserLocation.BUDGET_MENU_LOC;
     }
 
     /**
@@ -52,7 +51,7 @@ public class BudgetHandler {
             outputData.output("Бюджет не установлен.");
         }
 
-        return UserLocation.BUDGET_MENU;
+        return UserLocation.BUDGET_MENU_LOC;
     }
 
     /**
@@ -72,7 +71,7 @@ public class BudgetHandler {
         controller.updateBudget(userId, newLimit);
         outputData.output("Бюджет успешно обновлен. Новый лимит: " + newLimit);
 
-        return UserLocation.BUDGET_MENU;
+        return UserLocation.BUDGET_MENU_LOC;
     }
 
     /**
@@ -88,7 +87,7 @@ public class BudgetHandler {
         controller.deleteBudget(userId);
         outputData.output("Ваш бюджет был удален.");
 
-        return UserLocation.BUDGET_MENU;
+        return UserLocation.BUDGET_MENU_LOC;
     }
 
     /**
@@ -119,7 +118,7 @@ public class BudgetHandler {
 
         outputData.output(actualInfo);
 
-        return UserLocation.BUDGET_MENU;
+        return UserLocation.BUDGET_MENU_LOC;
     }
 
     /**

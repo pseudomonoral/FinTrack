@@ -39,7 +39,7 @@ public class TransactionHandler {
         controller.createTransaction(amount, category, description, type);
 
         outputData.output("Транзакция успешно создана.");
-        return UserLocation.TRANSACTION_MENU;
+        return UserLocation.TRANSACTION_MENU_LOC;
     }
 
     /**
@@ -57,7 +57,7 @@ public class TransactionHandler {
         controller.deleteTransaction(transactionId);
 
         outputData.output("Транзакция успешно удалена.");
-        return UserLocation.TRANSACTION_MENU;
+        return UserLocation.TRANSACTION_MENU_LOC;
     }
 
     /**
@@ -86,7 +86,7 @@ public class TransactionHandler {
         controller.updateTransaction(transaction);
 
         outputData.output("Транзакция успешно обновлена.");
-        return UserLocation.TRANSACTION_MENU;
+        return UserLocation.TRANSACTION_MENU_LOC;
     }
 
     /**
@@ -108,7 +108,7 @@ public class TransactionHandler {
             }
         }
 
-        return UserLocation.TRANSACTION_MENU;
+        return UserLocation.TRANSACTION_MENU_LOC;
     }
 
     /**
@@ -134,7 +134,7 @@ public class TransactionHandler {
             }
         }
 
-        return UserLocation.TRANSACTION_MENU;
+        return UserLocation.TRANSACTION_MENU_LOC;
     }
 
     /**
