@@ -10,16 +10,16 @@ import java.time.LocalDate;
 import java.util.Map;
 
 /**
- * Позволяет запрашивать и выводить данные о текущем балансе, доходах, расходах и анализе расходов по категориям.
+ * Allows querying and displaying data about the current balance, income, expenses, and expense analysis by categories.
  */
 public class StatisticsHandler {
 
     /**
-     * Обрабатывает запрос на подсчет текущего баланса пользователя.
-     * @param inputData входные данные
-     * @param outputData выходные данные
-     * @param controller контроллер статистики
-     * @return текущее местоположение пользователя в приложении
+     * Handles the request to calculate the user's current balance.
+     * @param inputData input data
+     * @param outputData output data
+     * @param controller statistics controller
+     * @return the current location of the user in the application
      */
     public static UserLocation handleCurrentBalance(Input inputData, OutputData outputData, StatisticsController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
@@ -29,11 +29,11 @@ public class StatisticsHandler {
     }
 
     /**
-     * Обрабатывает запрос на расчет доходов за заданный период.
-     * @param inputData входные данные
-     * @param outputData выходные данные
-     * @param controller контроллер статистики
-     * @return текущее местоположение пользователя в приложении
+     * Handles the request to calculate the income for a given period.
+     * @param inputData input data
+     * @param outputData output data
+     * @param controller statistics controller
+     * @return the current location of the user in the application
      */
     public static UserLocation handleIncomeForPeriod(Input inputData, OutputData outputData, StatisticsController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
@@ -45,11 +45,11 @@ public class StatisticsHandler {
     }
 
     /**
-     * Обрабатывает запрос на расчет расходов за заданный период.
-     * @param inputData входные данные
-     * @param outputData выходные данные
-     * @param controller контроллер статистики
-     * @return текущее местоположение пользователя в приложении
+     * Handles the request to calculate the expenses for a given period.
+     * @param inputData input data
+     * @param outputData output data
+     * @param controller statistics controller
+     * @return the current location of the user in the application
      */
     public static UserLocation handleExpenseForPeriod(Input inputData, OutputData outputData, StatisticsController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
@@ -61,11 +61,11 @@ public class StatisticsHandler {
     }
 
     /**
-     * Обрабатывает запрос на анализ расходов по категориям.
-     * @param inputData входные данные
-     * @param outputData выходные данные
-     * @param controller контроллер статистики
-     * @return текущее местоположение пользователя в приложении
+     * Handles the request for expense analysis by category.
+     * @param inputData input data
+     * @param outputData output data
+     * @param controller statistics controller
+     * @return the current location of the user in the application
      */
     public static UserLocation handleExpenseAnalysis(Input inputData, OutputData outputData, StatisticsController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
@@ -76,11 +76,11 @@ public class StatisticsHandler {
     }
 
     /**
-     * Запрашивает у пользователя дату в формате ГГГГ-ММ-ДД.
-     * @param inputData входные данные
-     * @param outputData выходные данные
-     * @param message сообщение для пользователя
-     * @return введенная пользователем дата
+     * Asks the user for a date in the format YYYY-MM-DD.
+     * @param inputData input data
+     * @param outputData output data
+     * @param message message for the user
+     * @return the date entered by the user
      */
     private static LocalDate askDate(Input inputData, OutputData outputData, String message) {
         outputData.output(message);

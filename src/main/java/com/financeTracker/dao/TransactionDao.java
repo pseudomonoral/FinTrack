@@ -1,6 +1,5 @@
 package com.financeTracker.dao;
 
-import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 
 import java.util.Optional;
