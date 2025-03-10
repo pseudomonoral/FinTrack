@@ -60,12 +60,14 @@ public class ApplicationContext {
 
     private static void loadServiceLayer() {
         CONTEXT.put("securityService", new SecurityServiceImpl((UserDao) CONTEXT.get("userDao")));
-        CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao")));
         CONTEXT.put("budgetService", new BudgetServiceImpl((BudgetDao) CONTEXT.get("budgetDao"),
                 (TransactionService) CONTEXT.get("transactionService"),
                 (BudgetMapper) CONTEXT.get("budgetMapper")));
         CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao"),
                 (GoalMapper) CONTEXT.get("goalMapper")));
+        CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao"),
+                        (BudgetService) CONTEXT.get("budgetService"),
+                        (GoalService) CONTEXT.get("goalService")));
         CONTEXT.put("transactionService",
                 new TransactionServiceImpl((UserService) CONTEXT.get("userService"),
                 (TransactionDao) CONTEXT.get("transactionDao"),

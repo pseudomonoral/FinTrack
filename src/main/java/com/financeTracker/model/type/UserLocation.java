@@ -29,6 +29,8 @@ public enum UserLocation {
 
     GOALS_MENU,
 
+    STATISTICS_MENU,
+
     /**
      * Represents the state where the user exits the application.
      */

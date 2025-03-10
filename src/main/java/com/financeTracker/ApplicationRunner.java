@@ -1,16 +1,19 @@
 package com.financeTracker;
 
-import com.financeTracker.controller.AuthController;
+import com.financeTracker.controller.*;
 import com.financeTracker.exceptions.authorization.AuthorizationException;
 import com.financeTracker.exceptions.registration.RegistrationException;
 import com.financeTracker.exceptions.validation.NotValidArgumentException;
+import com.financeTracker.handler.*;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
 
 import static com.financeTracker.handler.SecurityHandler.handleAuthorization;
 import static com.financeTracker.handler.SecurityHandler.handleRegistration;
+import static com.financeTracker.model.type.UserLocation.*;
 import static com.financeTracker.util.ConsoleConstants.*;
+import static com.financeTracker.util.ConsoleConstants.ADMIN_MENU;
 
 
 /**
@@ -20,17 +23,23 @@ import static com.financeTracker.util.ConsoleConstants.*;
 public class ApplicationRunner {
 
     private static AuthController authController;
+    private static BudgetController budgetController;
+    private static GoalController goalController;
+    private static StatisticsController statisticsController;
+    private static TransactionController transactionController;
     private static UserLocation userLocation;
+    private static UserController userController;
 
-    /**
-     * The main entry point of the application. It loads the application context,
-     * retrieves beans, and starts the main loop for processing user input.
-     */
     public static void run() {
         ApplicationContext.loadContext();
         Input inputData = (Input) ApplicationContext.getBean("input");
         OutputData outputData = (OutputData) ApplicationContext.getBean("output");
         authController = (AuthController) ApplicationContext.getBean("authController");
+        budgetController = (BudgetController) ApplicationContext.getBean("budgetController");
+        goalController = (GoalController) ApplicationContext.getBean("goalController");
+        statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
+        transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
+
         userLocation = UserLocation.SECURITY;
 
         boolean processIsRun = true;
@@ -38,8 +47,12 @@ public class ApplicationRunner {
             try {
                 switch (userLocation) {
                     case SECURITY -> handleSecurity(inputData, outputData);
-                    case MAIN_MENU -> handleMenu(inputData, outputData);
-                    case ADMIN_MENU -> handleAdmin(inputData, outputData);
+                    case ADMIN_MENU -> handleAdminMenu(inputData, outputData);
+                    case USER_MENU -> handleUserMenu(inputData, outputData);
+                    case BUDGET_MENU -> handleBudgetMenu(inputData, outputData);
+                    case GOALS_MENU -> handleGoalMenu(inputData, outputData);
+                    case TRANSACTION_MENU -> handleTransactionMenu(inputData, outputData);
+                    case STATISTICS_MENU -> handleStatisticsMenu(inputData, outputData);
                     case EXIT -> {
                         exitProcess(outputData);
                         processIsRun = false;
@@ -50,47 +63,150 @@ public class ApplicationRunner {
                      RegistrationException e) {
                 outputData.errOutput(e.getMessage());
             } catch (RuntimeException e) {
-                outputData.errOutput("Unknown error. More details " + e.getMessage());
+                outputData.errOutput("Unknown error. More details: " + e.getMessage());
                 processIsRun = false;
             }
         }
         inputData.closeIn();
     }
 
-    /**
-     * Handles the security stage where users can register, login, or exit the application.
-     *
-     * @param inputData  The input data provider.
-     * @param outputData The output data provider.
-     */
     public static void handleSecurity(Input inputData, OutputData outputData) {
         while (true) {
             outputData.output(SECURITY_MENU);
             Object input = inputData.in();
-            if (input.toString().equals("1")) {
-                userLocation = handleRegistration(inputData, outputData, authController);
-                break;
-            } else if (input.toString().equals("2")) {
-                userLocation = handleAuthorization(inputData, outputData, authController);
-                break;
-            } else if (input.toString().equals("3")) {
-                userLocation = UserLocation.EXIT;
-                break;
-            } else {
-                outputData.output("Неизвестная команда, повторите попытку.");
+            switch (input.toString()) {
+                case "1" -> {
+                    userLocation = handleRegistration(inputData, outputData, authController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = handleAuthorization(inputData, outputData, authController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = UserLocation.EXIT;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
             }
         }
     }
 
+    private static void handleUserMenu(Input inputData, OutputData outputData) {
+        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        while (true) {
+            outputData.output(USER_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = UserHandler.editProfileName(inputData, outputData, userController, userId);
+                case "2" -> userLocation = UserHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
+                case "3" -> userLocation = UserHandler.deleteProfile(inputData, outputData, userController, userId);
+                case "0" -> {
+                    userLocation = UserLocation.SECURITY;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
 
+    private static void handleAdminMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(ADMIN_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> AdminHandler.handleShowListOfRegisteredUsers(outputData, userController);
+                case "2" -> AdminHandler.handleShowAllTransactionsByUser(inputData, outputData, transactionController);
+                case "3" -> AdminHandler.handleBlockUser(inputData, outputData, userController);
+                case "4" -> AdminHandler.handleUnblockUser(inputData, outputData, userController);
+                case "0" -> {
+                    userLocation = UserLocation.SECURITY;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
 
-    /**
-     * Handles the exit process, displaying a farewell message and cleaning up resources.
-     *
-     * @param outputData The output data provider.
-     */
+    private static void handleBudgetMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(BUDGET_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = BudgetHandler.handleCreateBudget(inputData, outputData, budgetController);
+                case "2" -> userLocation = BudgetHandler.handleViewBudget(outputData, budgetController);
+                case "3" -> userLocation = BudgetHandler.handleUpdateBudget(inputData, outputData, budgetController);
+                case "4" -> userLocation = BudgetHandler.handleDeleteBudget(outputData, budgetController);
+                case "5" -> userLocation = BudgetHandler.handleCheckBudgetExceeded(outputData, budgetController,
+                        statisticsController);
+                case "0" -> {
+                    userLocation = UserLocation.ADMIN_MENU;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
+
+    private static void handleGoalMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(GOALS_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
+                case "2" -> userLocation = GoalHandler.handleViewGoal(inputData, outputData, goalController);
+                case "3" -> userLocation = GoalHandler.handleUpdateGoal(inputData, outputData, goalController);
+                case "4" -> userLocation = GoalHandler.handleDeleteGoal(inputData, outputData, goalController);
+                case "5" -> userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
+                case "0" -> {
+                    userLocation = UserLocation.ADMIN_MENU;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
+
+    private static void handleTransactionMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(TRANSACTION_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = TransactionHandler.handleCreateTransaction(inputData, outputData, transactionController);
+                case "2" -> userLocation = TransactionHandler.handleViewTransactions(outputData, transactionController);
+                case "3" -> userLocation = TransactionHandler.handleUpdateTransaction(inputData, outputData, transactionController);
+                case "4" -> userLocation = TransactionHandler.handleDeleteTransaction(inputData, outputData, transactionController);
+                case "5" -> userLocation = TransactionHandler.handleFilterTransactionsByCategory(inputData, outputData, transactionController);
+                case "0" -> {
+                    userLocation = UserLocation.ADMIN_MENU;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
+
+    private static void handleStatisticsMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(STATISTICS_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = StatisticsHandler.handleCurrentBalance(inputData, outputData, statisticsController);
+                case "2" -> userLocation = StatisticsHandler.handleIncomeForPeriod(inputData, outputData, statisticsController);
+                case "3" -> userLocation = StatisticsHandler.handleExpenseForPeriod(inputData, outputData, statisticsController);
+                case "4" -> userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
+                case "0" -> {
+                    userLocation = UserLocation.ADMIN_MENU;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
+    }
+
     private static void exitProcess(OutputData outputData) {
         outputData.output("До свидания!");
         ApplicationContext.cleanAuthorizedUser();
     }
 }
+
