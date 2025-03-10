@@ -1,6 +1,6 @@
 package com.financeTracker;
 
-import com.financeTracker.controller.AuthController;
+import com.financeTracker.controller.*;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.dao.TransactionDao;
@@ -56,6 +56,27 @@ public class ApplicationContext {
     private static void loadControllers() {
         AuthController authController = new AuthController((SecurityService) CONTEXT.get("securityService"));
         CONTEXT.put("authController", authController);
+
+        BudgetController budgetController = new BudgetController((BudgetService) CONTEXT.get("budgetService"));
+        CONTEXT.put("budgetController", budgetController);
+
+        GoalController goalController = new GoalController((GoalService) CONTEXT.get("goalService"));
+        CONTEXT.put("goalController", goalController);
+
+        NotificationController notificationController = new NotificationController((NotificationService)
+                CONTEXT.get("notificationService"));
+        CONTEXT.put("notificationController", notificationController);
+
+        StatisticsController statisticsController = new StatisticsController((StatisticsService)
+                CONTEXT.get("statisticsService"));
+        CONTEXT.put("statisticsController", statisticsController);
+
+        TransactionController transactionController = new TransactionController((TransactionService)
+                CONTEXT.get("transactionService"));
+        CONTEXT.put("transactionController", transactionController);
+
+        UserController userController = new UserController((UserService) CONTEXT.get("userService"));
+        CONTEXT.put("userController", userController);
     }
 
     private static void loadServiceLayer() {
@@ -83,7 +104,7 @@ public class ApplicationContext {
     }
 
     private static void loadMapper(){
-        CONTEXT.put("budgetMapper", new BudgetDaoImpl());
+        CONTEXT.put("budgetMapper", new BudgetMapper());
         CONTEXT.put("goalMapper", new GoalMapper());
     }
 }

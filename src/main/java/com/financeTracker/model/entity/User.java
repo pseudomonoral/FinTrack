@@ -14,6 +14,8 @@ import static com.financeTracker.model.type.UserStatus.ACTIVE;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 public class User extends BaseEntity {
 

@@ -2,10 +2,11 @@ package com.financeTracker.model.entity;
 
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper=true)
 public class Budget extends BaseEntity {
 
