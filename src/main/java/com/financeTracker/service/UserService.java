@@ -10,6 +10,8 @@ public interface UserService {
 
     void deleteUserById(Long id);
 
+    void deleteCascadeUserById(Long id);
+
     void updateUser(User user);
 
     void blockedUserById(Long id);

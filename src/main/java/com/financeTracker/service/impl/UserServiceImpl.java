@@ -3,11 +3,17 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
+import com.financeTracker.model.entity.Budget;
+import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.User;
+import com.financeTracker.service.BudgetService;
+import com.financeTracker.service.GoalService;
+import com.financeTracker.service.TransactionService;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.USER;
 import static com.financeTracker.model.type.UserStatus.*;
@@ -16,6 +22,8 @@ import static com.financeTracker.model.type.UserStatus.*;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final BudgetService budgetService;
+    private final GoalService goalService;
 
     @Override
     public User getUserById(Long id) {
@@ -29,6 +37,18 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER, id));
         userDao.delete(user);
+    }
+
+    @Override
+    public void deleteCascadeUserById(Long id) {
+        userDao.delete(getUserById(id));
+        if (budgetService.getBudget(id).isPresent()) {
+            budgetService.deleteBudget(id);
+        }
+        List<Goal> goalsByUser = goalService.getAllGoals(id);
+        for (Goal goal : goalsByUser) {
+            goalService.deleteGoal(goal.getName(), goal.getId());
+        }
     }
 
     @Override

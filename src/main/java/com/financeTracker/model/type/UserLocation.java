@@ -21,6 +21,8 @@ public enum UserLocation {
      */
     ADMIN_MENU,
 
+    USER_MENU,
+
     BUDGET_MENU,
 
     TRANSACTION_MENU,

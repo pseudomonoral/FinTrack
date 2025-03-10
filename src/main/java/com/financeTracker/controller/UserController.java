@@ -65,4 +65,15 @@ public class UserController {
     public List<User> showAllUsers() {
         return userService.showAll();
     }
+
+    /**
+     * Deletes a user and all associated (without transactions) data by their ID.
+     * This operation removes the user along with related entities,
+     *
+     * @param id The ID of the user to delete.
+     */
+    public void deleteCascadeUserById(Long id) {
+        userService.deleteCascadeUserById(id);
+    }
+
 }

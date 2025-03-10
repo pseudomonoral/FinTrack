@@ -8,6 +8,7 @@ import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.*;
@@ -37,6 +38,11 @@ public class GoalServiceImpl implements GoalService {
     public Goal getGoal(String nameGoal, Long userId) {
         return goalDao.findGoalByNameAndId(nameGoal, userId)
                 .orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
+    }
+
+    @Override
+    public List<Goal> getAllGoals(Long userId) {
+        return goalDao.findAllByUserId(userId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.financeTracker.service;
 
 import com.financeTracker.model.entity.Goal;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GoalService {
@@ -9,6 +10,8 @@ public interface GoalService {
     Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount);
 
     Goal getGoal(String nameGoal, Long userId);
+
+    List<Goal> getAllGoals(Long userId);
 
     void deleteGoal(String nameGoal, Long userId);
 

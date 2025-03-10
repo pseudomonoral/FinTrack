@@ -3,11 +3,12 @@ package com.financeTracker.handler;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.entity.User;
+import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
 
 public class UserHandler {
 
-    public static void editProfileName(Input inputData, OutputData outputData, UserController userController, Long userId) {
+    public static UserLocation editProfileName(Input inputData, OutputData outputData, UserController userController, Long userId) {
         final String currentName = "Ваше текущее имя - %s, введите новое:";
 
         User user = userController.getUserById(userId);
@@ -17,16 +18,19 @@ public class UserHandler {
         user.setName(newName);
 
         userController.updateUser(user);
+
+        return UserLocation.USER_MENU;
     }
 
-    public static void resetPasswordAndEmail(Input inputData, OutputData outputData, UserController userController, Long userId) {
-        final String currentName = "Ваш текущий email - %s, введите новый:";
-        User user = userController.getUserById(userId);
-        outputData.output(String.format(currentName, user.getLogin()));
+    public static UserLocation resetPasswordAndEmail(Input inputData, OutputData outputData, UserController userController, Long userId) {
+        userController.deleteUserById(userId);
 
-        String newName = inputData.in().toString();
-        user.setName(newName);
+        return UserLocation.SECURITY;
+    }
 
-        userController.updateUser(user);
+    public static UserLocation deleteProfile(Input inputData, OutputData outputData, UserController userController, Long userId) {
+        userController.deleteCascadeUserById(userId);
+
+        return UserLocation.SECURITY;
     }
 }
