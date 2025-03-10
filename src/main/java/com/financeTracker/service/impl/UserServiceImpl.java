@@ -1,6 +1,7 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.UserDao;
+import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.UserService;
@@ -33,6 +34,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         if (userDao.findById(user.getId()).isPresent()) {
+            String login = user.getLogin();
+            if (userDao.findByLogin(login).isPresent()){
+                throw new EntityAlreadyExistException(USER, user.getId());
+            }
             userDao.update(user);
         }else {
             throw new EntityNotFoundException(USER, user.getId());

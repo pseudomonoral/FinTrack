@@ -21,6 +21,12 @@ public enum UserLocation {
      */
     ADMIN_MENU,
 
+    BUDGET_MENU,
+
+    TRANSACTION_MENU,
+
+    GOALS_MENU,
+
     /**
      * Represents the state where the user exits the application.
      */
