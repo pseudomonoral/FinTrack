@@ -14,6 +14,7 @@ import static com.financeTracker.handler.SecurityHandler.handleRegistration;
 import static com.financeTracker.model.type.UserLocation.*;
 import static com.financeTracker.util.ConsoleConstants.*;
 import static com.financeTracker.util.ConsoleConstants.ADMIN_MENU;
+import static com.financeTracker.util.ConsoleConstants.MAIN_MENU;
 
 
 /**
@@ -47,6 +48,7 @@ public class ApplicationRunner {
             try {
                 switch (userLocation) {
                     case SECURITY -> handleSecurity(inputData, outputData);
+                    case MAIN_MENU -> handleMainMenu(inputData, outputData);
                     case ADMIN_MENU -> handleAdminMenu(inputData, outputData);
                     case USER_MENU -> handleUserMenu(inputData, outputData);
                     case BUDGET_MENU -> handleBudgetMenu(inputData, outputData);
@@ -68,6 +70,25 @@ public class ApplicationRunner {
             }
         }
         inputData.closeIn();
+    }
+
+    private static void handleMainMenu(Input inputData, OutputData outputData) {
+        while (true) {
+            outputData.output(MAIN_MENU);
+            Object input = inputData.in();
+            switch (input.toString()) {
+                case "1" -> userLocation = USER_MENU;
+                case "2" -> userLocation = BUDGET_MENU;
+                case "3" -> userLocation = GOALS_MENU;
+                case "4" -> userLocation = TRANSACTION_MENU;
+                case "5" -> userLocation = STATISTICS_MENU;
+                case "0" -> {
+                    userLocation = UserLocation.SECURITY;
+                    return;
+                }
+                default -> outputData.output("Неизвестная команда, повторите попытку.");
+            }
+        }
     }
 
     public static void handleSecurity(Input inputData, OutputData outputData) {
