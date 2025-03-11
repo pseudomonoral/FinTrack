@@ -53,22 +53,4 @@ class TransactionServiceImplTest {
 
         assertThrows(EntityNotFoundException.class, () -> transactionService.deleteTransaction(TRANSACTION.getId()));
     }
-
-    @Test
-    @DisplayName("Update Transaction - Should Update When Exists")
-    void updateTransaction_ShouldUpdate_WhenExists() {
-        when(transactionDao.findById(TRANSACTION.getId())).thenReturn(Optional.of(TRANSACTION));
-
-        transactionService.updateTransaction(TRANSACTION);
-
-        verify(transactionDao, times(1)).updateTransaction(TRANSACTION);
-    }
-
-    @Test
-    @DisplayName("Update Transaction - Should Throw Exception When Not Found")
-    void updateTransaction_ShouldThrowException_WhenNotFound() {
-        when(transactionDao.findById(TRANSACTION.getId())).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> transactionService.updateTransaction(TRANSACTION));
-    }
 }

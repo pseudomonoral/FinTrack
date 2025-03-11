@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.financeTracker.model.type.BudgetStatus.OVER_BUDGET;
 import static com.financeTracker.model.type.BudgetStatus.WITHIN_BUDGET;
@@ -92,11 +93,23 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateTransaction(Transaction transaction) {
-        if (transactionDao.findById(transaction.getId()).isPresent()) {
+    public void updateTransaction(Long id, double amount, String category, String description,
+                                  TransactionType type) {
+        Optional<Transaction> old = transactionDao.findById(id);
+        if (old.isPresent()) {
+            Long userId = ApplicationContext.getAuthorizeUser().getId();
+            Transaction transaction = Transaction.builder()
+                    .id(id)
+                    .amount(amount)
+                    .userId(userId)
+                    .category(category)
+                    .description(description)
+                    .type(type)
+                    .build();
+            transaction.setCreatedAt(old.get().getCreatedAt());
             transactionDao.updateTransaction(transaction);
         } else {
-            throw new EntityNotFoundException(TRANSACTION, transaction.getId());
+            throw new EntityNotFoundException(TRANSACTION, id);
         }
     }
 

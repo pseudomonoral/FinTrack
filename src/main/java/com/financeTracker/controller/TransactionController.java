@@ -36,12 +36,15 @@ public class TransactionController {
     }
 
     /**
-     * Updates an existing transaction.
+     * Updates an existing transaction with new details.
      *
-     * @param transaction The transaction to update.
+     * @param amount     The new amount of the transaction.
+     * @param category   The new category of the transaction.
+     * @param description A description of the transaction.
+     * @param type       The type of the transaction (e.g., INCOME, EXPENSE).
      */
-    public void updateTransaction(Transaction transaction) {
-        transactionService.updateTransaction(transaction);
+    public void updateTransaction(Long id, double amount, String category, String description, TransactionType type) {
+        transactionService.updateTransaction(id, amount, category, description, type);
     }
 
     /**

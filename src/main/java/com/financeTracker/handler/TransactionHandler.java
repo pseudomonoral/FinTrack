@@ -22,7 +22,8 @@ public class TransactionHandler {
      * @param controller The transaction controller.
      * @return The next user location after transaction creation.
      */
-    public static UserLocation handleCreateTransaction(Input inputData, OutputData outputData, TransactionController controller) {
+    public static UserLocation handleCreateTransaction(Input inputData, OutputData outputData,
+                                                       TransactionController controller) {
         outputData.output("Введите сумму транзакции:");
         double amount = Double.parseDouble(inputData.in().toString());
 
@@ -32,9 +33,9 @@ public class TransactionHandler {
         outputData.output("Введите описание транзакции:");
         String description = inputData.in().toString();
 
-        outputData.output("Выберите тип транзакции (INCOME/EXPENSE):");
-        String typeInput = inputData.in().toString().toUpperCase();
-        TransactionType type = valueOf(typeInput);
+        outputData.output("Введите тип транзакции - \"доход\" или \"расход\":");
+        TransactionType type = inputData.in().toString().trim().equalsIgnoreCase("доход")
+                ? INCOME : EXPENSE;
 
         controller.createTransaction(amount, category, description, type);
 
@@ -81,15 +82,11 @@ public class TransactionHandler {
         outputData.output("Введите новое описание транзакции:");
         String description = inputData.in().toString();
 
-        Transaction transaction = Transaction.builder()
-                .id(transactionId)
-                .amount(amount)
-                .category(category)
-                .description(description)
-                .type(amount > 0 ? TransactionType.INCOME : TransactionType.EXPENSE)
-                .build();
+        outputData.output("Введите тип транзакции - \"доход\" или \"расход\":");
+        TransactionType type = inputData.in().toString().trim().equalsIgnoreCase("доход")
+                ? INCOME : EXPENSE;
 
-        controller.updateTransaction(transaction);
+        controller.updateTransaction(transactionId, amount, category, description, type);
 
         outputData.output("Транзакция успешно обновлена.");
         return UserLocation.TRANSACTION_MENU_LOC;

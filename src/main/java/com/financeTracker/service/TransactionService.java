@@ -32,11 +32,14 @@ public interface TransactionService {
     void deleteTransaction(Long transactionId);
 
     /**
-     * Updates an existing transaction.
+     * Updates an existing transaction with new details.
      *
-     * @param transaction The transaction entity to be updated.
+     * @param amount     The new amount of the transaction.
+     * @param category   The new category of the transaction.
+     * @param description A description of the transaction.
+     * @param type       The type of the transaction (e.g., INCOME, EXPENSE).
      */
-    void updateTransaction(Transaction transaction);
+    void updateTransaction(Long id, double amount, String category, String description, TransactionType type);
 
     /**
      * Retrieves all transactions for a specific user.
