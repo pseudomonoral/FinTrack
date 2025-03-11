@@ -7,6 +7,7 @@ import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
 
+import java.util.List;
 import java.util.Optional;
 
 public class GoalHandler {
@@ -19,11 +20,20 @@ public class GoalHandler {
      * @param controller The goal controller.
      * @return The next user location after goal creation.
      */
-    public static UserLocation handleCreateGoal(Input inputData, OutputData outputData, GoalController controller) {
+    public static UserLocation handleCreateGoal(Input inputData, OutputData outputData,
+                                                GoalController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
         outputData.output("Введите название цели:");
         String name = inputData.in().toString();
+
+        if (controller.getGoal(name, userId) != null) {
+            outputData.output("У вас уже есть цель с таким названием. Желаете изменить её? Да/Нет");
+            if (inputData.in().toString().equalsIgnoreCase("Да")){
+                return handleUpdateGoal(inputData, outputData, controller);
+            }
+            return UserLocation.GOALS_MENU_LOC;
+        }
 
         outputData.output("Введите сумму накопления:");
         double targetAmount = Double.parseDouble(inputData.in().toString());
@@ -125,6 +135,27 @@ public class GoalHandler {
         return UserLocation.GOALS_MENU_LOC;
     }
 
+    public static UserLocation handleViewAllGoals(OutputData outputData, GoalController controller) {
+        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        List<Goal> goals = controller.getGoals(userId);
+
+        if (!goals.isEmpty()) {
+            goals.forEach(goal -> outputData.output("Ваша актуальная цель: "
+                    + formatGoal(goal, controller)));
+        } else {
+            outputData.output("У вас нет созданных целей.");
+        }
+
+        return UserLocation.GOALS_MENU_LOC;
+    }
+
+    public static UserLocation handleDeactivateGoal(OutputData outputData,
+                                                    GoalController controller){
+        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        controller.deactivateGoalByUserId(userId);
+        outputData.output("Ваша актуальная цель деактивирована!");
+        return UserLocation.GOALS_MENU_LOC;
+    }
 
     /**
      * Handles displaying the progress of a specific goal.

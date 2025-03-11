@@ -273,7 +273,7 @@ public class ApplicationRunner {
                     return;
                 }
                 case "2" -> {
-                    userLocation = GoalHandler.handleViewGoal(inputData, outputData, goalController);
+                    userLocation = GoalHandler.handleViewActualGoal(outputData, goalController);
                     return;
                 }
                 case "3" -> {
@@ -285,7 +285,19 @@ public class ApplicationRunner {
                     return;
                 }
                 case "5" -> {
+                    userLocation = GoalHandler.handleDeactivateGoal(outputData, goalController);
+                    return;
+                }
+                case "6" -> {
                     userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
+                    return;
+                }
+                case "7" -> {
+                    userLocation = GoalHandler.handleViewGoal(inputData, outputData, goalController);
+                    return;
+                }
+                case "8" -> {
+                    userLocation = GoalHandler.handleViewAllGoals(outputData, goalController);
                     return;
                 }
                 case "0" -> {

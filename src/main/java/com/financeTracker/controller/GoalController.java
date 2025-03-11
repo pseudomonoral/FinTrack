@@ -4,6 +4,7 @@ import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,6 +23,10 @@ public class GoalController {
      */
     public Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount) {
         return goalService.createGoal(userId, goalCompleted, name, targetAmount);
+    }
+
+    public List<Goal> getGoals(Long userId) {
+        return goalService.getAllGoals(userId);
     }
 
     /**
