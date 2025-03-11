@@ -1,6 +1,6 @@
 package com.financeTracker.exceptions.registration;
 
-import com.financeTracker.exceptions.ErrorMessages;
+import com.financeTracker.util.ErrorMessages;
 
 public class UserAlreadyExistsException extends RegistrationException {
     public UserAlreadyExistsException() {

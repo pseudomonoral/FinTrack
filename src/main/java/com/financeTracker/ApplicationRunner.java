@@ -51,7 +51,7 @@ public class ApplicationRunner {
                     case SECURITY_LOC -> handleSecurity(inputData, outputData);
                     case MAIN_MENU_LOC -> handleMainMenu(inputData, outputData);
                     case ADMIN_MENU_LOC -> handleAdminMenu(inputData, outputData);
-                    case USER_MENU_LOC -> handleUserMenu(inputData, outputData);
+                    case USER_SETTINGS_LOC -> handleUserSettings(inputData, outputData);
                     case BUDGET_MENU_LOC -> handleBudgetMenu(inputData, outputData);
                     case GOALS_MENU_LOC -> handleGoalMenu(inputData, outputData);
                     case TRANSACTION_MENU_LOC -> handleTransactionMenu(inputData, outputData);
@@ -84,13 +84,14 @@ public class ApplicationRunner {
             outputData.output(MAIN_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = USER_MENU_LOC;
+                case "1" -> userLocation = USER_SETTINGS_LOC;
                 case "2" -> userLocation = BUDGET_MENU_LOC;
                 case "3" -> userLocation = GOALS_MENU_LOC;
                 case "4" -> userLocation = TRANSACTION_MENU_LOC;
                 case "5" -> userLocation = STATISTICS_MENU_LOC;
+                case "6" -> userLocation = SECURITY_LOC;
                 case "0" -> {
-                    userLocation = SECURITY_LOC;
+                    userLocation = EXIT;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");
@@ -132,15 +133,15 @@ public class ApplicationRunner {
      * @param inputData The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
-    private static void handleUserMenu(Input inputData, OutputData outputData) {
+    private static void handleUserSettings(Input inputData, OutputData outputData) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
         while (true) {
-            outputData.output(USER_MENU);
+            outputData.output(USER_SETTINGS_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = UserHandler.editProfileName(inputData, outputData, userController, userId);
-                case "2" -> userLocation = UserHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
-                case "3" -> userLocation = UserHandler.deleteProfile(inputData, outputData, userController, userId);
+                case "1" -> userLocation = UserSettingsHandler.editProfileName(inputData, outputData, userController, userId);
+                case "2" -> userLocation = UserSettingsHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
+                case "3" -> userLocation = UserSettingsHandler.deleteProfile(inputData, outputData, userController, userId);
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -162,12 +163,13 @@ public class ApplicationRunner {
             outputData.output(ADMIN_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> AdminHandler.handleShowListOfRegisteredUsers(outputData, userController);
-                case "2" -> AdminHandler.handleShowAllTransactionsByUser(inputData, outputData, transactionController);
-                case "3" -> AdminHandler.handleBlockUser(inputData, outputData, userController);
-                case "4" -> AdminHandler.handleUnblockUser(inputData, outputData, userController);
+                case "1" -> userLocation = AdminHandler.handleShowListOfRegisteredUsers(outputData, userController);
+                case "2" -> userLocation = AdminHandler.handleShowAllTransactionsByUser(inputData, outputData,
+                        userController, transactionController);
+                case "3" -> userLocation = AdminHandler.handleBlockUser(inputData, outputData, userController);
+                case "4" -> userLocation = AdminHandler.handleUnblockUser(inputData, outputData, userController);
                 case "0" -> {
-                    userLocation = SECURITY_LOC;
+                    userLocation = MAIN_MENU_LOC;
                     return;
                 }
                 default -> outputData.output("Неизвестная команда, повторите попытку.");

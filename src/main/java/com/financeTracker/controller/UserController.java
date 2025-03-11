@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.financeTracker.model.type.UserRole.*;
+
 @RequiredArgsConstructor
 public class UserController {
 
@@ -74,6 +76,11 @@ public class UserController {
      */
     public void deleteCascadeUserById(Long id) {
         userService.deleteCascadeUserById(id);
+    }
+
+    public boolean checkAdminAccess(Long id) {
+        User user = userService.getUserById(id);
+        return user.getUserRole().equals(ADMIN);
     }
 
 }

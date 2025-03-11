@@ -1,6 +1,6 @@
 package com.financeTracker.exceptions.authorization;
 
-import com.financeTracker.exceptions.ErrorMessages;
+import com.financeTracker.util.ErrorMessages;
 
 public class UserNotFoundException extends AuthorizationException {
     public UserNotFoundException() {

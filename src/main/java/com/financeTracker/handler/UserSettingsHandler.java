@@ -6,7 +6,7 @@ import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
 
-public class UserHandler {
+public class UserSettingsHandler {
 
     /**
      * Edits the user's profile name.
@@ -27,14 +27,13 @@ public class UserHandler {
 
         if (newName.isEmpty()) {
             outputData.output("Имя не может быть пустым. Попробуйте снова.");
-            return UserLocation.USER_MENU_LOC;
+            return UserLocation.USER_SETTINGS_LOC;
         }
 
-        // Обновляем имя пользователя
         user.setName(newName);
         userController.updateUser(user);
 
-        return UserLocation.USER_MENU_LOC;
+        return UserLocation.USER_SETTINGS_LOC;
     }
 
     /**
