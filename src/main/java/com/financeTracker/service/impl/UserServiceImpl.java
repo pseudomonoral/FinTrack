@@ -11,6 +11,7 @@ import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.USER;
 import static com.financeTracker.model.type.UserStatus.*;
@@ -51,8 +52,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user) {
         if (userDao.findById(user.getId()).isPresent()) {
-            String login = user.getLogin();
-            if (userDao.findByLogin(login).isPresent()){
+            Optional<User> old = userDao.findByLogin(user.getLogin());
+            if (old.isPresent() && !old.get().getId().equals(user.getId())) {
                 throw new EntityAlreadyExistException(USER, user.getId());
             }
             userDao.update(user);
