@@ -64,12 +64,16 @@ public class BudgetHandler {
      */
     public static UserLocation handleUpdateBudget(Input inputData, OutputData outputData, BudgetController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
+        if (controller.getBudget(userId).isEmpty()) {
+            outputData.output("Бюджет не установлен.");
+            return UserLocation.BUDGET_MENU_LOC;
+        }
 
         outputData.output("Введите новый лимит бюджета:");
         double newLimit = Double.parseDouble(inputData.in().toString());
 
         controller.updateBudget(userId, newLimit);
-        outputData.output("Бюджет успешно обновлен. Новый лимит: " + newLimit);
+        outputData.output("Бюджет успешно обновлен. Обновлённый лимит: " + newLimit);
 
         return UserLocation.BUDGET_MENU_LOC;
     }
@@ -83,6 +87,10 @@ public class BudgetHandler {
      */
     public static UserLocation handleDeleteBudget(OutputData outputData, BudgetController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
+        if (controller.getBudget(userId).isEmpty()) {
+            outputData.output("Бюджет не установлен.");
+            return UserLocation.BUDGET_MENU_LOC;
+        }
 
         controller.deleteBudget(userId);
         outputData.output("Ваш бюджет был удален.");
@@ -101,6 +109,10 @@ public class BudgetHandler {
                                                          BudgetController budgetController,
                                                          StatisticsController statisticsController) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
+        if (budgetController.getBudget(userId).isEmpty()) {
+            outputData.output("Бюджет не установлен.");
+            return UserLocation.BUDGET_MENU_LOC;
+        }
 
         boolean exceeded = budgetController.isBudgetExceeded(userId);
         LocalDate oneMonthAgo = LocalDate.from(LocalDateTime.now().minusMonths(1));

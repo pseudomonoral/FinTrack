@@ -19,7 +19,7 @@ public class UserDaoImpl implements UserDao {
                 .id(1L)
                 .userRole(ADMIN)
                 .login("admin")
-                .password("12345")
+                .password("admin")
                 .build();
         save(adminUser);
     }
