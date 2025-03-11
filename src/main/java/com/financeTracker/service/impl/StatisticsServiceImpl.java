@@ -20,9 +20,15 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public double calculateCurrentBalance(Long userId) {
-        return transactionService.getTransactions(userId).stream()
+        double income = transactionService.getTransactions(userId).stream()
+                .filter(transaction -> transaction.getType().equals(INCOME))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
+        double expense = transactionService.getTransactions(userId).stream()
+                .filter(transaction -> transaction.getType().equals(EXPENSE))
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+        return income - expense;
     }
 
     @Override

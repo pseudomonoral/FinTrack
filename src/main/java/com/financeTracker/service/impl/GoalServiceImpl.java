@@ -21,7 +21,7 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public Goal createGoal(Long userId, boolean goalActual, String nameGoal,
-                           double targetAmount) {
+                           double targetAmount, double currentAmount) {
         if (goalDao.findGoalByNameAndId(nameGoal, userId).isPresent()) {
             throw new EntityAlreadyExistException(GOAL, userId);
         }
@@ -30,6 +30,7 @@ public class GoalServiceImpl implements GoalService {
             deactivateGoalByUserId(userId);
         }
         goal.setGoalActual(goalActual);
+        goal.setCurrentAmount(currentAmount);
         goal.onCreate();
         return goalDao.save(goal);
     }
@@ -53,14 +54,16 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void updateGoal(Long userId, String nameGoal, double targetAmount,
+    public void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount,
                            boolean goalActual) {
         Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount);
         goal.setGoalActual(goalActual);
+        goal.setCurrentAmount(currentAmount);
+        goal.setId(id);
 
-        Optional<Goal> old = goalDao.findGoalByNameAndId(nameGoal, userId);
-        if (old.isPresent()) {
-            if (goalActual && !old.get().isGoalActual()){
+        Optional<Goal> oldActualGoal = goalDao.findGoalByNameAndId(nameGoal, userId);
+        if (oldActualGoal.isPresent()) {
+            if (goalActual && !oldActualGoal.get().isGoalActual()){
                 deactivateGoalByUserId(userId);
             }
             goalDao.updateGoal(goal);
@@ -68,6 +71,7 @@ public class GoalServiceImpl implements GoalService {
             throw new EntityNotFoundException(GOAL, goal.getUserId());
         }
     }
+
 
     @Override
     public Optional<Goal> getActualGoalByUserId(Long userId) {
@@ -78,10 +82,13 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public void deactivateGoalByUserId(Long userId){
-        Goal goal = getActualGoalByUserId(userId).
-                orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
-        goal.setGoalActual(false);
-        goalDao.updateGoal(goal);
+        Optional<Goal> goal = getActualGoalByUserId(userId);
+        if (goal.isPresent()){
+            Goal goalForUpdate = goal.get();
+            goalForUpdate.setGoalActual(false);
+            goalDao.updateGoal(goalForUpdate);
+        }
+
     }
 
     @Override

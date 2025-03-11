@@ -15,12 +15,12 @@ public interface GoalService {
      * Creates a new goal for a specific user.
      *
      * @param userId The ID of the user who is setting the goal.
-     * @param goalCompleted A boolean indicating whether the goal is completed.
+     * @param goalActive A boolean indicating whether the goal is active.
      * @param name The name of the goal.
      * @param targetAmount The target amount for the goal.
      * @return Goal The created goal entity.
      */
-    Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount);
+    Goal createGoal(Long userId, boolean goalActive, String name, double targetAmount, double currentAmount);
 
     /**
      * Retrieves a specific goal by its name and associated user ID.
@@ -55,7 +55,7 @@ public interface GoalService {
      * @param targetAmount The new target amount for the goal.
      * @param goalActual A boolean indicating whether the goal is actually achieved.
      */
-    void updateGoal(Long userId, String nameGoal, double targetAmount, boolean goalActual);
+    void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount, boolean goalActual);
 
     /**
      * Retrieves the current goal that is active for a specific user.

@@ -82,8 +82,8 @@ public class TransactionServiceImpl implements TransactionService {
             user.setGoalStatus(ACHIEVED);
             userService.updateUser(user);
         }
-        goalService.updateGoal(userId, actualGoal.getName(),
-                actualGoal.getTargetAmount(), actualGoal.isGoalActual());
+        goalService.updateGoal(actualGoal.getId(), userId, actualGoal.getName(),
+                actualGoal.getTargetAmount(), actualGoal.getCurrentAmount(), actualGoal.isGoalActual());
     }
 
     @Override

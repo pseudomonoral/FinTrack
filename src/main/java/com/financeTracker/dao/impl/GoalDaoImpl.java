@@ -60,6 +60,9 @@ public class GoalDaoImpl implements GoalDao {
     @Override
     public Goal updateGoal(Goal entity) {
         if (goals.containsKey(entity.getId())) {
+            Goal oldGoal = goals.get(entity.getId());
+            entity.setCreatedAt(oldGoal.getCreatedAt());
+            entity.onUpdate();
             return goals.put(entity.getId(), entity);
         } else {
             throw new IllegalArgumentException("Goal: \""

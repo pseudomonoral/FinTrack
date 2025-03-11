@@ -94,6 +94,8 @@ public class ApplicationContext {
                 (TransactionDao) CONTEXT.get("transactionDao"),
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
+        CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
+                (UserService) CONTEXT.get("userService")));
     }
 
     private static void loadDAOLayer() {

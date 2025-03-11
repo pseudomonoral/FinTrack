@@ -269,7 +269,7 @@ public class ApplicationRunner {
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> {
-                    userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
+                    userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController, statisticsController);
                     return;
                 }
                 case "2" -> {

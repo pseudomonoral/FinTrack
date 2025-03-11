@@ -2,6 +2,7 @@ package com.financeTracker.handler;
 
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.GoalController;
+import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.type.UserLocation;
@@ -21,13 +22,13 @@ public class GoalHandler {
      * @return The next user location after goal creation.
      */
     public static UserLocation handleCreateGoal(Input inputData, OutputData outputData,
-                                                GoalController controller) {
+                                                GoalController controller, StatisticsController statisticsController) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
         outputData.output("Введите название цели:");
         String name = inputData.in().toString();
 
-        if (controller.getGoal(name, userId) != null) {
+        if (controller.getGoals(userId).stream().anyMatch(entity -> entity.getName().equals(name))) {
             outputData.output("У вас уже есть цель с таким названием. Желаете изменить её? Да/Нет");
             if (inputData.in().toString().equalsIgnoreCase("Да")){
                 return handleUpdateGoal(inputData, outputData, controller);
@@ -35,10 +36,22 @@ public class GoalHandler {
             return UserLocation.GOALS_MENU_LOC;
         }
 
-        outputData.output("Введите сумму накопления:");
+        outputData.output("Введите сумму, которую хотите накопить:");
         double targetAmount = Double.parseDouble(inputData.in().toString());
 
-        Goal goal = controller.createGoal(userId, false, name, targetAmount);
+        outputData.output("Желаете сделать цель активной? (связать с транзакциями) Да/Нет");
+        boolean goalActive = inputData.in().toString().equalsIgnoreCase("Да");
+
+        double currentBalance = statisticsController.calculateCurrentBalance(userId);
+        outputData.output(String.format("Ваш баланс составляет сейчас %.2f. " +
+                "Желаете связать свой баланс с актуальной целью? Да/Нет", currentBalance));
+
+        double currentAmount = 0.0;
+        if (inputData.in().toString().equalsIgnoreCase("Да")){
+            currentAmount = currentBalance;
+        }
+
+        Goal goal = controller.createGoal(userId, goalActive, name, targetAmount, currentAmount);
 
         outputData.output("Цель успешно создана: " + formatGoal(goal, controller));
         return UserLocation.GOALS_MENU_LOC;
@@ -100,16 +113,22 @@ public class GoalHandler {
     public static UserLocation handleUpdateGoal(Input inputData, OutputData outputData, GoalController controller) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
+        outputData.output("Введите id цели, которую хотите обновить:");
+        Long id = Long.parseLong(inputData.in().toString());
+
         outputData.output("Введите название цели для обновления:");
         String nameGoal = inputData.in().toString();
 
-        outputData.output("Введите новую сумму накопления:");
+        outputData.output("Введите новую сумму, которую хотите накопить:");
         double targetAmount = Double.parseDouble(inputData.in().toString());
+
+        outputData.output("Введите сумму, которая накоплена:");
+        double currentAmount = Double.parseDouble(inputData.in().toString());
 
         outputData.output("Актуальна ли цель? (true/false):");
         boolean goalActual = Boolean.parseBoolean(inputData.in().toString());
 
-        controller.updateGoal(userId, nameGoal, targetAmount, goalActual);
+        controller.updateGoal(id, userId, nameGoal, targetAmount, currentAmount, goalActual);
         outputData.output("Цель успешно обновлена.");
 
         return UserLocation.GOALS_MENU_LOC;
@@ -191,8 +210,9 @@ public class GoalHandler {
      */
     private static String formatGoal(Goal goal, GoalController controller) {
 
-        return String.format("Название: %s | Сумма: %.2f | Актуальна: %b | Прогресс: %.2f%%",
-                goal.getName(), goal.getTargetAmount(), goal.isGoalCompleted(), controller.getGoalProgress(goal));
+        return String.format("Название: %s | Сумма: %.2f | Сумма: %.2f | Актуальна: %b | Прогресс: %.2f%%",
+                goal.getName(), goal.getTargetAmount(), goal.getCurrentAmount(),goal.isGoalActual(),
+                controller.getGoalProgress(goal));
     }
 }
 

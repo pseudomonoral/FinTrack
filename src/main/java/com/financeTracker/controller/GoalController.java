@@ -16,13 +16,13 @@ public class GoalController {
      * Creates a goal for the user.
      *
      * @param userId      The user's ID.
-     * @param goalCompleted Whether the goal is completed.
+     * @param goalActive Whether the goal is active.
      * @param name        The name of the goal.
      * @param targetAmount The target amount for the goal.
      * @return The created goal.
      */
-    public Goal createGoal(Long userId, boolean goalCompleted, String name, double targetAmount) {
-        return goalService.createGoal(userId, goalCompleted, name, targetAmount);
+    public Goal createGoal(Long userId, boolean goalActive, String name, double targetAmount, double currentAmount) {
+        return goalService.createGoal(userId, goalActive, name, targetAmount, currentAmount);
     }
 
     public List<Goal> getGoals(Long userId) {
@@ -58,8 +58,8 @@ public class GoalController {
      * @param targetAmount The target amount for the goal.
      * @param goalActual Whether the goal is achieved.
      */
-    public void updateGoal(Long userId, String nameGoal, double targetAmount, boolean goalActual) {
-        goalService.updateGoal(userId, nameGoal, targetAmount, goalActual);
+    public void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount, boolean goalActual) {
+        goalService.updateGoal(id, userId, nameGoal, targetAmount, currentAmount, goalActual);
     }
 
     /**
