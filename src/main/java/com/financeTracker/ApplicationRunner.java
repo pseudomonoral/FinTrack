@@ -84,12 +84,30 @@ public class ApplicationRunner {
             outputData.output(MAIN_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = USER_SETTINGS_LOC;
-                case "2" -> userLocation = BUDGET_MENU_LOC;
-                case "3" -> userLocation = GOALS_MENU_LOC;
-                case "4" -> userLocation = TRANSACTION_MENU_LOC;
-                case "5" -> userLocation = STATISTICS_MENU_LOC;
-                case "6" -> userLocation = SECURITY_LOC;
+                case "1" -> {
+                    userLocation = USER_SETTINGS_LOC;
+                    return;
+                }
+                case "2" -> {
+                    userLocation = BUDGET_MENU_LOC;
+                    return;
+                }
+                case "3" -> {
+                    userLocation = GOALS_MENU_LOC;
+                    return;
+                }
+                case "4" -> {
+                    userLocation = TRANSACTION_MENU_LOC;
+                    return;
+                }
+                case "5" -> {
+                    userLocation = STATISTICS_MENU_LOC;
+                    return;
+                }
+                case "6" -> {
+                    userLocation = SECURITY_LOC;
+                    return;
+                }
                 case "0" -> {
                     userLocation = EXIT;
                     return;
@@ -98,6 +116,7 @@ public class ApplicationRunner {
             }
         }
     }
+
 
     /**
      * Handles security menu interactions, where users can choose to register, authorize, or exit.
@@ -139,9 +158,18 @@ public class ApplicationRunner {
             outputData.output(USER_SETTINGS_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = UserSettingsHandler.editProfileName(inputData, outputData, userController, userId);
-                case "2" -> userLocation = UserSettingsHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
-                case "3" -> userLocation = UserSettingsHandler.deleteProfile(inputData, outputData, userController, userId);
+                case "1" -> {
+                    userLocation = UserSettingsHandler.editProfileName(inputData, outputData, userController, userId);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = UserSettingsHandler.resetPasswordAndEmail(inputData, outputData, userController, userId);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = UserSettingsHandler.deleteProfile(inputData, outputData, userController, userId);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -150,6 +178,7 @@ public class ApplicationRunner {
             }
         }
     }
+
 
     /**
      * Handles the admin menu interactions, allowing the admin to perform various operations such as viewing users,
@@ -163,11 +192,22 @@ public class ApplicationRunner {
             outputData.output(ADMIN_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = AdminHandler.handleShowListOfRegisteredUsers(outputData, userController);
-                case "2" -> userLocation = AdminHandler.handleShowAllTransactionsByUser(inputData, outputData,
-                        userController, transactionController);
-                case "3" -> userLocation = AdminHandler.handleBlockUser(inputData, outputData, userController);
-                case "4" -> userLocation = AdminHandler.handleUnblockUser(inputData, outputData, userController);
+                case "1" -> {
+                    userLocation = AdminHandler.handleShowListOfRegisteredUsers(outputData, userController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = AdminHandler.handleShowAllTransactionsByUser(inputData, outputData, userController, transactionController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = AdminHandler.handleBlockUser(inputData, outputData, userController);
+                    return;
+                }
+                case "4" -> {
+                    userLocation = AdminHandler.handleUnblockUser(inputData, outputData, userController);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -188,12 +228,26 @@ public class ApplicationRunner {
             outputData.output(BUDGET_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = BudgetHandler.handleCreateBudget(inputData, outputData, budgetController);
-                case "2" -> userLocation = BudgetHandler.handleViewBudget(outputData, budgetController);
-                case "3" -> userLocation = BudgetHandler.handleUpdateBudget(inputData, outputData, budgetController);
-                case "4" -> userLocation = BudgetHandler.handleDeleteBudget(outputData, budgetController);
-                case "5" -> userLocation = BudgetHandler.handleCheckBudgetExceeded(outputData, budgetController,
-                        statisticsController);
+                case "1" -> {
+                    userLocation = BudgetHandler.handleCreateBudget(inputData, outputData, budgetController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = BudgetHandler.handleViewBudget(outputData, budgetController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = BudgetHandler.handleUpdateBudget(inputData, outputData, budgetController);
+                    return;
+                }
+                case "4" -> {
+                    userLocation = BudgetHandler.handleDeleteBudget(outputData, budgetController);
+                    return;
+                }
+                case "5" -> {
+                    userLocation = BudgetHandler.handleCheckBudgetExceeded(outputData, budgetController, statisticsController);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -214,11 +268,26 @@ public class ApplicationRunner {
             outputData.output(GOAL_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
-                case "2" -> userLocation = GoalHandler.handleViewGoal(inputData, outputData, goalController);
-                case "3" -> userLocation = GoalHandler.handleUpdateGoal(inputData, outputData, goalController);
-                case "4" -> userLocation = GoalHandler.handleDeleteGoal(inputData, outputData, goalController);
-                case "5" -> userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
+                case "1" -> {
+                    userLocation = GoalHandler.handleCreateGoal(inputData, outputData, goalController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = GoalHandler.handleViewGoal(inputData, outputData, goalController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = GoalHandler.handleUpdateGoal(inputData, outputData, goalController);
+                    return;
+                }
+                case "4" -> {
+                    userLocation = GoalHandler.handleDeleteGoal(inputData, outputData, goalController);
+                    return;
+                }
+                case "5" -> {
+                    userLocation = GoalHandler.handleViewGoalProgress(inputData, outputData, goalController);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -239,11 +308,26 @@ public class ApplicationRunner {
             outputData.output(TRANSACTION_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = TransactionHandler.handleCreateTransaction(inputData, outputData, transactionController);
-                case "2" -> userLocation = TransactionHandler.handleViewTransactions(outputData, transactionController);
-                case "3" -> userLocation = TransactionHandler.handleUpdateTransaction(inputData, outputData, transactionController);
-                case "4" -> userLocation = TransactionHandler.handleDeleteTransaction(inputData, outputData, transactionController);
-                case "5" -> userLocation = TransactionHandler.handleFilterTransactionsByCategory(inputData, outputData, transactionController);
+                case "1" -> {
+                    userLocation = TransactionHandler.handleCreateTransaction(inputData, outputData, transactionController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = TransactionHandler.handleViewTransactions(outputData, transactionController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = TransactionHandler.handleUpdateTransaction(inputData, outputData, transactionController);
+                    return;
+                }
+                case "4" -> {
+                    userLocation = TransactionHandler.handleDeleteTransaction(inputData, outputData, transactionController);
+                    return;
+                }
+                case "5" -> {
+                    userLocation = TransactionHandler.handleFilterTransactionsByCategory(inputData, outputData, transactionController);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
@@ -264,10 +348,22 @@ public class ApplicationRunner {
             outputData.output(STATISTICS_MENU);
             Object input = inputData.in();
             switch (input.toString()) {
-                case "1" -> userLocation = StatisticsHandler.handleCurrentBalance(inputData, outputData, statisticsController);
-                case "2" -> userLocation = StatisticsHandler.handleIncomeForPeriod(inputData, outputData, statisticsController);
-                case "3" -> userLocation = StatisticsHandler.handleExpenseForPeriod(inputData, outputData, statisticsController);
-                case "4" -> userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
+                case "1" -> {
+                    userLocation = StatisticsHandler.handleCurrentBalance(inputData, outputData, statisticsController);
+                    return;
+                }
+                case "2" -> {
+                    userLocation = StatisticsHandler.handleIncomeForPeriod(inputData, outputData, statisticsController);
+                    return;
+                }
+                case "3" -> {
+                    userLocation = StatisticsHandler.handleExpenseForPeriod(inputData, outputData, statisticsController);
+                    return;
+                }
+                case "4" -> {
+                    userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
+                    return;
+                }
                 case "0" -> {
                     userLocation = MAIN_MENU_LOC;
                     return;
