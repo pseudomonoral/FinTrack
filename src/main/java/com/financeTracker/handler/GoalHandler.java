@@ -210,8 +210,8 @@ public class GoalHandler {
      */
     private static String formatGoal(Goal goal, GoalController controller) {
 
-        return String.format("Название: %s | Сумма: %.2f | Сумма: %.2f | Актуальна: %b | Прогресс: %.2f%%",
-                goal.getName(), goal.getTargetAmount(), goal.getCurrentAmount(),goal.isGoalActual(),
+        return String.format("ID: %d | Название: %s | Целевая сумма: %.2f | Накоплено: %.2f | Актуальна: %b | Прогресс: %.2f%%",
+                goal.getId(), goal.getName(), goal.getTargetAmount(), goal.getCurrentAmount(),goal.isGoalActual(),
                 controller.getGoalProgress(goal));
     }
 }

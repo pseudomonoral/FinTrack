@@ -1,6 +1,7 @@
 package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.BudgetDao;
+import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
@@ -10,6 +11,7 @@ import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.BUDGET;
@@ -19,7 +21,7 @@ import static com.financeTracker.model.type.TransactionType.*;
 public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetDao budgetDao;
-    private final TransactionService transactionService;
+    private final TransactionDao transactionDao;
     private final BudgetMapper budgetMapper;
 
     @Override
@@ -60,8 +62,9 @@ public class BudgetServiceImpl implements BudgetService {
 
         LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
 
-        double actualExpenses = transactionService.getTransactionsByDate(userId, oneMonthAgo)
-                .stream()
+        double actualExpenses = transactionDao.findAll().stream()
+                .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
+                .filter(transaction -> !transaction.getCreatedAt().isBefore(oneMonthAgo))
                 .filter(transaction -> transaction.getType().equals(EXPENSE))
                 .mapToDouble(Transaction::getAmount)
                 .sum();
