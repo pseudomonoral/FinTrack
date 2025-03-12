@@ -152,7 +152,7 @@ public class GoalHandler {
         List<Goal> goals = controller.getGoals(userId);
 
         if (!goals.isEmpty()) {
-            goals.forEach(goal -> outputData.output("Ваша актуальная цель: "
+            goals.forEach(goal -> outputData.output("Цель: "
                     + formatGoal(goal, controller)));
         } else {
             outputData.output("У вас нет созданных целей.");
