@@ -105,7 +105,7 @@ public class ApplicationRunner {
                     return;
                 }
                 case "6" -> {
-                    userLocation = SECURITY_LOC;
+                    userLocation = ADMIN_MENU_LOC;
                     return;
                 }
                 case "0" -> {
@@ -277,7 +277,7 @@ public class ApplicationRunner {
                     return;
                 }
                 case "3" -> {
-                    userLocation = GoalHandler.handleUpdateGoal(inputData, outputData, goalController);
+                    userLocation = GoalHandler.handleUpdateGoal(inputData, outputData, goalController, statisticsController);
                     return;
                 }
                 case "4" -> {

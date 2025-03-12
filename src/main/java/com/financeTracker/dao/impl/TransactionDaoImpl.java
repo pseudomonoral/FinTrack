@@ -28,7 +28,7 @@ public class TransactionDaoImpl implements TransactionDao {
             Transaction oldTransaction = transactions.get(transaction.getId());
             transaction.setCreatedAt(oldTransaction.getCreatedAt());
             transaction.onUpdate();
-            return transactions.put(id, transaction);
+            return transactions.put(transaction.getId(), transaction);
         } else {
             throw new IllegalArgumentException("Transaction with id:" + id + " doesn't exist");
         }
