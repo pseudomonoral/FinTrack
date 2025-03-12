@@ -66,7 +66,7 @@ public class GoalDaoImpl implements GoalDao {
             return goals.put(entity.getId(), entity);
         } else {
             throw new IllegalArgumentException("Goal: \""
-                    + entity.toString() + "\" doesn't exist");
+                    + entity + "\" doesn't exist");
         }
     }
 }

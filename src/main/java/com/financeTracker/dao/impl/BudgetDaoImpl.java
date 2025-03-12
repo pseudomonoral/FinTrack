@@ -55,6 +55,9 @@ public class BudgetDaoImpl implements BudgetDao {
     @Override
     public Budget updateBudget(Budget entity) {
         if (budgets.containsKey(entity.getId())) {
+            Budget oldBudget = budgets.get(entity.getId());
+            entity.setCreatedAt(oldBudget.getCreatedAt());
+            entity.onUpdate();
             return budgets.put(entity.getId(), entity);
         } else {
             throw new IllegalArgumentException("Budget: \""

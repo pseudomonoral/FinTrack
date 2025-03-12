@@ -24,8 +24,10 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public Transaction updateTransaction(Transaction transaction) {
-        Long id = transaction.getId();
-        if (transactions.containsKey(id)) {
+        if (transactions.containsKey(transaction.getId())) {
+            Transaction oldTransaction = transactions.get(transaction.getId());
+            transaction.setCreatedAt(oldTransaction.getCreatedAt());
+            transaction.onUpdate();
             return transactions.put(id, transaction);
         } else {
             throw new IllegalArgumentException("Transaction with id:" + id + " doesn't exist");

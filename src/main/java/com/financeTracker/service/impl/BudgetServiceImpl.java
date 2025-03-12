@@ -39,12 +39,13 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public void updateBudget(Long userId, double limit) {
-        Budget budget = budgetMapper.mapToBudget(userId, limit);
-
-        if (budgetDao.findByUserId(userId).isPresent()) {
-            budgetDao.updateBudget(budget);
+        Budget newBudget = budgetMapper.mapToBudget(userId, limit);
+        Optional<Budget> oldBudget = budgetDao.findByUserId(userId);
+        if (oldBudget.isPresent()) {
+            newBudget.setId(oldBudget.get().getId());
+            budgetDao.updateBudget(newBudget);
         } else {
-            throw new EntityNotFoundException(BUDGET, budget.getUserId());
+            throw new EntityNotFoundException(BUDGET, newBudget.getUserId());
         }
     }
 
