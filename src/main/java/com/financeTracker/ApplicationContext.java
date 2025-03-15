@@ -95,7 +95,7 @@ public class ApplicationContext {
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
         CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
-                (UserService) CONTEXT.get("userService")));
+                (GoalService) CONTEXT.get("goalService")));
     }
 
     private static void loadDAOLayer() {

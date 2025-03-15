@@ -1,4 +1,4 @@
-package com.financeTracker.util;
+package com.financeTracker.constants;
 
 public interface ErrorMessages {
     String USER_NOT_FOUND = "Пользователь с таким логином не найден.";

@@ -1,0 +1,18 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+
+    <changeSet id="6" author="pseudomonoral">
+        <modifyDataType tableName="users" schemaName="fintrack" columnName="user_role"
+                        newDataType="fintrack.user_role"/>
+        <modifyDataType tableName="users" schemaName="fintrack" columnName="user_status"
+                        newDataType="fintrack.user_status"/>
+        <modifyDataType tableName="users" schemaName="fintrack" columnName="goal_status"
+                        newDataType="fintrack.goal_status"/>
+        <modifyDataType tableName="users" schemaName="fintrack" columnName="budget_status"
+                        newDataType="fintrack.budget_status"/>
+    </changeSet>
+</databaseChangeLog>

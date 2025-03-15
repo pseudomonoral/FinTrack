@@ -12,9 +12,9 @@ import com.financeTracker.out.OutputData;
 import static com.financeTracker.handler.SecurityHandler.handleAuthorization;
 import static com.financeTracker.handler.SecurityHandler.handleRegistration;
 import static com.financeTracker.model.type.UserLocation.*;
-import static com.financeTracker.util.ConsoleConstants.*;
-import static com.financeTracker.util.ConsoleConstants.ADMIN_MENU;
-import static com.financeTracker.util.ConsoleConstants.MAIN_MENU;
+import static com.financeTracker.constants.ConsoleConstants.*;
+import static com.financeTracker.constants.ConsoleConstants.ADMIN_MENU;
+import static com.financeTracker.constants.ConsoleConstants.MAIN_MENU;
 
 
 /**
@@ -361,7 +361,7 @@ public class ApplicationRunner {
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> {
-                    userLocation = StatisticsHandler.handleCurrentBalance(inputData, outputData, statisticsController);
+                    userLocation = StatisticsHandler.handleCurrentBalance(outputData, statisticsController);
                     return;
                 }
                 case "2" -> {
@@ -373,7 +373,12 @@ public class ApplicationRunner {
                     return;
                 }
                 case "4" -> {
-                    userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
+                    userLocation = StatisticsHandler.handleExpenseAnalysis(outputData, statisticsController);
+                    return;
+                }
+                case "5" -> {
+                    userLocation = StatisticsHandler.generateReport(outputData, statisticsController,
+                            budgetController, userController, goalController);
                     return;
                 }
                 case "0" -> {

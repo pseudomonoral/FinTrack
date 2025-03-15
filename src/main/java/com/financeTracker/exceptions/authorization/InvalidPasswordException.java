@@ -1,6 +1,6 @@
 package com.financeTracker.exceptions.authorization;
 
-import com.financeTracker.util.ErrorMessages;
+import com.financeTracker.constants.ErrorMessages;
 
 public class InvalidPasswordException extends AuthorizationException {
     public InvalidPasswordException() {

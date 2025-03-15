@@ -14,9 +14,6 @@ public class BudgetDaoImpl implements BudgetDao {
 
     private Long id = 1L;
 
-    public BudgetDaoImpl() {
-    }
-
     @Override
     public Optional<Budget> findByUserId(Long userId) {
         return budgets.values().stream()

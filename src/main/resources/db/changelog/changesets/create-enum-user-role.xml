@@ -1,0 +1,17 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+
+    <changeSet id="5" author="pseudomonoral">
+        <sql>
+            CREATE TYPE fintrack.user_role AS ENUM ('ADMIN', 'USER');
+            CREATE TYPE fintrack.user_status AS ENUM ('ACTIVE', 'BLOCKED');
+            CREATE TYPE fintrack.goal_status AS ENUM ('ACHIEVED', 'NOT_ACHIEVED');
+            CREATE TYPE fintrack.budget_status AS ENUM ('WITHIN_BUDGET', 'OVER_BUDGET');
+            CREATE TYPE fintrack.transaction_type AS ENUM ('INCOME', 'EXPENSE');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

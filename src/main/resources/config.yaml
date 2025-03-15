@@ -1,0 +1,9 @@
+database:
+  url: ""
+  username: ""
+  password: ""
+  poolSize: 10
+  schema: "fintrack"
+
+liquibase:
+  changelog: "db/changelog/db.changelog-master.xml"
