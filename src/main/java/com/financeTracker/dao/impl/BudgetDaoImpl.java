@@ -2,19 +2,17 @@ package com.financeTracker.dao.impl;
 
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.model.entity.Budget;
-import com.financeTracker.util.DatabaseManager;
+import lombok.RequiredArgsConstructor;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
+@RequiredArgsConstructor
 public class BudgetDaoImpl implements BudgetDao {
     private final DataSource dataSource;
 
-    public BudgetDaoImpl() {
-        this.dataSource = DatabaseManager.getDataSource();
-    }
 
     @Override
     public Optional<Budget> findByUserId(Long userId) {

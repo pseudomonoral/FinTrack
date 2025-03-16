@@ -16,7 +16,9 @@ import com.financeTracker.model.entity.User;
 import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
 import com.financeTracker.service.impl.*;
+import com.financeTracker.util.DatabaseManager;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,11 +101,14 @@ public class ApplicationContext {
     }
 
     private static void loadDAOLayer() {
-        CONTEXT.put("userDao", new UserDaoImpl());
-        CONTEXT.put("transactionDao", new TransactionDaoImpl());
-        CONTEXT.put("budgetDao", new BudgetDaoImpl());
-        CONTEXT.put("goalDao", new GoalDaoImpl());
+        DataSource dataSource = DatabaseManager.getDataSource();
+
+        CONTEXT.put("userDao", new UserDaoImpl(dataSource));
+        CONTEXT.put("transactionDao", new TransactionDaoImpl(dataSource));
+        CONTEXT.put("budgetDao", new BudgetDaoImpl(dataSource));
+        CONTEXT.put("goalDao", new GoalDaoImpl(dataSource));
     }
+
 
     private static void loadMapper(){
         CONTEXT.put("budgetMapper", new BudgetMapper());

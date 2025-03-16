@@ -6,6 +6,9 @@
 
 
     <changeSet id="6" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="users" schemaName="fintrack"/>
+        </preConditions>
         <modifyDataType tableName="users" schemaName="fintrack" columnName="user_role"
                         newDataType="fintrack.user_role"/>
         <modifyDataType tableName="users" schemaName="fintrack" columnName="user_status"

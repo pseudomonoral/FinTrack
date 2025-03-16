@@ -8,6 +8,7 @@ import com.financeTracker.handler.*;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
+import com.financeTracker.util.LiquibaseMigrator;
 
 import static com.financeTracker.handler.SecurityHandler.handleAuthorization;
 import static com.financeTracker.handler.SecurityHandler.handleRegistration;
@@ -32,6 +33,7 @@ public class ApplicationRunner {
     private static UserController userController;
 
     public static void run() {
+        LiquibaseMigrator.executeMigrations();
         ApplicationContext.loadContext();
         Input inputData = (Input) ApplicationContext.getBean("input");
         OutputData outputData = (OutputData) ApplicationContext.getBean("output");

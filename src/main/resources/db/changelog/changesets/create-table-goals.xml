@@ -6,6 +6,11 @@
 
 
     <changeSet id="3" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="goals" schemaName="fintrack"/>
+            </not>
+        </preConditions>
         <createTable tableName="goals" schemaName="fintrack">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>

@@ -5,6 +5,9 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="7" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transactions" schemaName="fintrack"/>
+        </preConditions>
         <modifyDataType tableName="transactions" schemaName="fintrack" columnName="type" newDataType="fintrack.transaction_type"/>
     </changeSet>
 

@@ -5,9 +5,14 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="2" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="budgets" schemaName="fintrack"/>
+            </not>
+        </preConditions>
         <createTable tableName="budgets" schemaName="fintrack">
             <column name="id" type="bigserial">
-                <constraints primaryKey="true" />
+                <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false" foreignKeyName="fk_budget_user" references="fintrack.users(id)"/>
@@ -19,6 +24,4 @@
             <column name="updated_at" type="timestamp"/>
         </createTable>
     </changeSet>
-
-
 </databaseChangeLog>

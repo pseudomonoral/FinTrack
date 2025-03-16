@@ -2,19 +2,18 @@ package com.financeTracker.dao.impl;
 
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.model.entity.Goal;
-import com.financeTracker.util.DatabaseManager;
+import lombok.RequiredArgsConstructor;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
+
+@RequiredArgsConstructor
 public class GoalDaoImpl implements GoalDao {
     private final DataSource dataSource;
 
-    public GoalDaoImpl() {
-        this.dataSource = DatabaseManager.getDataSource();
-    }
 
     @Override
     public List<Goal> findAllByUserId(Long userId) {

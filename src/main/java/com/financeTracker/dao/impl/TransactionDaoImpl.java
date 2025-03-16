@@ -3,19 +3,18 @@ package com.financeTracker.dao.impl;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
-import com.financeTracker.util.DatabaseManager;
+
+import lombok.RequiredArgsConstructor;
+import org.postgresql.util.PGobject;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
+@RequiredArgsConstructor
 public class TransactionDaoImpl implements TransactionDao {
     private final DataSource dataSource;
-
-    public TransactionDaoImpl() {
-        this.dataSource = DatabaseManager.getDataSource();
-    }
 
     @Override
     public Optional<Transaction> findByUserId(Long userId) {
@@ -42,8 +41,8 @@ public class TransactionDaoImpl implements TransactionDao {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBigDecimal(1, BigDecimal.valueOf(transaction.getAmount()));
             stmt.setString(2, transaction.getCategory());
-            stmt.setString(3, transaction.getType().name());
-            stmt.setString(4, transaction.getDescription()); // Добавлено поле description
+            stmt.setObject(3, toPGObject(transaction.getType().name()));
+            stmt.setString(4, transaction.getDescription());
             stmt.setLong(5, transaction.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -105,7 +104,7 @@ public class TransactionDaoImpl implements TransactionDao {
             stmt.setLong(1, entity.getUserId());
             stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getAmount()));
             stmt.setString(3, entity.getCategory());
-            stmt.setString(4, entity.getType().name());
+            stmt.setObject(4, toPGObject(entity.getType().name()));
             stmt.setString(5, entity.getDescription());
             stmt.executeUpdate();
 
@@ -130,6 +129,13 @@ public class TransactionDaoImpl implements TransactionDao {
                 .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                 .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
                 .build();
+    }
+
+    private PGobject toPGObject(String value) throws SQLException {
+        PGobject pgObject = new PGobject();
+        pgObject.setType("transaction_type");
+        pgObject.setValue(value);
+        return pgObject;
     }
 }
 

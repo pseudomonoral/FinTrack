@@ -6,6 +6,11 @@
 
 
     <changeSet id="5" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sqlCheck expectedResult="0">SELECT COUNT(*) FROM pg_type WHERE typname = 'user_role'</sqlCheck>
+            </not>
+        </preConditions>
         <sql>
             CREATE TYPE fintrack.user_role AS ENUM ('ADMIN', 'USER');
             CREATE TYPE fintrack.user_status AS ENUM ('ACTIVE', 'BLOCKED');
