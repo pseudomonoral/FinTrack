@@ -25,7 +25,6 @@ public interface UserDao extends MainDao<Long, User> {
      * Updates a user's information in the database.
      *
      * @param user The user entity to be updated.
-     * @return User The updated user entity.
      */
-    User update(User user);
+    void update(User user);
 }
