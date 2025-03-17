@@ -1,5 +1,5 @@
 database:
-  url: "jdbc:postgresql://localhost:5432/fintrack_db?currentSchema=fintrack"
+  url: "jdbc:postgresql://localhost:5432/fintrack_db"
   username: "pseudo"
   password: "0000"
   poolSize: 10
