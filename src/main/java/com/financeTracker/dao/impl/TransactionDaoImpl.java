@@ -97,8 +97,8 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public Transaction save(Transaction entity) {
-        String sql = "INSERT INTO fintrack.transactions (id, user_id, amount, category, type, description, created_at, updated_at) " +
-                "VALUES (nextval('fintrack.transaction_seq'), ?, ?, ?, ?, ?, now(), now()) RETURNING id";
+        String sql = "INSERT INTO fintrack.transactions (user_id, amount, category, type, description, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, now(), now()) RETURNING id";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, entity.getUserId());

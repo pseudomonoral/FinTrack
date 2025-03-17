@@ -84,8 +84,8 @@ public class GoalDaoImpl implements GoalDao {
     @Override
     public Goal save(Goal entity) {
         String sql = "INSERT INTO fintrack.goals " +
-                "(id, user_id, name, target_amount, current_amount, goal_completed, goal_actual, created_at, updated_at) " +
-                "VALUES (nextval('fintrack.goal_seq'), ?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
+                "(user_id, name, target_amount, current_amount, goal_completed, goal_actual, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, entity.getUserId());

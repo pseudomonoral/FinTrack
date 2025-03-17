@@ -64,8 +64,8 @@ public class BudgetDaoImpl implements BudgetDao {
 
     @Override
     public Budget save(Budget entity) {
-        String sql = "INSERT INTO fintrack.budgets (id, user_id, limit, created_at, updated_at) " +
-                "VALUES (nextval('fintrack.budget_seq'), ?, ?, now(), now()) RETURNING id";
+        String sql = "INSERT INTO fintrack.budgets (user_id, \"limit\", created_at, updated_at) " +
+                "VALUES (?, ?, now(), now()) RETURNING id";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, entity.getUserId());
