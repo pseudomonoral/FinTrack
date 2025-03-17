@@ -1,42 +1,103 @@
 package com.dao;
 
-import com.config.AbstractPostgresContainerTest;
+import com.testRepository.TestDatabaseContainer;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.dao.impl.UserDaoImpl;
 import com.financeTracker.model.entity.User;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import com.financeTracker.util.DatabaseManager;
+import org.junit.jupiter.api.*;
 
-import java.util.Optional;
-
-import static com.config.TestDataSourceProvider.dataSourceFromContainer;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
-class UserDaoTest extends AbstractPostgresContainerTest {
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+@DisplayName("Тестирование UserDao")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class UserDaoTest {
     private UserDao userDao;
 
-    @BeforeEach
-    void setUp() {
-        userDao = new UserDaoImpl(dataSourceFromContainer());
+    @BeforeAll
+    void setup() {
+        DatabaseManager databaseManager = TestDatabaseContainer.getDatabaseManager();
+        userDao = new UserDaoImpl(databaseManager.getDataSource());
+    }
+
+    private User createUniqueUser() {
+        return User.builder()
+                .name("testname")
+                .login("login_" + UUID.randomUUID())
+                .password("password")
+                .build();
     }
 
     @Test
-    void testSaveAndFindById() {
+    @DisplayName("Сохранение пользователя")
+    void save_ShouldPersistUser() {
+        User uniqueUser = createUniqueUser();
+        User savedUser = userDao.save(uniqueUser);
 
-        User user = User.builder()
-                .name("John Doe")
-                .login("testuser")
-                .password("testpassword")
-                .build();
+        assertNotNull(savedUser.getId(), "ID должен быть установлен после сохранения");
+        assertEquals(uniqueUser.getLogin(), savedUser.getLogin(), "Логин должен совпадать");
+    }
 
-        User savedUser = userDao.save(user);
-        assertNotNull(savedUser.getId());
+    @Test
+    @DisplayName("Поиск пользователя по ID")
+    void findById_ShouldReturnUser() {
+        User uniqueUser = createUniqueUser();
+        User savedUser = userDao.save(uniqueUser);
+        Optional<User> foundUser = userDao.findById(savedUser.getId());
 
-        Optional<User> retrievedUser = userDao.findById(savedUser.getId());
-        assertTrue(retrievedUser.isPresent());
-        assertEquals("testuser", retrievedUser.get().getLogin());
+        assertTrue(foundUser.isPresent(), "Пользователь должен существовать");
+        assertEquals(savedUser.getLogin(), foundUser.get().getLogin(), "Логин должен совпадать");
+    }
+
+    @Test
+    @DisplayName("Поиск пользователя по логину")
+    void findByLogin_ShouldReturnUser() {
+        User uniqueUser = createUniqueUser();
+        userDao.save(uniqueUser);
+        Optional<User> foundUser = userDao.findByLogin(uniqueUser.getLogin());
+
+        assertTrue(foundUser.isPresent(), "Пользователь должен быть найден по логину");
+        assertEquals(uniqueUser.getLogin(), foundUser.get().getLogin(), "Логин должен совпадать");
+    }
+
+    @Test
+    @DisplayName("Получение всех пользователей")
+    void findAll_ShouldReturnUsers() {
+        userDao.save(createUniqueUser());
+        userDao.save(createUniqueUser());
+
+        List<User> users = userDao.findAll();
+
+        assertFalse(users.isEmpty(), "Список пользователей не должен быть пустым");
+        assertTrue(users.size() >= 2, "Должно быть минимум два пользователя");
+    }
+
+    @Test
+    @DisplayName("Обновление пользователя")
+    void update_ShouldModifyUser() {
+        User user = userDao.save(createUniqueUser());
+        user.setPassword("newPassword");
+        userDao.update(user);
+
+        Optional<User> updatedUser = userDao.findById(user.getId());
+        assertTrue(updatedUser.isPresent(), "Обновленный пользователь должен существовать");
+        assertEquals("newPassword", updatedUser.get().getPassword(), "Пароль должен обновиться");
+    }
+
+    @Test
+    @DisplayName("Удаление пользователя")
+    void delete_ShouldRemoveUser() {
+        User user = userDao.save(createUniqueUser());
+        userDao.delete(user);
+
+        Optional<User> deletedUser = userDao.findById(user.getId());
+        assertFalse(deletedUser.isPresent(), "Пользователь должен быть удален");
     }
 }
+
+
+

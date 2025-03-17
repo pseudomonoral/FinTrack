@@ -16,6 +16,8 @@ import com.financeTracker.model.entity.User;
 import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
 import com.financeTracker.service.impl.*;
+import com.financeTracker.util.Config;
+import com.financeTracker.util.ConfigLoader;
 import com.financeTracker.util.DatabaseManager;
 
 import javax.sql.DataSource;
@@ -101,7 +103,9 @@ public class ApplicationContext {
     }
 
     private static void loadDAOLayer() {
-        DataSource dataSource = DatabaseManager.getDataSource();
+        Config config = ConfigLoader.loadConfig("config.yaml");
+        DatabaseManager databaseManager = new DatabaseManager(config.database);
+        DataSource dataSource = databaseManager.getDataSource();
 
         CONTEXT.put("userDao", new UserDaoImpl(dataSource));
         CONTEXT.put("transactionDao", new TransactionDaoImpl(dataSource));

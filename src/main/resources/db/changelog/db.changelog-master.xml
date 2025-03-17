@@ -5,12 +5,9 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <include file="db/changelog/changesets/create-schema.xml"/>
-    <include file="db/changelog/changesets/create-enum-user-role.xml"/>
     <include file="db/changelog/changesets/create-table-users.xml"/>
     <include file="db/changelog/changesets/create-table-budgets.xml"/>
     <include file="db/changelog/changesets/create-table-goals.xml"/>
     <include file="db/changelog/changesets/create-table-transactions.xml"/>
-    <include file="db/changelog/changesets/modify-column-users.xml"/>
-    <include file="db/changelog/changesets/modify-column-transactions.xml"/>
 
 </databaseChangeLog>

@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import javax.sql.DataSource;
 import java.sql.*;
 
-import org.postgresql.util.PGobject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +46,10 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(1, user.getLogin());
             stmt.setString(2, user.getPassword());
             stmt.setString(3, user.getName());
-            stmt.setObject(4, createPGObject("user_role", user.getUserRole().name()));
-            stmt.setObject(5, createPGObject("user_status", user.getUserStatus().name()));
-            stmt.setObject(6, createPGObject("goal_status", user.getGoalStatus().name()));
-            stmt.setObject(7, createPGObject("budget_status", user.getBudgetStatus().name()));
+            stmt.setObject(4, user.getUserRole().name());
+            stmt.setObject(5, user.getUserStatus().name());
+            stmt.setObject(6, user.getGoalStatus().name());
+            stmt.setObject(7, user.getBudgetStatus().name());
             stmt.setLong(8, user.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -113,10 +111,10 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(1, entity.getLogin());
             stmt.setString(2, entity.getPassword());
             stmt.setString(3, entity.getName());
-            stmt.setObject(4, createPGObject("user_role", entity.getUserRole().name()));
-            stmt.setObject(5, createPGObject("user_status", entity.getUserStatus().name()));
-            stmt.setObject(6, createPGObject("goal_status", entity.getGoalStatus().name()));
-            stmt.setObject(7, createPGObject("budget_status", entity.getBudgetStatus().name()));
+            stmt.setObject(4, entity.getUserRole().name());
+            stmt.setObject(5, entity.getUserStatus().name());
+            stmt.setObject(6, entity.getGoalStatus().name());
+            stmt.setObject(7, entity.getBudgetStatus().name());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -144,12 +142,6 @@ public class UserDaoImpl implements UserDao {
                 .build();
     }
 
-    private PGobject createPGObject(String type, String value) throws SQLException {
-        PGobject pgObject = new PGobject();
-        pgObject.setType(type);
-        pgObject.setValue(value);
-        return pgObject;
-    }
 }
 
 

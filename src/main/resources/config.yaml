@@ -1,7 +1,7 @@
 database:
-  url: ""
-  username: ""
-  password: ""
+  url: "jdbc:postgresql://localhost:5432/fintrack_db?currentSchema=fintrack"
+  username: "pseudo"
+  password: "0000"
   poolSize: 10
   schema: "fintrack"
 

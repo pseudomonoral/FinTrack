@@ -2,14 +2,13 @@ package com.financeTracker.util;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import javax.sql.DataSource;
 
 public class DatabaseManager {
-    private static final HikariDataSource dataSource;
+    private final HikariDataSource dataSource;
 
-    static {
-        Config.DatabaseConfig config = ConfigLoader.getConfig().database;
-
+    public DatabaseManager(Config.DatabaseConfig config) {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.url);
         hikariConfig.setUsername(config.username);
@@ -17,10 +16,15 @@ public class DatabaseManager {
         hikariConfig.setMaximumPoolSize(config.poolSize);
         hikariConfig.setDriverClassName("org.postgresql.Driver");
 
-        dataSource = new HikariDataSource(hikariConfig);
+        this.dataSource = new HikariDataSource(hikariConfig);
     }
 
-    public static DataSource getDataSource() {
+    public DataSource getDataSource() {
         return dataSource;
     }
+
+    public void close() {
+        dataSource.close();
+    }
 }
+
