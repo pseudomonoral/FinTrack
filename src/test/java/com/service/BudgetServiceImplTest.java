@@ -83,7 +83,7 @@ class BudgetServiceImplTest {
 
         budgetService.deleteBudget(BUDGET.getUserId());
 
-        verify(budgetDao, times(1)).delete(BUDGET);
+        verify(budgetDao, times(1)).delete(BUDGET.getId());
     }
 
     @Test

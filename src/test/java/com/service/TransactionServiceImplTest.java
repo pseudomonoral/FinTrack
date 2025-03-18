@@ -43,7 +43,7 @@ class TransactionServiceImplTest {
 
         transactionService.deleteTransaction(TRANSACTION.getId());
 
-        verify(transactionDao, times(1)).delete(TRANSACTION);
+        verify(transactionDao, times(1)).delete(TRANSACTION.getId());
     }
 
     @Test
