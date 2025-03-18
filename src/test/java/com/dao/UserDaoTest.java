@@ -92,7 +92,7 @@ public class UserDaoTest {
     @DisplayName("Удаление пользователя")
     void delete_ShouldRemoveUser() {
         User user = userDao.save(createUniqueUser());
-        userDao.delete(user);
+        userDao.delete(user.getId());
 
         Optional<User> deletedUser = userDao.findById(user.getId());
         assertFalse(deletedUser.isPresent(), "Пользователь должен быть удален");
