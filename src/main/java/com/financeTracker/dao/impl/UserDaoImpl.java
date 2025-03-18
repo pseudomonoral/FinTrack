@@ -58,11 +58,11 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(Long userId) {
         String sql = "DELETE FROM fintrack.users WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, user.getId());
+            stmt.setLong(1, userId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при удалении пользователя", e);

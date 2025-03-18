@@ -83,11 +83,11 @@ public class BudgetDaoImpl implements BudgetDao {
     }
 
     @Override
-    public void delete(Budget entity) {
+    public void delete(Long budgetId) {
         String sql = "DELETE FROM fintrack.budgets WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, entity.getId());
+            stmt.setLong(1, budgetId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при удалении бюджета", e);
@@ -95,7 +95,7 @@ public class BudgetDaoImpl implements BudgetDao {
     }
 
     @Override
-    public Budget updateBudget(Budget entity) {
+    public void updateBudget(Budget entity) {
         String sql = "UPDATE fintrack.budgets SET limit = ?, updated_at = now() WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -105,7 +105,6 @@ public class BudgetDaoImpl implements BudgetDao {
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при обновлении бюджета", e);
         }
-        return entity;
     }
 
     private Budget mapToBudget(ResultSet rs) throws SQLException {

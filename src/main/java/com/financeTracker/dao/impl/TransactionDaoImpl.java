@@ -5,7 +5,6 @@ import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
 
 import lombok.RequiredArgsConstructor;
-import org.postgresql.util.PGobject;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -33,7 +32,7 @@ public class TransactionDaoImpl implements TransactionDao {
     }
 
     @Override
-    public Transaction updateTransaction(Transaction transaction) {
+    public void updateTransaction(Transaction transaction) {
         String sql = "UPDATE fintrack.transactions " +
                 "SET amount = ?, category = ?, type = ?, description = ?, updated_at = now() " +
                 "WHERE id = ?";
@@ -48,15 +47,14 @@ public class TransactionDaoImpl implements TransactionDao {
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при обновлении транзакции", e);
         }
-        return transaction;
     }
 
     @Override
-    public void delete(Transaction transaction) {
+    public void delete(Long transactionId) {
         String sql = "DELETE FROM fintrack.transactions WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, transaction.getId());
+            stmt.setLong(1, transactionId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при удалении транзакции", e);

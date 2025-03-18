@@ -32,7 +32,9 @@ public class GoalServiceImpl implements GoalService {
         goal.setGoalActual(goalActual);
         goal.setCurrentAmount(currentAmount);
         goal.onCreate();
-        return goalDao.save(goal);
+        goalDao.save(goal);
+        return goalDao.findById(goal.getId())
+                .orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
     }
 
     @Override
@@ -50,7 +52,7 @@ public class GoalServiceImpl implements GoalService {
     public void deleteGoal(String nameGoal, Long userId) {
         Goal goal = goalDao.findGoalByNameAndId(nameGoal, userId)
                 .orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
-        goalDao.delete(goal);
+        goalDao.delete(goal.getId());
     }
 
     @Override

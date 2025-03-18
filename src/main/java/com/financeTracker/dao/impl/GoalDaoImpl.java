@@ -107,11 +107,11 @@ public class GoalDaoImpl implements GoalDao {
     }
 
     @Override
-    public void delete(Goal entity) {
+    public void delete(Long goalId) {
         String sql = "DELETE FROM fintrack.goals WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, entity.getId());
+            stmt.setLong(1, goalId);
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при удалении цели", e);
@@ -119,7 +119,7 @@ public class GoalDaoImpl implements GoalDao {
     }
 
     @Override
-    public Goal updateGoal(Goal entity) {
+    public void updateGoal(Goal entity) {
         String sql = "UPDATE fintrack.goals " +
                 "SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, goal_actual = ?, updated_at = now() " +
                 "WHERE id = ?";
@@ -135,7 +135,6 @@ public class GoalDaoImpl implements GoalDao {
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при обновлении цели", e);
         }
-        return entity;
     }
 
     private Goal mapToGoal(ResultSet rs) throws SQLException {

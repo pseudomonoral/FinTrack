@@ -53,7 +53,7 @@ public class BudgetServiceImpl implements BudgetService {
     public void deleteBudget(long userId) {
         Budget budget = budgetDao.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(BUDGET, userId));
-        budgetDao.delete(budget);
+        budgetDao.delete(budget.getId());
     }
 
     @Override
