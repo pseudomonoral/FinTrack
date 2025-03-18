@@ -12,6 +12,7 @@ import com.financeTracker.dao.impl.UserDaoImpl;
 import com.financeTracker.in.ConsoleInput;
 import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.mapper.GoalMapper;
+import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
@@ -91,13 +92,14 @@ public class ApplicationContext {
         CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao"),
                 (GoalMapper) CONTEXT.get("goalMapper")));
         CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao"),
-                        (BudgetService) CONTEXT.get("budgetService"),
-                        (GoalService) CONTEXT.get("goalService")));
-        CONTEXT.put("transactionService",
-                new TransactionServiceImpl((UserService) CONTEXT.get("userService"),
-                (TransactionDao) CONTEXT.get("transactionDao"),
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
+        CONTEXT.put("transactionService",
+                new TransactionServiceImpl((UserService) CONTEXT.get("userService"),
+                        (TransactionDao) CONTEXT.get("transactionDao"),
+                        (BudgetService) CONTEXT.get("budgetService"),
+                        (GoalService) CONTEXT.get("goalService"),
+                        new TransactionMapper()));
         CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
                 (GoalService) CONTEXT.get("goalService")));
     }
@@ -114,7 +116,7 @@ public class ApplicationContext {
     }
 
 
-    private static void loadMapper(){
+    private static void loadMapper() {
         CONTEXT.put("budgetMapper", new BudgetMapper());
         CONTEXT.put("goalMapper", new GoalMapper());
     }

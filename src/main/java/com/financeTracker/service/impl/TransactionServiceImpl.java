@@ -3,6 +3,7 @@ package com.financeTracker.service.impl;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
+import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.entity.User;
@@ -28,23 +29,14 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionDao transactionDao;
     private final BudgetService budgetService;
     private final GoalService goalService;
+    private final TransactionMapper mapper;
 
     @Override
     public Transaction createTransaction(double amount, String category, String description, TransactionType type) {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
-
-        Transaction newTransaction = Transaction.builder()
-                .amount(amount)
-                .userId(userId)
-                .category(category)
-                .description(description)
-                .type(type)
-                .build();
-        newTransaction.onCreate();
-
-        Transaction transaction = transactionDao.save(newTransaction);
+        Transaction transaction = transactionDao.save(mapper
+                .mapToTransaction(userId, amount, category, description, type));
         applyTransaction(transaction);
-
         return transaction;
     }
 
@@ -102,16 +94,9 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Transaction> old = transactionDao.findById(id);
         if (old.isPresent()) {
             Long userId = ApplicationContext.getAuthorizeUser().getId();
-            Transaction newTransaction = Transaction.builder()
-                    .id(id)
-                    .amount(amount)
-                    .userId(userId)
-                    .category(category)
-                    .description(description)
-                    .type(type)
-                    .build();
+            Transaction newTransaction = mapper.mapToTransaction(userId, amount, category, description, type);
+            newTransaction.setId(id);
             newTransaction.setCreatedAt(old.get().getCreatedAt());
-
             if (!old.get().getType().equals(newTransaction.getType())
             || old.get().getAmount() != newTransaction.getAmount()) {
                 applyTransaction(getDiffTransaction(old.get(), newTransaction));

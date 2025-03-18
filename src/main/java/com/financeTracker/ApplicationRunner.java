@@ -85,7 +85,7 @@ public class ApplicationRunner {
     /**
      * Handles the main menu interactions, where the user can navigate to other menu sections.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleMainMenu(Input inputData, OutputData outputData) {
@@ -130,7 +130,7 @@ public class ApplicationRunner {
     /**
      * Handles security menu interactions, where users can choose to register, authorize, or exit.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     public static void handleSecurity(Input inputData, OutputData outputData) {
@@ -158,7 +158,7 @@ public class ApplicationRunner {
     /**
      * Handles the user menu interactions, allowing the user to edit profile or delete it.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleUserSettings(Input inputData, OutputData outputData) {
@@ -193,7 +193,7 @@ public class ApplicationRunner {
      * Handles the admin menu interactions, allowing the admin to perform various operations such as viewing users,
      * managing transactions, and blocking/unblocking users.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleAdminMenu(Input inputData, OutputData outputData) {
@@ -229,7 +229,7 @@ public class ApplicationRunner {
     /**
      * Handles the budget menu interactions, allowing the user to create, view, update, delete, or check budget limits.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleBudgetMenu(Input inputData, OutputData outputData) {
@@ -269,7 +269,7 @@ public class ApplicationRunner {
     /**
      * Handles the goal menu interactions, allowing the user to create, view, update, delete, or check progress on goals.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleGoalMenu(Input inputData, OutputData outputData) {
@@ -321,7 +321,7 @@ public class ApplicationRunner {
     /**
      * Handles the transaction menu interactions, allowing the user to create, view, update, delete, or filter transactions.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleTransactionMenu(Input inputData, OutputData outputData) {
@@ -361,7 +361,7 @@ public class ApplicationRunner {
     /**
      * Handles the statistics menu interactions, allowing the user to view current balance, income, expenses, or expense analysis.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleStatisticsMenu(Input inputData, OutputData outputData) {
