@@ -14,9 +14,10 @@ import java.util.Optional;
 public interface BudgetDao {
 
     /**
-     * Updates a budget in the database.
+     * Updates an existing budget in the database.
      *
-     * @param budget The budget entity to be updated.
+     * @param budget The budget entity containing updated data.
+     * @throws IllegalArgumentException if the budget does not exist.
      */
     void updateBudget(Budget budget);
 
@@ -29,33 +30,37 @@ public interface BudgetDao {
     Optional<Budget> findByUserId(Long userId);
 
     /**
-     * Finds an entity by its unique identifier.
+     * Finds a budget by its unique identifier.
      *
-     * @param id The identifier of the entity.
-     * @return Optional<T> An Optional containing the entity if found, or an empty Optional if not found.
+     * @param id The unique identifier of the budget.
+     * @return Optional<Budget> An Optional containing the budget if found, or an empty Optional if not found.
+     * @throws IllegalArgumentException if the provided ID is null.
      */
     Optional<Budget> findById(Long id);
 
-
     /**
-     * Retrieves a list of all entities.
+     * Retrieves a list of all budgets in the database.
      *
-     * @return List<T> A list of all entities of type T.
+     * @return List<Budget> A list containing all budgets. If no budgets exist, returns an empty list.
      */
     List<Budget> findAll();
 
     /**
-     * Saves or updates an entity in the database.
+     * Saves a new budget or updates an existing one in the database.
      *
-     * @param entity The entity to be saved or updated.
-     * @return T The saved entity with its updated state (e.g., with an assigned ID).
+     * @param budget The budget entity to be saved or updated.
+     * @return Budget The saved budget entity with its assigned ID.
+     * @throws IllegalArgumentException if the budget or its required fields are null.
      */
-    Budget save(Budget entity);
+    Budget save(Budget budget);
 
     /**
-     * Deletes an entity from the database.
+     * Deletes a budget from the database by its ID.
      *
+     * @param budgetId The unique identifier of the budget to be deleted.
+     * @throws IllegalArgumentException if the provided budgetId is null.
      */
-    void delete(Long goalId);
+    void delete(Long budgetId);
 }
+
 
