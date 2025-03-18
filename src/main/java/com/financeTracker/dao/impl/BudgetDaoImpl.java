@@ -96,7 +96,7 @@ public class BudgetDaoImpl implements BudgetDao {
 
     @Override
     public void updateBudget(Budget entity) {
-        String sql = "UPDATE fintrack.budgets SET limit = ?, updated_at = now() WHERE id = ?";
+        String sql = "UPDATE fintrack.budgets SET \"limit\" = ?, updated_at = now() WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBigDecimal(1, BigDecimal.valueOf(entity.getLimit()));

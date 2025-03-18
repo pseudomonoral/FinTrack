@@ -14,10 +14,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Тестирование TransactionDao")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -60,5 +61,75 @@ public class TransactionDaoTest {
         assertNotNull(savedTransaction.getId(), "ID должен быть установлен после сохранения");
         assertEquals(user.getId(), savedTransaction.getUserId(), "UserId должен совпадать");
     }
-}
 
+    @Test
+    @DisplayName("Транзакция должна обновляться корректно")
+    void updateTransaction_ShouldUpdateTransactionFields() {
+        User user = createTestUser();
+        Transaction transaction = transactionDao.save(createTransaction(user.getId()));
+
+        transaction.setAmount(200.50);
+        transaction.setCategory("Shopping");
+        transaction.setDescription("Bought clothes");
+        transaction.setType(TransactionType.INCOME);
+
+        transactionDao.updateTransaction(transaction);
+        Optional<Transaction> updatedTransaction = transactionDao.findById(transaction.getId());
+
+        assertTrue(updatedTransaction.isPresent(), "Обновленная транзакция должна существовать");
+        assertEquals(200.50, updatedTransaction.get().getAmount(), "Сумма должна обновиться");
+        assertEquals("Shopping", updatedTransaction.get().getCategory(), "Категория должна обновиться");
+        assertEquals("Bought clothes", updatedTransaction.get().getDescription(), "Описание должно обновиться");
+        assertEquals(TransactionType.INCOME, updatedTransaction.get().getType(), "Тип должен обновиться");
+    }
+
+    @Test
+    @DisplayName("Поиск транзакций по userId должен возвращать корректные данные")
+    void findByUserId_ShouldReturnTransactionsForUser() {
+        User user = createTestUser();
+        Transaction transaction1 = transactionDao.save(createTransaction(user.getId()));
+        Transaction transaction2 = transactionDao.save(createTransaction(user.getId()));
+
+        Optional<Transaction> transactions = transactionDao.findByUserId(user.getId());
+
+        assertTrue(transactions.isPresent(), "Транзакции должны быть найдены");
+        assertEquals(user.getId(), transactions.get().getUserId(), "UserId транзакции должен совпадать");
+    }
+
+    @Test
+    @DisplayName("Поиск транзакции по ID должен работать корректно")
+    void findById_ShouldReturnTransactionIfExists() {
+        User user = createTestUser();
+        Transaction transaction = transactionDao.save(createTransaction(user.getId()));
+
+        Optional<Transaction> foundTransaction = transactionDao.findById(transaction.getId());
+
+        assertTrue(foundTransaction.isPresent(), "Транзакция должна быть найдена по ID");
+        assertEquals(transaction.getId(), foundTransaction.get().getId(), "ID найденной транзакции должен совпадать");
+    }
+
+    @Test
+    @DisplayName("Метод findAll() должен возвращать список всех транзакций")
+    void findAll_ShouldReturnListOfTransactions() {
+        User user = createTestUser();
+        transactionDao.save(createTransaction(user.getId()));
+        transactionDao.save(createTransaction(user.getId()));
+
+        List<Transaction> transactions = transactionDao.findAll();
+
+        assertFalse(transactions.isEmpty(), "Список транзакций не должен быть пустым");
+        assertTrue(transactions.size() >= 2, "Список должен содержать как минимум 2 транзакции");
+    }
+
+    @Test
+    @DisplayName("Удаление транзакции должно работать корректно")
+    void deleteTransaction_ShouldRemoveTransaction() {
+        User user = createTestUser();
+        Transaction transaction = transactionDao.save(createTransaction(user.getId()));
+
+        transactionDao.delete(transaction.getId());
+        Optional<Transaction> deletedTransaction = transactionDao.findById(transaction.getId());
+
+        assertFalse(deletedTransaction.isPresent(), "Транзакция должна быть удалена");
+    }
+}
