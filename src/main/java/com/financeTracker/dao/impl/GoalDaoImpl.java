@@ -24,7 +24,7 @@ public class GoalDaoImpl implements GoalDao {
             stmt.setLong(1, userId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                goals.add(mapToGoal(rs));
+                goals.add(mapToGoalFromDatabase(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при получении целей пользователя", e);
@@ -41,7 +41,7 @@ public class GoalDaoImpl implements GoalDao {
             stmt.setLong(2, userId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(mapToGoal(rs));
+                return Optional.of(mapToGoalFromDatabase(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при поиске цели", e);
@@ -57,7 +57,7 @@ public class GoalDaoImpl implements GoalDao {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return Optional.of(mapToGoal(rs));
+                return Optional.of(mapToGoalFromDatabase(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при поиске цели по ID", e);
@@ -73,7 +73,7 @@ public class GoalDaoImpl implements GoalDao {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                goals.add(mapToGoal(rs));
+                goals.add(mapToGoalFromDatabase(rs));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при получении всех целей", e);
@@ -84,7 +84,8 @@ public class GoalDaoImpl implements GoalDao {
     @Override
     public Goal save(Goal entity) {
         String sql = "INSERT INTO fintrack.goals " +
-                "(user_id, name, target_amount, current_amount, goal_completed, goal_actual, created_at, updated_at) " +
+                "(user_id, name, target_amount, current_amount, goal_completed, goal_actual, " +
+                "created_at, updated_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -121,7 +122,8 @@ public class GoalDaoImpl implements GoalDao {
     @Override
     public void updateGoal(Goal entity) {
         String sql = "UPDATE fintrack.goals " +
-                "SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, goal_actual = ?, updated_at = now() " +
+                "SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, " +
+                "goal_actual = ?, updated_at = now() " +
                 "WHERE id = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -137,7 +139,7 @@ public class GoalDaoImpl implements GoalDao {
         }
     }
 
-    private Goal mapToGoal(ResultSet rs) throws SQLException {
+    private Goal mapToGoalFromDatabase(ResultSet rs) throws SQLException {
         return Goal.builder()
                 .id(rs.getLong("id"))
                 .userId(rs.getLong("user_id"))

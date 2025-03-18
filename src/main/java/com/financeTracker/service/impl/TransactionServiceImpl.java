@@ -93,7 +93,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setType(transaction.getType().equals(INCOME) ? EXPENSE : INCOME);
 
         applyTransaction(transaction);
-        transactionDao.delete(transaction);
+        transactionDao.delete(transaction.getId());
     }
 
     @Override
