@@ -5,7 +5,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
 
-    <changeSet id="3" author="pseudomonoral">
+    <changeSet id="create-goals-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="goals" schemaName="fintrack"/>
@@ -19,7 +19,7 @@
                 <constraints nullable="false" foreignKeyName="fk_goal_user" references="fintrack.users(id)"/>
             </column>
             <column name="name" type="varchar(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="target_amount" type="decimal(10,2)">
                 <constraints nullable="false"/>

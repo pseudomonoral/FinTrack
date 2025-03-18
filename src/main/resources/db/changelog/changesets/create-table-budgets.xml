@@ -4,7 +4,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
-    <changeSet id="2" author="pseudomonoral">
+    <changeSet id="create-budgets-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="budgets" schemaName="fintrack"/>
@@ -15,7 +15,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_budget_user" references="fintrack.users(id)"/>
+                <constraints nullable="false" unique="true" foreignKeyName="fk_budget_user" references="fintrack.users(id)"/>
             </column>
             <column name="limit" type="decimal(10,2)">
                 <constraints nullable="false"/>

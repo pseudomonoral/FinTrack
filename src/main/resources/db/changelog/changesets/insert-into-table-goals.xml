@@ -1,0 +1,19 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="insert-goals-data" author="pseudomonoral">
+        <insert tableName="goals" schemaName="fintrack">
+            <column name="user_id" value="2"/>
+            <column name="name" value="Vacation Trip"/>
+            <column name="target_amount" value="3000.00"/>
+            <column name="current_amount" value="0.00"/>
+            <column name="goal_completed" valueBoolean="false"/>
+            <column name="goal_actual" valueBoolean="true"/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="updated_at" valueDate="NOW()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

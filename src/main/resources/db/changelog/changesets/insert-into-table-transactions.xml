@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="insert-transactions-data" author="pseudomonoral">
+        <insert tableName="transactions" schemaName="fintrack">
+            <column name="user_id" value="2"/>
+            <column name="amount" value="50.75"/>
+            <column name="category" value="Food"/>
+            <column name="description" value="Lunch at cafe"/>
+            <column name="type" value="EXPENSE"/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="updated_at" valueDate="NOW()"/>
+        </insert>
+        <insert tableName="transactions" schemaName="fintrack">
+            <column name="user_id" value="2"/>
+            <column name="amount" value="200.00"/>
+            <column name="category" value="Salary"/>
+            <column name="description" value="Freelance work"/>
+            <column name="type" value="INCOME"/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="updated_at" valueDate="NOW()"/>
+        </insert>
+        <insert tableName="transactions" schemaName="fintrack">
+            <column name="user_id" value="2"/>
+            <column name="amount" value="30.00"/>
+            <column name="category" value="Entertainment"/>
+            <column name="description" value="Movie ticket"/>
+            <column name="type" value="EXPENSE"/>
+            <column name="created_at" valueDate="NOW()"/>
+            <column name="updated_at" valueDate="NOW()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
