@@ -1,7 +1,11 @@
 # FinTrack
 
 ## Project Overview
-FinTrack is a backend application for managing personal finances. It allows users to register, track transactions, monitor their balance, analyze income and expenses, set financial goals, and manage their progress. The backend provides authentication, CRUD operations for transactions, database interaction, an API for frontend integration, and report generation.
+FinTrack is a backend application for managing personal finances. It allows users to:
+- Register and authenticate securely.
+- Track transactions, monitor balances, and analyze income/expenses.
+- Set financial goals and manage progress.
+- Utilize an API for frontend integration and report generation.
 
 ## Features
 
@@ -45,21 +49,28 @@ FinTrack is a backend application for managing personal finances. It allows user
 - Java 17
 - Gradle
 - Git
+- Docker & Docker Compose (for database setup)
+
 
 ### Clone the Repository
-
-git clone <https://github.com/pseudomonoral/FinTrack>
+```sh
+git clone https://github.com/pseudomonoral/FinTrack.git
 cd FinTrack
+```
 
-### Build the Project
-The project uses Gradle for dependency management and builds automatically when running the main method.
+### Configure Environment Variables  
+- To modify **Docker Compose settings**, edit the `.env` file.
+- To change **database connection settings**, update `config.yaml`.
 
-gradle build
+### Run with IntelliJ IDEA  
+Open the `com.financeTracker.Main` class and run the `main()` method.
 
-### Run the Application
-You can run the application by executing the `Main` class:
-java -cp build/libs/FinTrack-1.0-SNAPSHOT.jar org.example.Main
+### Default Credentials
 
-### Run Tests
-JUnit is used for testing. Run tests with:
-gradle test
+#### Admin Access:
+- **Login:** admin@gmail.com
+- **Password:** admin
+
+#### User Access:
+- **Login:** user@gmail.com
+- **Password:** user  

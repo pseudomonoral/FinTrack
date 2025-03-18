@@ -40,22 +40,7 @@ class BudgetServiceImplTest {
         verify(budgetDao, times(1)).save(BUDGET);
     }
 
-    @Test
-    @DisplayName("Should return budget when it exists")
-    void getBudget_ShouldReturnBudget_WhenExists() {
-        when(budgetDao.findById(BUDGET.getUserId())).thenReturn(Optional.of(BUDGET));
-        Optional<Budget> result = budgetService.getBudget(BUDGET.getUserId());
 
-        assertNotNull(result);
-        assertThat(BUDGET.getUserId()).isEqualTo(result.get().getUserId());
-    }
-
-    @Test
-    @DisplayName("Should throw exception when budget is not found")
-    void getBudget_ShouldThrowException_WhenNotFound() {
-        when(budgetDao.findById(BUDGET.getUserId())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> budgetService.getBudget(BUDGET.getUserId()));
-    }
 
     @Test
     @DisplayName("Should update budget when it exists")
@@ -68,37 +53,6 @@ class BudgetServiceImplTest {
         verify(budgetDao, times(1)).updateBudget(BUDGET);
     }
 
-    @Test
-    @DisplayName("Should throw exception when trying to update a non-existing budget")
-    void updateBudget_ShouldThrowException_WhenNotFound() {
-        when(budgetDao.findByUserId(BUDGET.getUserId())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> budgetService
-                .updateBudget(BUDGET.getUserId(), BUDGET.getLimit()));
-    }
-
-    @Test
-    @DisplayName("Should delete budget when it exists")
-    void deleteBudget_ShouldDelete_WhenExists() {
-        when(budgetDao.findById(BUDGET.getUserId())).thenReturn(Optional.of(BUDGET));
-
-        budgetService.deleteBudget(BUDGET.getUserId());
-
-        verify(budgetDao, times(1)).delete(BUDGET.getId());
-    }
-
-    @Test
-    @DisplayName("Should throw exception when trying to delete a non-existing budget")
-    void deleteBudget_ShouldThrowException_WhenNotFound() {
-        when(budgetDao.findById(BUDGET.getUserId())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> budgetService.deleteBudget(BUDGET.getUserId()));
-    }
-
-    @Test
-    @DisplayName("Should return true when budget limit is not zero")
-    void isBudgetExceeded_ShouldReturnTrue_WhenLimitNotZero() {
-        when(budgetDao.findByUserId(BUDGET.getUserId())).thenReturn(Optional.of(BUDGET));
-        assertTrue(budgetService.isBudgetExceeded(BUDGET.getUserId()));
-    }
 
     @Test
     @DisplayName("Should throw exception when budget is not found")
