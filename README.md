@@ -59,8 +59,9 @@ cd FinTrack
 ```
 
 ### Configure Environment Variables  
-- To modify **Docker Compose settings**, edit the `.env` file.
-- To change **database connection settings**, update `config.yaml`.
+- To modify **Docker Compose settings** and **database connection settings**, simply edit the `.env` file.  
+- No need to update `config.yaml`—values are automatically loaded from `.env`.  
+
 
 ### Run with IntelliJ IDEA  
 Open the `com.financeTracker.Main` class and run the `main()` method.
