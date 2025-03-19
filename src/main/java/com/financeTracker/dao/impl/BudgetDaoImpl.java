@@ -66,44 +66,70 @@ public class BudgetDaoImpl implements BudgetDao {
     public Budget save(Budget entity) {
         String sql = "INSERT INTO fintrack.budgets (user_id, \"limit\", created_at, updated_at) " +
                 "VALUES (?, ?, now(), now()) RETURNING id";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setLong(1, entity.getUserId());
-            stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getLimit()));
-            stmt.executeUpdate();
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                entity.setId(rs.getLong(1));
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setLong(1, entity.getUserId());
+                stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getLimit()));
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    entity.setId(rs.getLong(1));
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при сохранении бюджета", e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при сохранении бюджета", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
+
         return entity;
     }
 
     @Override
     public void delete(Long budgetId) {
         String sql = "DELETE FROM fintrack.budgets WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, budgetId);
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong(1, budgetId);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при удалении бюджета", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при удалении бюджета", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
 
     @Override
     public void updateBudget(Budget entity) {
         String sql = "UPDATE fintrack.budgets SET \"limit\" = ?, updated_at = now() WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setBigDecimal(1, BigDecimal.valueOf(entity.getLimit()));
-            stmt.setLong(2, entity.getId());
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setBigDecimal(1, BigDecimal.valueOf(entity.getLimit()));
+                stmt.setLong(2, entity.getId());
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при обновлении бюджета", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при обновлении бюджета", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
 

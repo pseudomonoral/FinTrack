@@ -40,34 +40,53 @@ public class UserDaoImpl implements UserDao {
         String sql = "UPDATE fintrack.users " +
                 "SET login = ?, password = ?, name = ?, user_role = ?, user_status = ?, goal_status = ?, budget_status = ?, updated_at = now() " +
                 "WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            user.onUpdate();
-            stmt.setString(1, user.getLogin());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getName());
-            stmt.setObject(4, user.getUserRole().name());
-            stmt.setObject(5, user.getUserStatus().name());
-            stmt.setObject(6, user.getGoalStatus().name());
-            stmt.setObject(7, user.getBudgetStatus().name());
-            stmt.setLong(8, user.getId());
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                user.onUpdate();
+                stmt.setString(1, user.getLogin());
+                stmt.setString(2, user.getPassword());
+                stmt.setString(3, user.getName());
+                stmt.setObject(4, user.getUserRole().name());
+                stmt.setObject(5, user.getUserStatus().name());
+                stmt.setObject(6, user.getGoalStatus().name());
+                stmt.setObject(7, user.getBudgetStatus().name());
+                stmt.setLong(8, user.getId());
+
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при обновлении пользователя", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при обновлении пользователя", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
+
 
     @Override
     public void delete(Long userId) {
         String sql = "DELETE FROM fintrack.users WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, userId);
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong(1, userId);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при удалении пользователя", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при удалении пользователя", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
+
 
     @Override
     public Optional<User> findById(Long id) {
@@ -106,24 +125,33 @@ public class UserDaoImpl implements UserDao {
         String sql = "INSERT INTO fintrack.users (login, password, name, user_role, user_status, goal_status, budget_status, created_at, updated_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
 
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, entity.getLogin());
-            stmt.setString(2, entity.getPassword());
-            stmt.setString(3, entity.getName());
-            stmt.setObject(4, entity.getUserRole().name());
-            stmt.setObject(5, entity.getUserStatus().name());
-            stmt.setObject(6, entity.getGoalStatus().name());
-            stmt.setObject(7, entity.getBudgetStatus().name());
-            stmt.executeUpdate();
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                entity.setId(rs.getLong(1));
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, entity.getLogin());
+                stmt.setString(2, entity.getPassword());
+                stmt.setString(3, entity.getName());
+                stmt.setObject(4, entity.getUserRole().name());
+                stmt.setObject(5, entity.getUserStatus().name());
+                stmt.setObject(6, entity.getGoalStatus().name());
+                stmt.setObject(7, entity.getBudgetStatus().name());
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    entity.setId(rs.getLong(1));
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при сохранении пользователя", e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при сохранении пользователя", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
+
         return entity;
     }
 

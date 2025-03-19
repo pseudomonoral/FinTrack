@@ -87,35 +87,53 @@ public class GoalDaoImpl implements GoalDao {
                 "(user_id, name, target_amount, current_amount, goal_completed, goal_actual, " +
                 "created_at, updated_at) " +
                 "VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setLong(1, entity.getUserId());
-            stmt.setString(2, entity.getName());
-            stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getTargetAmount()));
-            stmt.setBigDecimal(4, BigDecimal.valueOf(entity.getCurrentAmount()));
-            stmt.setBoolean(5, entity.isGoalCompleted());
-            stmt.setBoolean(6, entity.isGoalActual());
-            stmt.executeUpdate();
 
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                entity.setId(rs.getLong(1));
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setLong(1, entity.getUserId());
+                stmt.setString(2, entity.getName());
+                stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getTargetAmount()));
+                stmt.setBigDecimal(4, BigDecimal.valueOf(entity.getCurrentAmount()));
+                stmt.setBoolean(5, entity.isGoalCompleted());
+                stmt.setBoolean(6, entity.isGoalActual());
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    entity.setId(rs.getLong(1));
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при сохранении цели", e);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при сохранении цели", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
+
         return entity;
     }
 
     @Override
     public void delete(Long goalId) {
         String sql = "DELETE FROM fintrack.goals WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, goalId);
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong(1, goalId);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при удалении цели", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при удалении цели", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
 
@@ -125,17 +143,26 @@ public class GoalDaoImpl implements GoalDao {
                 "SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, " +
                 "goal_actual = ?, updated_at = now() " +
                 "WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, entity.getName());
-            stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getTargetAmount()));
-            stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getCurrentAmount()));
-            stmt.setBoolean(4, entity.isGoalCompleted());
-            stmt.setBoolean(5, entity.isGoalActual());
-            stmt.setLong(6, entity.getId());
-            stmt.executeUpdate();
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, entity.getName());
+                stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getTargetAmount()));
+                stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getCurrentAmount()));
+                stmt.setBoolean(4, entity.isGoalCompleted());
+                stmt.setBoolean(5, entity.isGoalActual());
+                stmt.setLong(6, entity.getId());
+
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при обновлении цели", e);
+            }
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при обновлении цели", e);
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
 
