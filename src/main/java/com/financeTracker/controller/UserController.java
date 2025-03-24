@@ -1,16 +1,22 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.UserUpdateDto;
+import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.financeTracker.model.type.UserRole.*;
 
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
     private final UserService userService;
 
     /**
@@ -19,8 +25,8 @@ public class UserController {
      * @param id The ID of the user to retrieve.
      * @return The user corresponding to the given ID.
      */
-    public User getUserById(Long id) {
-        return userService.getUserById(id);
+    public UserDto getUserById(Long id) {
+        return userMapper.toDto(userService.getUserById(id));
     }
 
     /**
@@ -28,16 +34,17 @@ public class UserController {
      *
      * @param id The ID of the user to delete.
      */
-    public void deleteUserById(Long id) {
-        userService.deleteUserById(id);
+    public void deleteUser(Long id, boolean confirmed) {
+        if (confirmed) {
+            userService.deleteCascadeUserById(id);
+        }
     }
 
-    /**
-     * Updates the user information.
-     *
-     * @param user The user object with updated information.
-     */
-    public void updateUser(User user) {
+
+    public void updateUser(Long id, UserUpdateDto dto) {
+        User user = userService.getUserById(id);
+        user.setName(dto.getName());
+        user.setLogin(dto.getEmail());
         userService.updateUser(user);
     }
 
@@ -64,8 +71,10 @@ public class UserController {
      *
      * @return A list containing all users.
      */
-    public List<User> showAllUsers() {
-        return userService.showAll();
+    public List<UserDto> showAllUsers() {
+        return userService.showAll().stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -82,5 +91,4 @@ public class UserController {
         User user = userService.getUserById(id);
         return user.getUserRole().equals(ADMIN);
     }
-
 }

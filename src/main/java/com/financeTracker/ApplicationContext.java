@@ -10,9 +10,9 @@ import com.financeTracker.dao.impl.GoalDaoImpl;
 import com.financeTracker.dao.impl.TransactionDaoImpl;
 import com.financeTracker.dao.impl.UserDaoImpl;
 import com.financeTracker.in.ConsoleInput;
-import com.financeTracker.mapper.BudgetMapper;
-import com.financeTracker.mapper.GoalMapper;
-import com.financeTracker.mapper.TransactionMapper;
+import com.financeTracker.mapper.BudgetOldMapper;
+import com.financeTracker.mapper.GoalOldMapper;
+import com.financeTracker.mapper.TransactionOldMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
@@ -88,9 +88,9 @@ public class ApplicationContext {
         CONTEXT.put("securityService", new SecurityServiceImpl((UserDao) CONTEXT.get("userDao")));
         CONTEXT.put("budgetService", new BudgetServiceImpl((BudgetDao) CONTEXT.get("budgetDao"),
                 (TransactionDao) CONTEXT.get("transactionDao"),
-                (BudgetMapper) CONTEXT.get("budgetMapper")));
+                (BudgetOldMapper) CONTEXT.get("budgetMapper")));
         CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao"),
-                (GoalMapper) CONTEXT.get("goalMapper")));
+                (GoalOldMapper) CONTEXT.get("goalMapper")));
         CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao"),
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
@@ -99,7 +99,7 @@ public class ApplicationContext {
                         (TransactionDao) CONTEXT.get("transactionDao"),
                         (BudgetService) CONTEXT.get("budgetService"),
                         (GoalService) CONTEXT.get("goalService"),
-                        new TransactionMapper()));
+                        new TransactionOldMapper()));
         CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
                 (GoalService) CONTEXT.get("goalService")));
     }
@@ -117,7 +117,7 @@ public class ApplicationContext {
 
 
     private static void loadMapper() {
-        CONTEXT.put("budgetMapper", new BudgetMapper());
-        CONTEXT.put("goalMapper", new GoalMapper());
+        CONTEXT.put("budgetMapper", new BudgetOldMapper());
+        CONTEXT.put("goalMapper", new GoalOldMapper());
     }
 }

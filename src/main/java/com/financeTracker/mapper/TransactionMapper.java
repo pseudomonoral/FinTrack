@@ -1,17 +1,14 @@
 package com.financeTracker.mapper;
 
+import com.financeTracker.dto.TransactionResponseDTO;
 import com.financeTracker.model.entity.Transaction;
-import com.financeTracker.model.type.TransactionType;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class TransactionMapper {
-    public Transaction mapToTransaction(Long userId, double amount, String category, String description,
-                                        TransactionType type){
-       return Transaction.builder()
-                .amount(amount)
-                .userId(userId)
-                .category(category)
-                .description(description)
-                .type(type)
-                .build();
-    }
+@Mapper(componentModel = "jakarta")
+public interface TransactionMapper {
+
+    @Mapping(source = "id", target = "id")
+    TransactionResponseDTO toResponseDTO(Transaction transaction);
 }
+

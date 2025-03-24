@@ -16,4 +16,3 @@ public class AuthRequestDto {
     @Size(min = 5, message = "Пароль должен содержать минимум 5 символов")
     private String password;
 }
-

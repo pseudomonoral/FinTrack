@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Aspect;
 import java.util.logging.Logger;
 
 @Aspect
-@Component
 public class LoggingAspect {
 
     private static final Logger logger = Logger.getLogger(LoggingAspect.class.getName());

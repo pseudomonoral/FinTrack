@@ -1,63 +1,55 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.dto.BudgetCheckResponse;
+import com.financeTracker.dto.BudgetCreateRequest;
+import com.financeTracker.dto.BudgetResponse;
+import com.financeTracker.dto.BudgetUpdateRequest;
+import com.financeTracker.mapper.BudgetOldMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
+import org.mapstruct.factory.Mappers;
+
 @RequiredArgsConstructor
 public class BudgetController {
 
     private final BudgetService budgetService;
+    private final BudgetOldMapper budgetMapper = Mappers.getMapper(BudgetOldMapper.class);
 
-    /**
-     * Creates a budget for the user with a given limit.
-     *
-     * @param userId The user's ID.
-     * @param limit  The limit for the user's budget.
-     */
-    public void createBudget(Long userId, double limit) {
-        budgetService.createBudget(userId, limit);
+    public BudgetResponse createBudget(Long userId, BudgetCreateRequest request) {
+        budgetService.createBudget(userId, request.getLimit());
+        return budgetMapper.toResponse(request.getLimit());
     }
 
-    /**
-     * Gets the current budget of the user.
-     *
-     * @param userId The user's ID.
-     * @return An Optional containing the user's budget if present.
-     */
-    public Optional<Budget> getBudget(long userId) {
-        return budgetService.getBudget(userId);
+    public Optional<BudgetResponse> getBudget(long userId) {
+        return budgetService.getBudget(userId).map(budgetMapper::toResponse);
     }
 
-    /**
-     * Updates the user's budget with a new limit.
-     *
-     * @param userId The user's ID.
-     * @param limit  The new limit for the user's budget.
-     */
-    public void updateBudget(Long userId, double limit) {
-        budgetService.updateBudget(userId, limit);
+    public BudgetResponse updateBudget(Long userId, BudgetUpdateRequest request) {
+        budgetService.updateBudget(userId, request.getNewLimit());
+        return budgetMapper.toResponse(request.getNewLimit());
     }
 
-    /**
-     * Deletes the user's budget.
-     *
-     * @param userId The user's ID.
-     */
     public void deleteBudget(long userId) {
         budgetService.deleteBudget(userId);
     }
 
-    /**
-     * Checks if the user's budget has been exceeded.
-     *
-     * @param userId The user's ID.
-     * @return A boolean indicating whether the budget has been exceeded.
-     */
-    public boolean isBudgetExceeded(long userId) {
-        return budgetService.isBudgetExceeded(userId);
+    public BudgetCheckResponse checkBudgetExceeded(long userId, double monthlyExpense) {
+        boolean exceeded = budgetService.isBudgetExceeded(userId);
+        double limit = budgetService.getBudget(userId)
+                .map(Budget::getLimit)
+                .orElse(0.0);
+
+        BudgetCheckResponse response = new BudgetCheckResponse();
+        response.setExceeded(exceeded);
+        response.setMonthlyExpense(monthlyExpense);
+        response.setBudgetLimit(limit);
+
+        return response;
     }
 }
+
 
