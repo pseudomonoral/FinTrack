@@ -1,10 +1,10 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.BudgetCheckResponse;
-import com.financeTracker.dto.BudgetCreateRequest;
-import com.financeTracker.dto.BudgetResponse;
-import com.financeTracker.dto.BudgetUpdateRequest;
-import com.financeTracker.mapper.BudgetMapper;
+import com.financeTracker.dto.BudgetCheckResponseDto;
+import com.financeTracker.dto.BudgetCreateRequestDto;
+import com.financeTracker.dto.BudgetResponseDto;
+import com.financeTracker.dto.BudgetUpdateRequestDto;
+import com.financeTracker.mapper.DtoBudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +17,18 @@ import org.mapstruct.factory.Mappers;
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final BudgetMapper budgetMapper = Mappers.getMapper(BudgetMapper.class);
+    private final DtoBudgetMapper budgetMapper = Mappers.getMapper(DtoBudgetMapper.class);
 
-    public BudgetResponse createBudget(Long userId, BudgetCreateRequest request) {
+    public BudgetResponseDto createBudget(Long userId, BudgetCreateRequestDto request) {
         budgetService.createBudget(userId, request.getLimit());
         return budgetMapper.toResponse(request.getLimit());
     }
 
-    public Optional<BudgetResponse> getBudget(long userId) {
+    public Optional<BudgetResponseDto> getBudget(long userId) {
         return budgetService.getBudget(userId).map(budgetMapper::toResponse);
     }
 
-    public BudgetResponse updateBudget(Long userId, BudgetUpdateRequest request) {
+    public BudgetResponseDto updateBudget(Long userId, BudgetUpdateRequestDto request) {
         budgetService.updateBudget(userId, request.getNewLimit());
         return budgetMapper.toResponse(request.getNewLimit());
     }
@@ -37,13 +37,13 @@ public class BudgetController {
         budgetService.deleteBudget(userId);
     }
 
-    public BudgetCheckResponse checkBudgetExceeded(long userId, double monthlyExpense) {
+    public BudgetCheckResponseDto checkBudgetExceeded(long userId, double monthlyExpense) {
         boolean exceeded = budgetService.isBudgetExceeded(userId);
         double limit = budgetService.getBudget(userId)
                 .map(Budget::getLimit)
                 .orElse(0.0);
 
-        BudgetCheckResponse response = new BudgetCheckResponse();
+        BudgetCheckResponseDto response = new BudgetCheckResponseDto();
         response.setExceeded(exceeded);
         response.setMonthlyExpense(monthlyExpense);
         response.setBudgetLimit(limit);

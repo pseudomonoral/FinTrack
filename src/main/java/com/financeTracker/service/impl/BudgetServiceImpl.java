@@ -3,7 +3,7 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.BudgetOldMapper;
+import com.financeTracker.mapper.EntityBudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.BudgetService;
@@ -21,7 +21,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetDao budgetDao;
     private final TransactionDao transactionDao;
-    private final BudgetOldMapper budgetMapper;
+    private final EntityBudgetMapper budgetMapper;
 
     @Override
     public void createBudget(Long userId, double limit) {

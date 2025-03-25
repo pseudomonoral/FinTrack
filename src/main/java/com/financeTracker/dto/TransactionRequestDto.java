@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class TransactionRequestDTO {
+public class TransactionRequestDto {
 
     @Min(value = 0, message = "Сумма должна быть неотрицательной")
     private double amount;

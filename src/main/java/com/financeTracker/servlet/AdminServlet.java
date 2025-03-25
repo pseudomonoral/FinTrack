@@ -3,8 +3,8 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.controller.UserController;
-import com.financeTracker.dto.AdminActionDTO;
-import com.financeTracker.dto.TransactionResponseDTO;
+import com.financeTracker.dto.AdminActionDto;
+import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.dto.UserDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -34,7 +34,7 @@ public class AdminServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), users);
         } else if ("transactions".equals(action)) {
             Long userId = Long.parseLong(req.getParameter("userId"));
-            List<TransactionResponseDTO> transactions = transactionController.getTransactions(userId);
+            List<TransactionResponseDto> transactions = transactionController.getTransactions(userId);
             resp.setContentType("application/json");
             objectMapper.writeValue(resp.getWriter(), transactions);
         } else {
@@ -47,11 +47,11 @@ public class AdminServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("block".equals(action)) {
-            AdminActionDTO adminAction = objectMapper.readValue(req.getInputStream(), AdminActionDTO.class);
+            AdminActionDto adminAction = objectMapper.readValue(req.getInputStream(), AdminActionDto.class);
             userController.blockedUserById(adminAction.getUserId());
             resp.setStatus(HttpServletResponse.SC_OK);
         } else if ("unblock".equals(action)) {
-            AdminActionDTO adminAction = objectMapper.readValue(req.getInputStream(), AdminActionDTO.class);
+            AdminActionDto adminAction = objectMapper.readValue(req.getInputStream(), AdminActionDto.class);
             userController.unblockedUserById(adminAction.getUserId());
             resp.setStatus(HttpServletResponse.SC_OK);
         } else {

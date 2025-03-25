@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class GoalUpdateRequestDTO {
+public class GoalUpdateRequestDto {
     @NotNull(message = "ID цели не должен быть пустым")
     private Long id;
 

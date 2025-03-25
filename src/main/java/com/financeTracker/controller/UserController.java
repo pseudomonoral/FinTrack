@@ -2,7 +2,7 @@ package com.financeTracker.controller;
 
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
-import com.financeTracker.mapper.UserMapper;
+import com.financeTracker.mapper.DtoUserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import static com.financeTracker.model.type.UserRole.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private final DtoUserMapper dtoUserMapper = Mappers.getMapper(DtoUserMapper.class);
     private final UserService userService;
 
     /**
@@ -26,7 +26,7 @@ public class UserController {
      * @return The user corresponding to the given ID.
      */
     public UserDto getUserById(Long id) {
-        return userMapper.toDto(userService.getUserById(id));
+        return dtoUserMapper.toDto(userService.getUserById(id));
     }
 
     /**
@@ -73,7 +73,7 @@ public class UserController {
      */
     public List<UserDto> showAllUsers() {
         return userService.showAll().stream()
-                .map(userMapper::toDto)
+                .map(dtoUserMapper::toDto)
                 .collect(Collectors.toList());
     }
 

@@ -1,11 +1,13 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.TransactionRequestDTO;
-import com.financeTracker.dto.TransactionResponseDTO;
-import com.financeTracker.mapper.TransactionMapper;
+import com.financeTracker.dto.TransactionRequestDto;
+import com.financeTracker.dto.TransactionResponseDto;
+import com.financeTracker.mapper.DtoGoalMapper;
+import com.financeTracker.mapper.DtoTransactionMapper;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -15,35 +17,35 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final TransactionMapper transactionMapper;
+    private final DtoTransactionMapper dtoTransactionMapper = Mappers.getMapper(DtoTransactionMapper.class);;
 
-    public TransactionResponseDTO createTransaction(TransactionRequestDTO dto) {
+    public TransactionResponseDto createTransaction(TransactionRequestDto dto) {
         Transaction transaction = transactionService.createTransaction(
                 dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType()
         );
-        return transactionMapper.toResponseDTO(transaction);
+        return dtoTransactionMapper.toResponseDTO(transaction);
     }
 
     public void deleteTransaction(Long transactionId) {
         transactionService.deleteTransaction(transactionId);
     }
 
-    public TransactionResponseDTO updateTransaction(Long userId, Long transactionId, TransactionRequestDTO dto) {
+    public TransactionResponseDto updateTransaction(Long userId, Long transactionId, TransactionRequestDto dto) {
         transactionService.updateTransaction(transactionId, dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType());
-        return transactionMapper.toResponseDTO(transactionService.getTransactions(userId)
+        return dtoTransactionMapper.toResponseDTO(transactionService.getTransactions(userId)
                 .stream().filter(transaction -> transaction.getId().equals(transactionId))
                 .findFirst().orElse(null));
     }
 
-    public List<TransactionResponseDTO> getTransactions(Long userId) {
+    public List<TransactionResponseDto> getTransactions(Long userId) {
         return transactionService.getTransactions(userId).stream()
-                .map(transactionMapper::toResponseDTO)
+                .map(dtoTransactionMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<TransactionResponseDTO> getTransactionsByCategory(Long userId, String category) {
+    public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
         return transactionService.getTransactionsByCategory(userId, category).stream()
-                .map(transactionMapper::toResponseDTO)
+                .map(dtoTransactionMapper::toResponseDTO)
                 .collect(Collectors.toList());
     }
 }

@@ -3,7 +3,7 @@ package com.financeTracker.dto;
 import lombok.Data;
 
 @Data
-public class GoalResponseDTO {
+public class GoalResponseDto {
     private Long id;
     private String name;
     private double targetAmount;

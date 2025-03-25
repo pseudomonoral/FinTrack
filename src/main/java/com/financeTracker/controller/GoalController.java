@@ -1,9 +1,9 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.GoalCreateRequestDTO;
-import com.financeTracker.dto.GoalResponseDTO;
-import com.financeTracker.dto.GoalUpdateRequestDTO;
-import com.financeTracker.mapper.GoalMapper;
+import com.financeTracker.dto.GoalCreateRequestDto;
+import com.financeTracker.dto.GoalResponseDto;
+import com.financeTracker.dto.GoalUpdateRequestDto;
+import com.financeTracker.mapper.DtoGoalMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
@@ -16,33 +16,33 @@ import org.mapstruct.factory.Mappers;
 public class GoalController {
 
     private final GoalService goalService;
-    private final GoalMapper goalMapper = Mappers.getMapper(GoalMapper.class);
+    private final DtoGoalMapper dtoGoalMapper = Mappers.getMapper(DtoGoalMapper.class);
 
-    public GoalResponseDTO createGoal(Long userId, GoalCreateRequestDTO dto) {
+    public GoalResponseDto createGoal(Long userId, GoalCreateRequestDto dto) {
         Goal goal = goalService.createGoal(userId, dto.getGoalActive(), dto.getName(), dto.getTargetAmount(), 0);
-        return goalMapper.toDTO(goal);
+        return dtoGoalMapper.toDTO(goal);
     }
 
-    public List<GoalResponseDTO> getGoals(Long userId) {
+    public List<GoalResponseDto> getGoals(Long userId) {
         return goalService.getAllGoals(userId)
                 .stream()
-                .map(goalMapper::toDTO)
+                .map(dtoGoalMapper::toDTO)
                 .toList();
     }
 
-    public GoalResponseDTO getGoal(String nameGoal, Long userId) {
+    public GoalResponseDto getGoal(String nameGoal, Long userId) {
         Goal goal = goalService.getGoal(nameGoal, userId);
-        return goalMapper.toDTO(goal);
+        return dtoGoalMapper.toDTO(goal);
     }
 
     public void deleteGoal(String nameGoal, Long userId) {
         goalService.deleteGoal(nameGoal, userId);
     }
 
-    public GoalResponseDTO updateGoal(Long userId, GoalUpdateRequestDTO dto) {
+    public GoalResponseDto updateGoal(Long userId, GoalUpdateRequestDto dto) {
         goalService.updateGoal(dto.getId(), userId, dto.getName(), dto.getTargetAmount(), 0, dto.getGoalActual());
         Goal updatedGoal = goalService.getGoal(dto.getName(), userId);
-        return goalMapper.toDTO(updatedGoal);
+        return dtoGoalMapper.toDTO(updatedGoal);
     }
 }
 

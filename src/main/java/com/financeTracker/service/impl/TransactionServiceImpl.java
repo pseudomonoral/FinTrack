@@ -3,7 +3,7 @@ package com.financeTracker.service.impl;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.TransactionOldMapper;
+import com.financeTracker.mapper.EntityTransactionMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.entity.User;
@@ -29,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionDao transactionDao;
     private final BudgetService budgetService;
     private final GoalService goalService;
-    private final TransactionOldMapper mapper;
+    private final EntityTransactionMapper mapper;
 
     @Override
     public Transaction createTransaction(double amount, String category, String description, TransactionType type) {

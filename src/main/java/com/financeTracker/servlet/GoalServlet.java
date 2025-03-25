@@ -3,9 +3,9 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.GoalController;
-import com.financeTracker.dto.GoalCreateRequestDTO;
-import com.financeTracker.dto.GoalResponseDTO;
-import com.financeTracker.dto.GoalUpdateRequestDTO;
+import com.financeTracker.dto.GoalCreateRequestDto;
+import com.financeTracker.dto.GoalResponseDto;
+import com.financeTracker.dto.GoalUpdateRequestDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,9 +26,9 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
-        GoalCreateRequestDTO requestDTO = objectMapper.readValue(req.getReader(), GoalCreateRequestDTO.class);
+        GoalCreateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalCreateRequestDto.class);
 
-        GoalResponseDTO createdGoal = goalController.createGoal(userId, requestDTO);
+        GoalResponseDto createdGoal = goalController.createGoal(userId, requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
         objectMapper.writeValue(resp.getWriter(), createdGoal);
@@ -40,7 +40,7 @@ public class GoalServlet extends HttpServlet {
         String goalName = req.getParameter("name");
 
         if (goalName != null) {
-            GoalResponseDTO goal = goalController.getGoal(goalName, userId);
+            GoalResponseDto goal = goalController.getGoal(goalName, userId);
             if (goal != null) {
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -50,7 +50,7 @@ public class GoalServlet extends HttpServlet {
                 resp.getWriter().write("Goal not found");
             }
         } else {
-            List<GoalResponseDTO> goals = goalController.getGoals(userId);
+            List<GoalResponseDto> goals = goalController.getGoals(userId);
             resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), goals);
@@ -60,9 +60,9 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
-        GoalUpdateRequestDTO requestDTO = objectMapper.readValue(req.getReader(), GoalUpdateRequestDTO.class);
+        GoalUpdateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalUpdateRequestDto.class);
 
-        GoalResponseDTO updatedGoal = goalController.updateGoal(userId, requestDTO);
+        GoalResponseDto updatedGoal = goalController.updateGoal(userId, requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
         objectMapper.writeValue(resp.getWriter(), updatedGoal);

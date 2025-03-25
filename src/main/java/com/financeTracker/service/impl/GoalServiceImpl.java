@@ -3,7 +3,7 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.GoalOldMapper;
+import com.financeTracker.mapper.EntityGoalMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import static com.financeTracker.model.type.EntityName.*;
 public class GoalServiceImpl implements GoalService {
 
     private final GoalDao goalDao;
-    private final GoalOldMapper mapper;
+    private final EntityGoalMapper mapper;
 
     @Override
     public Goal createGoal(Long userId, boolean goalActual, String nameGoal,

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class GoalCreateRequestDTO {
+public class GoalCreateRequestDto {
     @NotBlank(message = "Название цели не должно быть пустым")
     private String name;
 

@@ -3,8 +3,8 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.TransactionController;
-import com.financeTracker.dto.TransactionRequestDTO;
-import com.financeTracker.dto.TransactionResponseDTO;
+import com.financeTracker.dto.TransactionRequestDto;
+import com.financeTracker.dto.TransactionResponseDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,8 +24,8 @@ public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TransactionRequestDTO dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDTO.class);
-        TransactionResponseDTO responseDTO = transactionController.createTransaction(dto);
+        TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
+        TransactionResponseDto responseDTO = transactionController.createTransaction(dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -38,8 +38,8 @@ public class TransactionServlet extends HttpServlet {
         if (transactionId == null) return;
 
         Long userId = ApplicationContext.getAuthorizeUser().getId();
-        TransactionRequestDTO dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDTO.class);
-        TransactionResponseDTO responseDTO = transactionController.updateTransaction(userId, transactionId, dto);
+        TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
+        TransactionResponseDto responseDTO = transactionController.updateTransaction(userId, transactionId, dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -60,7 +60,7 @@ public class TransactionServlet extends HttpServlet {
         String category = req.getParameter("category");
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
-        List<TransactionResponseDTO> transactions;
+        List<TransactionResponseDto> transactions;
         if (category != null) {
             transactions = transactionController.getTransactionsByCategory(userId, category);
         } else {

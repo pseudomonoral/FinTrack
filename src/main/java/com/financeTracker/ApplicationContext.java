@@ -9,12 +9,10 @@ import com.financeTracker.dao.impl.BudgetDaoImpl;
 import com.financeTracker.dao.impl.GoalDaoImpl;
 import com.financeTracker.dao.impl.TransactionDaoImpl;
 import com.financeTracker.dao.impl.UserDaoImpl;
-import com.financeTracker.in.ConsoleInput;
-import com.financeTracker.mapper.BudgetOldMapper;
-import com.financeTracker.mapper.GoalOldMapper;
-import com.financeTracker.mapper.TransactionOldMapper;
+import com.financeTracker.mapper.EntityBudgetMapper;
+import com.financeTracker.mapper.EntityGoalMapper;
+import com.financeTracker.mapper.EntityTransactionMapper;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
 import com.financeTracker.service.impl.*;
 import com.financeTracker.util.Config;
@@ -34,7 +32,6 @@ public class ApplicationContext {
         loadMapper();
         loadServiceLayer();
         loadControllers();
-        loadInputOutputLayers();
     }
 
     public static void loadAuthorizedUser(User user) {
@@ -53,10 +50,6 @@ public class ApplicationContext {
         return CONTEXT.get(beanName);
     }
 
-    private static void loadInputOutputLayers() {
-        CONTEXT.put("input", new ConsoleInput());
-        CONTEXT.put("output", new ConsoleOutputData());
-    }
 
     private static void loadControllers() {
         AuthController authController = new AuthController((SecurityService) CONTEXT.get("securityService"));
@@ -88,9 +81,9 @@ public class ApplicationContext {
         CONTEXT.put("securityService", new SecurityServiceImpl((UserDao) CONTEXT.get("userDao")));
         CONTEXT.put("budgetService", new BudgetServiceImpl((BudgetDao) CONTEXT.get("budgetDao"),
                 (TransactionDao) CONTEXT.get("transactionDao"),
-                (BudgetOldMapper) CONTEXT.get("budgetMapper")));
+                (EntityBudgetMapper) CONTEXT.get("budgetMapper")));
         CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao"),
-                (GoalOldMapper) CONTEXT.get("goalMapper")));
+                (EntityGoalMapper) CONTEXT.get("goalMapper")));
         CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao"),
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
@@ -99,7 +92,7 @@ public class ApplicationContext {
                         (TransactionDao) CONTEXT.get("transactionDao"),
                         (BudgetService) CONTEXT.get("budgetService"),
                         (GoalService) CONTEXT.get("goalService"),
-                        new TransactionOldMapper()));
+                        new EntityTransactionMapper()));
         CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
                 (GoalService) CONTEXT.get("goalService")));
     }
@@ -117,7 +110,7 @@ public class ApplicationContext {
 
 
     private static void loadMapper() {
-        CONTEXT.put("budgetMapper", new BudgetOldMapper());
-        CONTEXT.put("goalMapper", new GoalOldMapper());
+        CONTEXT.put("budgetMapper", new EntityBudgetMapper());
+        CONTEXT.put("goalMapper", new EntityGoalMapper());
     }
 }

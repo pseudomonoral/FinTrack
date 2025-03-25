@@ -7,8 +7,8 @@ import org.mapstruct.factory.Mappers;
 import java.util.Map;
 
 @Mapper
-public interface StatisticsMapper {
-    StatisticsMapper INSTANCE = Mappers.getMapper(StatisticsMapper.class);
+public interface DtoStatisticsMapper {
+    DtoStatisticsMapper INSTANCE = Mappers.getMapper(DtoStatisticsMapper.class);
 
     BalanceResponseDto toBalanceResponseDto(double balance);
     IncomeExpenseResponseDto toIncomeExpenseResponseDto(double amount);

@@ -2,7 +2,7 @@ package com.service;
 
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.BudgetOldMapper;
+import com.financeTracker.mapper.EntityBudgetMapper;
 import com.financeTracker.service.impl.BudgetServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class BudgetServiceImplTest {
     private BudgetDao budgetDao;
 
     @Mock
-    private BudgetOldMapper budgetMapper;
+    private EntityBudgetMapper budgetMapper;
 
     @InjectMocks
     private BudgetServiceImpl budgetService;

@@ -1,18 +1,18 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.BudgetResponse;
+import com.financeTracker.dto.BudgetResponseDto;
 import com.financeTracker.model.entity.Budget;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface BudgetMapper {
+public interface DtoBudgetMapper {
 
     @Mapping(target = "limit", source = "budget.limit")
-    BudgetResponse toResponse(Budget budget);
+    BudgetResponseDto toResponse(Budget budget);
 
-    default BudgetResponse toResponse(Double limit) {
-        BudgetResponse response = new BudgetResponse();
+    default BudgetResponseDto toResponse(Double limit) {
+        BudgetResponseDto response = new BudgetResponseDto();
         response.setLimit(limit);
         return response;
     }

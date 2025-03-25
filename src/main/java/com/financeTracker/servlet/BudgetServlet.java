@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
-import com.financeTracker.dto.BudgetCheckResponse;
-import com.financeTracker.dto.BudgetCreateRequest;
-import com.financeTracker.dto.BudgetResponse;
-import com.financeTracker.dto.BudgetUpdateRequest;
+import com.financeTracker.dto.BudgetCheckResponseDto;
+import com.financeTracker.dto.BudgetCreateRequestDto;
+import com.financeTracker.dto.BudgetResponseDto;
+import com.financeTracker.dto.BudgetUpdateRequestDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -39,10 +39,10 @@ public class BudgetServlet extends HttpServlet {
     }
 
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BudgetCreateRequest request = objectMapper.readValue(req.getInputStream(), BudgetCreateRequest.class);
+        BudgetCreateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetCreateRequestDto.class);
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
-        BudgetResponse response = budgetController.createBudget(userId, request);
+        BudgetResponseDto response = budgetController.createBudget(userId, request);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -55,7 +55,7 @@ public class BudgetServlet extends HttpServlet {
         double expense = statisticsController.getExpenseForPeriod(userId,
                 LocalDate.now().minusMonths(1), LocalDate.now()).getAmount();
 
-        BudgetCheckResponse response = budgetController.checkBudgetExceeded(userId, expense);
+        BudgetCheckResponseDto response = budgetController.checkBudgetExceeded(userId, expense);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -66,7 +66,7 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = ApplicationContext.getAuthorizeUser().getId();
-        Optional<BudgetResponse> budget = budgetController.getBudget(userId);
+        Optional<BudgetResponseDto> budget = budgetController.getBudget(userId);
 
         resp.setContentType("application/json");
         if (budget.isPresent()) {
@@ -80,10 +80,10 @@ public class BudgetServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BudgetUpdateRequest request = objectMapper.readValue(req.getInputStream(), BudgetUpdateRequest.class);
+        BudgetUpdateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetUpdateRequestDto.class);
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
-        BudgetResponse response = budgetController.updateBudget(userId, request);
+        BudgetResponseDto response = budgetController.updateBudget(userId, request);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
