@@ -3,10 +3,8 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.UserController;
-import com.financeTracker.dto.UserDeleteDto;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,45 +19,31 @@ public class UserSettingsServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = (Long) req.getSession().getAttribute("userId");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
-        if (userId == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь не авторизован");
-            return;
-        }
-
-        UserDto userDto = userController.getUserById(userId);
         resp.setContentType("application/json");
         objectMapper.writeValue(resp.getOutputStream(), userDto);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = (Long) req.getSession().getAttribute("userId");
-
-        if (userId == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь не авторизован");
-            return;
-        }
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
         UserUpdateDto updateDto = objectMapper.readValue(req.getInputStream(), UserUpdateDto.class);
-        userController.updateUser(userId, updateDto);
+        userController.updateUser(userDto.getId(), updateDto);
+
+        UserDto newUserDto = userController.getUserById(userDto.getId());
+        req.getSession().setAttribute("user", newUserDto);
+
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = (Long) req.getSession().getAttribute("userId");
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
-        if (userId == null) {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь не авторизован");
-            return;
-        }
-
-        UserDeleteDto deleteDto = objectMapper.readValue(req.getInputStream(), UserDeleteDto.class);
-        userController.deleteUser(userId, deleteDto.isConfirmed());
-
+        userController.deleteUser(userDto.getId());
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }

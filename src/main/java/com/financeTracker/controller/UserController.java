@@ -34,17 +34,15 @@ public class UserController {
      *
      * @param id The ID of the user to delete.
      */
-    public void deleteUser(Long id, boolean confirmed) {
-        if (confirmed) {
-            userService.deleteCascadeUserById(id);
-        }
+    public void deleteUser(Long id) {
+        userService.deleteAccountUserById(id);
     }
 
 
     public void updateUser(Long id, UserUpdateDto dto) {
         User user = userService.getUserById(id);
         user.setName(dto.getName());
-        user.setLogin(dto.getEmail());
+        user.setLogin(dto.getLogin());
         userService.updateUser(user);
     }
 
@@ -75,16 +73,6 @@ public class UserController {
         return userService.showAll().stream()
                 .map(dtoUserMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Deletes a user and all associated (without transactions) data by their ID.
-     * This operation removes the user along with related entities,
-     *
-     * @param id The ID of the user to delete.
-     */
-    public void deleteCascadeUserById(Long id) {
-        userService.deleteCascadeUserById(id);
     }
 
     public boolean checkAdminAccess(Long id) {

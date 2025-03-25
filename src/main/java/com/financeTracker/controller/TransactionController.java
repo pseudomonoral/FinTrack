@@ -2,8 +2,6 @@ package com.financeTracker.controller;
 
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
-import com.financeTracker.dto.UserDto;
-import com.financeTracker.mapper.DtoGoalMapper;
 import com.financeTracker.mapper.DtoTransactionMapper;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.TransactionService;

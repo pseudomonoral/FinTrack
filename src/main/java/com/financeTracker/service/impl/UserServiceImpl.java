@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteCascadeUserById(Long userId) {
+    public void deleteAccountUserById(Long userId) {
         userDao.delete(userId);
         if (budgetService.getBudget(userId).isPresent()) {
             budgetService.deleteBudget(userId);

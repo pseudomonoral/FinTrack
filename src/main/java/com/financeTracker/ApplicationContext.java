@@ -9,7 +9,6 @@ import com.financeTracker.dao.impl.BudgetDaoImpl;
 import com.financeTracker.dao.impl.GoalDaoImpl;
 import com.financeTracker.dao.impl.TransactionDaoImpl;
 import com.financeTracker.dao.impl.UserDaoImpl;
-import com.financeTracker.model.entity.User;
 import com.financeTracker.service.*;
 import com.financeTracker.service.impl.*;
 import com.financeTracker.util.Config;
