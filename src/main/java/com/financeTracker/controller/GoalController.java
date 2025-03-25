@@ -9,12 +9,8 @@ import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class GoalController {

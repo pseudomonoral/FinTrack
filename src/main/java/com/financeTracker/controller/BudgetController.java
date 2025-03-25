@@ -4,7 +4,7 @@ import com.financeTracker.dto.BudgetCheckResponse;
 import com.financeTracker.dto.BudgetCreateRequest;
 import com.financeTracker.dto.BudgetResponse;
 import com.financeTracker.dto.BudgetUpdateRequest;
-import com.financeTracker.mapper.BudgetOldMapper;
+import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.mapstruct.factory.Mappers;
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final BudgetOldMapper budgetMapper = Mappers.getMapper(BudgetOldMapper.class);
+    private final BudgetMapper budgetMapper = Mappers.getMapper(BudgetMapper.class);
 
     public BudgetResponse createBudget(Long userId, BudgetCreateRequest request) {
         budgetService.createBudget(userId, request.getLimit());

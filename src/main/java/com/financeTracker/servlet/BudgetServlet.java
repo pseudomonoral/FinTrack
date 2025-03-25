@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/api/budget")
@@ -27,6 +28,18 @@ public class BudgetServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = req.getPathInfo();
+
+        if ("/create".equals(path)) {
+            handleCreateBudget(req, resp);
+        } else if ("/check-exceeded".equals(path)) {
+            handleCheckBudgetExceeded(req, resp);
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown endpoint");
+        }
+    }
+
+    private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BudgetCreateRequest request = objectMapper.readValue(req.getInputStream(), BudgetCreateRequest.class);
         Long userId = ApplicationContext.getAuthorizeUser().getId();
 
@@ -36,6 +49,20 @@ public class BudgetServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_CREATED);
         objectMapper.writeValue(resp.getOutputStream(), response);
     }
+
+    private void handleCheckBudgetExceeded(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        StatisticsController statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
+        double expense = statisticsController.getExpenseForPeriod(userId,
+                LocalDate.now().minusMonths(1), LocalDate.now()).getAmount();
+
+        BudgetCheckResponse response = budgetController.checkBudgetExceeded(userId, expense);
+
+        resp.setContentType("application/json");
+        resp.setStatus(HttpServletResponse.SC_OK);
+        objectMapper.writeValue(resp.getOutputStream(), response);
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -70,22 +97,6 @@ public class BudgetServlet extends HttpServlet {
         budgetController.deleteBudget(userId);
 
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getPathInfo().equals("/check")) {
-            Long userId = ApplicationContext.getAuthorizeUser().getId();
-            StatisticsController statisticsController = new StatisticsController();
-            double expense = statisticsController.calculateExpenseForPeriod(userId,
-                    LocalDate.now().minusMonths(1), LocalDate.now());
-
-            BudgetCheckResponse response = budgetController.checkBudgetExceeded(userId, expense);
-
-            resp.setContentType("application/json");
-            resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getOutputStream(), response);
-        }
     }
 }
 

@@ -5,21 +5,21 @@ import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.PeriodRequestDto;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
+@WebServlet("/statistic")
+@RequiredArgsConstructor
 public class StatisticServlet extends HttpServlet {
     private final StatisticsController statisticsController;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public StatisticServlet(StatisticsController statisticsController) {
-        this.statisticsController = statisticsController;
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
