@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/admin")
+@WebServlet("/admin/*")
 @RequiredArgsConstructor
 public class AdminServlet extends HttpServlet {
 

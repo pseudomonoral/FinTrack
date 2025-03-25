@@ -16,10 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Optional;
 
-@WebServlet("/api/budget")
+@WebServlet("/budget/*")
 @RequiredArgsConstructor
 public class BudgetServlet extends HttpServlet {
 

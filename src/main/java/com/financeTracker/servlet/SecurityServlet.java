@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/auth")
+@WebServlet("/auth/*")
 @RequiredArgsConstructor
 public class SecurityServlet extends HttpServlet {
 

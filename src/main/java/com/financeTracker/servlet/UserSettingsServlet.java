@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
-@WebServlet("/api/user/settings")
+@WebServlet("/settings/*")
 @RequiredArgsConstructor
 public class UserSettingsServlet extends HttpServlet {
 
