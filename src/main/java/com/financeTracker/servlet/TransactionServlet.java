@@ -37,10 +37,11 @@ public class TransactionServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long transactionId = extractTransactionId(req, resp);
         if (transactionId == null) return;
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
 
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
         TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
-        TransactionResponseDto responseDTO = transactionController.updateTransaction(userId, transactionId, dto);
+        TransactionResponseDto responseDTO = transactionController.updateTransaction(userDto.getId(), transactionId, dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -58,8 +59,10 @@ public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
+        Long userId = userDto.getId();
         String category = req.getParameter("category");
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
 
         List<TransactionResponseDto> transactions;
         if (category != null) {

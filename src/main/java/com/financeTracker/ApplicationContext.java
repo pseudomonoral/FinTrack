@@ -31,14 +31,9 @@ public class ApplicationContext {
         loadControllers();
     }
 
-    public static User getAuthorizeUser() {
-        return (User) CONTEXT.get("authorize");
-    }
-
     public static Object getBean(String beanName) {
         return CONTEXT.get(beanName);
     }
-
 
     private static void loadControllers() {
         AuthController authController = new AuthController((SecurityService) CONTEXT.get("securityService"));

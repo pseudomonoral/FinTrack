@@ -85,11 +85,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateTransaction(Long id, double amount, String category, String description,
+    public void updateTransaction(Long userId, Long id, double amount, String category, String description,
                                   TransactionType type) {
         Optional<Transaction> old = transactionDao.findById(id);
         if (old.isPresent()) {
-            Long userId = ApplicationContext.getAuthorizeUser().getId();
             Transaction newTransaction = mapToTransaction(userId, amount, category, description, type);
             newTransaction.setId(id);
             newTransaction.setCreatedAt(old.get().getCreatedAt());

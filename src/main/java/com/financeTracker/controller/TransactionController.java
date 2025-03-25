@@ -32,10 +32,11 @@ public class TransactionController {
     }
 
     public TransactionResponseDto updateTransaction(Long userId, Long transactionId, TransactionRequestDto dto) {
-        transactionService.updateTransaction(transactionId, dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType());
+        transactionService.updateTransaction(userId, transactionId, dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType());
         return dtoTransactionMapper.toResponseDTO(transactionService.getTransactions(userId)
                 .stream().filter(transaction -> transaction.getId().equals(transactionId))
                 .findFirst().orElse(null));
+        //TODO:исправить передачу с потенциальным null
     }
 
     public List<TransactionResponseDto> getTransactions(Long userId) {

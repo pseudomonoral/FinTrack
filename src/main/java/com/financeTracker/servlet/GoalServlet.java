@@ -6,6 +6,7 @@ import com.financeTracker.controller.GoalController;
 import com.financeTracker.dto.GoalCreateRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
 import com.financeTracker.dto.GoalUpdateRequestDto;
+import com.financeTracker.dto.UserDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,10 +25,11 @@ public class GoalServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         GoalCreateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalCreateRequestDto.class);
 
-        GoalResponseDto createdGoal = goalController.createGoal(userId, requestDTO);
+        GoalResponseDto createdGoal = goalController.createGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
         objectMapper.writeValue(resp.getWriter(), createdGoal);
@@ -35,11 +37,12 @@ public class GoalServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         String goalName = req.getParameter("name");
 
         if (goalName != null) {
-            GoalResponseDto goal = goalController.getGoal(goalName, userId);
+            GoalResponseDto goal = goalController.getGoal(goalName, userDto.getId());
             if (goal != null) {
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -49,7 +52,7 @@ public class GoalServlet extends HttpServlet {
                 resp.getWriter().write("Goal not found");
             }
         } else {
-            List<GoalResponseDto> goals = goalController.getGoals(userId);
+            List<GoalResponseDto> goals = goalController.getGoals(userDto.getId());
             resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), goals);
@@ -58,10 +61,11 @@ public class GoalServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         GoalUpdateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalUpdateRequestDto.class);
 
-        GoalResponseDto updatedGoal = goalController.updateGoal(userId, requestDTO);
+        GoalResponseDto updatedGoal = goalController.updateGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
         objectMapper.writeValue(resp.getWriter(), updatedGoal);
@@ -69,11 +73,12 @@ public class GoalServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         String goalName = req.getParameter("name");
 
         if (goalName != null) {
-            goalController.deleteGoal(goalName, userId);
+            goalController.deleteGoal(goalName, userDto.getId());
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

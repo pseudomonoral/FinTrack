@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.PeriodRequestDto;
+import com.financeTracker.dto.UserDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +23,9 @@ public class StatisticServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
+        Long userId = userDto.getId();
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
 
@@ -54,7 +57,9 @@ public class StatisticServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getPathInfo();
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
+        Long userId = userDto.getId();
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         String requestBody = req.getReader().lines().collect(Collectors.joining());

@@ -39,7 +39,7 @@ public interface TransactionService {
      * @param description A description of the transaction.
      * @param type       The type of the transaction (e.g., INCOME, EXPENSE).
      */
-    void updateTransaction(Long id, double amount, String category, String description, TransactionType type);
+    void updateTransaction(Long userId, Long id, double amount, String category, String description, TransactionType type);
 
     /**
      * Retrieves all transactions for a specific user.

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
-import com.financeTracker.dto.BudgetCheckResponseDto;
-import com.financeTracker.dto.BudgetCreateRequestDto;
-import com.financeTracker.dto.BudgetResponseDto;
-import com.financeTracker.dto.BudgetUpdateRequestDto;
+import com.financeTracker.dto.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -37,10 +34,11 @@ public class BudgetServlet extends HttpServlet {
     }
 
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         BudgetCreateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetCreateRequestDto.class);
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
 
-        BudgetResponseDto response = budgetController.createBudget(userId, request);
+        BudgetResponseDto response = budgetController.createBudget(userDto.getId(), request);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
@@ -48,12 +46,13 @@ public class BudgetServlet extends HttpServlet {
     }
 
     private void handleCheckBudgetExceeded(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         StatisticsController statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
-        double expense = statisticsController.getExpenseForPeriod(userId,
+        double expense = statisticsController.getExpenseForPeriod(userDto.getId(),
                 LocalDate.now().minusMonths(1), LocalDate.now()).getAmount();
 
-        BudgetCheckResponseDto response = budgetController.checkBudgetExceeded(userId, expense);
+        BudgetCheckResponseDto response = budgetController.checkBudgetExceeded(userDto.getId(), expense);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -63,8 +62,9 @@ public class BudgetServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
-        Optional<BudgetResponseDto> budget = budgetController.getBudget(userId);
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
+        Optional<BudgetResponseDto> budget = budgetController.getBudget(userDto.getId());
 
         resp.setContentType("application/json");
         if (budget.isPresent()) {
@@ -78,10 +78,11 @@ public class BudgetServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         BudgetUpdateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetUpdateRequestDto.class);
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
 
-        BudgetResponseDto response = budgetController.updateBudget(userId, request);
+        BudgetResponseDto response = budgetController.updateBudget(userDto.getId(), request);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -90,10 +91,10 @@ public class BudgetServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
-        budgetController.deleteBudget(userId);
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
+        budgetController.deleteBudget(userDto.getId());
 
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }
-
