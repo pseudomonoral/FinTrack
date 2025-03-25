@@ -1,6 +1,7 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.dto.UserDeleteDto;
 import com.financeTracker.dto.UserDto;
@@ -10,16 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
 @WebServlet("/settings/*")
-@RequiredArgsConstructor
 public class UserSettingsServlet extends HttpServlet {
 
-    private final UserController userController;
-    private final ObjectMapper objectMapper;
+    private final UserController userController = (UserController) ApplicationContext.getBean("userController");
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

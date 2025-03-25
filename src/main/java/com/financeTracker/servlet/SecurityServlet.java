@@ -1,28 +1,26 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/auth/*")
-@RequiredArgsConstructor
 public class SecurityServlet extends HttpServlet {
 
-    private final AuthController authController;
+    private final AuthController authController = (AuthController) ApplicationContext.getBean("authController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.isEmpty()) {
@@ -32,25 +30,37 @@ public class SecurityServlet extends HttpServlet {
 
         AuthRequestDto authRequest = objectMapper.readValue(req.getReader(), AuthRequestDto.class);
 
-        UserDto userDto;
         switch (pathInfo) {
             case "/register":
-                userDto = authController.register(authRequest);
-                resp.setStatus(HttpServletResponse.SC_CREATED);
+                handleRegister(authRequest, resp);
                 break;
             case "/login":
-                userDto = authController.authorize(authRequest);
-                resp.setStatus(HttpServletResponse.SC_OK);
+                handleLogin(authRequest, req, resp);
                 break;
             default:
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Неизвестный путь");
-                return;
         }
+    }
 
+    private void handleRegister(AuthRequestDto authRequest, HttpServletResponse resp) throws IOException {
+        UserDto userDto = authController.register(authRequest);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+        writeResponse(resp, userDto);
+    }
+
+    private void handleLogin(AuthRequestDto authRequest, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        UserDto userDto = authController.authorize(authRequest);
+        req.getSession().setAttribute("user", userDto);
+        resp.setStatus(HttpServletResponse.SC_OK);
+        writeResponse(resp, userDto);
+    }
+
+    private void writeResponse(HttpServletResponse resp, Object data) throws IOException {
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
-        out.write(objectMapper.writeValueAsString(userDto));
+        out.write(objectMapper.writeValueAsString(data));
         out.flush();
     }
 }
+
 

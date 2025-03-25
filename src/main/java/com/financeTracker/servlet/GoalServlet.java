@@ -17,10 +17,9 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/goals/*")
-@RequiredArgsConstructor
 public class GoalServlet extends HttpServlet {
 
-    private final GoalController goalController;
+    private final GoalController goalController = (GoalController) ApplicationContext.getBean("goalController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

@@ -5,27 +5,28 @@ import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
+import com.financeTracker.dto.UserDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/transactions/*")
-@RequiredArgsConstructor
 public class TransactionServlet extends HttpServlet {
 
-    private final TransactionController transactionController;
+    private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDto userDto = (UserDto) req.getSession().getAttribute("user");
+        if (userDto == null) return;
         TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
-        TransactionResponseDto responseDTO = transactionController.createTransaction(dto);
+        TransactionResponseDto responseDTO = transactionController.createTransaction(userDto.getId(), dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);

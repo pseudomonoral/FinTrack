@@ -13,16 +13,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 @WebServlet("/budget/*")
-@RequiredArgsConstructor
 public class BudgetServlet extends HttpServlet {
 
-    private final BudgetController budgetController;
+    private final BudgetController budgetController = (BudgetController) ApplicationContext.getBean("budgetController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

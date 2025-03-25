@@ -3,7 +3,6 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.EntityBudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.BudgetService;
@@ -21,11 +20,10 @@ public class BudgetServiceImpl implements BudgetService {
 
     private final BudgetDao budgetDao;
     private final TransactionDao transactionDao;
-    private final EntityBudgetMapper budgetMapper;
 
     @Override
     public void createBudget(Long userId, double limit) {
-        Budget budget = budgetMapper.mapToBudget(userId, limit);
+        Budget budget = mapToBudget(userId, limit);
 
         budget.onCreate();
         budgetDao.save(budget);
@@ -38,7 +36,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public void updateBudget(Long userId, double limit) {
-        Budget newBudget = budgetMapper.mapToBudget(userId, limit);
+        Budget newBudget = mapToBudget(userId, limit);
         Optional<Budget> oldBudget = budgetDao.findByUserId(userId);
         if (oldBudget.isPresent()) {
             newBudget.setId(oldBudget.get().getId());
@@ -71,5 +69,10 @@ public class BudgetServiceImpl implements BudgetService {
 
         return actualExpenses > budget.getLimit();
     }
-
+    private Budget mapToBudget(Long userId, double limit) {
+        return Budget.builder()
+                .userId(userId)
+                .limit(limit)
+                .build();
+    }
 }

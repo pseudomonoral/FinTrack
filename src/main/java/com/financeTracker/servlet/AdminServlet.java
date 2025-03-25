@@ -1,6 +1,7 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.dto.AdminActionDto;
@@ -11,17 +12,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/admin/*")
-@RequiredArgsConstructor
 public class AdminServlet extends HttpServlet {
 
-    private final UserController userController;
-    private final TransactionController transactionController;
+    private final UserController userController = (UserController) ApplicationContext.getBean("userController");
+    private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

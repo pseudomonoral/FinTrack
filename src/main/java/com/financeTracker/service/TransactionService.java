@@ -22,7 +22,7 @@ public interface TransactionService {
      * @param type The type of the transaction (income or expense).
      * @return Transaction The created transaction entity.
      */
-    Transaction createTransaction(double amount, String category, String description, TransactionType type);
+    Transaction createTransaction(Long userId, double amount, String category, String description, TransactionType type);
 
     /**
      * Deletes a specific transaction by its ID.

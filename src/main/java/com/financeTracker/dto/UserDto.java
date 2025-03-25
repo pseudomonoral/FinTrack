@@ -11,4 +11,3 @@ public class UserDto {
     private String userRole;
     private String userStatus;
 }
-

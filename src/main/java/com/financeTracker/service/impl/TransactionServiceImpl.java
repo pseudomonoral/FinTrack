@@ -3,7 +3,6 @@ package com.financeTracker.service.impl;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.EntityTransactionMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.entity.User;
@@ -29,13 +28,10 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionDao transactionDao;
     private final BudgetService budgetService;
     private final GoalService goalService;
-    private final EntityTransactionMapper mapper;
 
     @Override
-    public Transaction createTransaction(double amount, String category, String description, TransactionType type) {
-        Long userId = ApplicationContext.getAuthorizeUser().getId();
-        Transaction transaction = transactionDao.save(mapper
-                .mapToTransaction(userId, amount, category, description, type));
+    public Transaction createTransaction(Long userId, double amount, String category, String description, TransactionType type) {
+        Transaction transaction = transactionDao.save(mapToTransaction(userId, amount, category, description, type));
         applyTransaction(transaction);
         return transaction;
     }
@@ -94,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<Transaction> old = transactionDao.findById(id);
         if (old.isPresent()) {
             Long userId = ApplicationContext.getAuthorizeUser().getId();
-            Transaction newTransaction = mapper.mapToTransaction(userId, amount, category, description, type);
+            Transaction newTransaction = mapToTransaction(userId, amount, category, description, type);
             newTransaction.setId(id);
             newTransaction.setCreatedAt(old.get().getCreatedAt());
             if (!old.get().getType().equals(newTransaction.getType())
@@ -163,5 +159,16 @@ public class TransactionServiceImpl implements TransactionService {
                 .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
                 .filter(transaction -> transaction.getType() == type)
                 .toList();
+    }
+
+    private Transaction mapToTransaction(Long userId, double amount, String category, String description,
+                                         TransactionType type){
+        return Transaction.builder()
+                .amount(amount)
+                .userId(userId)
+                .category(category)
+                .description(description)
+                .type(type)
+                .build();
     }
 }

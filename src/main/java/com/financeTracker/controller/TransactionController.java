@@ -2,6 +2,7 @@ package com.financeTracker.controller;
 
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
+import com.financeTracker.dto.UserDto;
 import com.financeTracker.mapper.DtoGoalMapper;
 import com.financeTracker.mapper.DtoTransactionMapper;
 import com.financeTracker.model.entity.Transaction;
@@ -19,8 +20,8 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final DtoTransactionMapper dtoTransactionMapper = Mappers.getMapper(DtoTransactionMapper.class);;
 
-    public TransactionResponseDto createTransaction(TransactionRequestDto dto) {
-        Transaction transaction = transactionService.createTransaction(
+    public TransactionResponseDto createTransaction(Long userId, TransactionRequestDto dto) {
+        Transaction transaction = transactionService.createTransaction(userId,
                 dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType()
         );
         return dtoTransactionMapper.toResponseDTO(transaction);
