@@ -11,7 +11,9 @@ public enum EventType {
     LOGOUT("Logout"),
     UPDATE_PROFILE("Update Profile"),
     DELETE_ACCOUNT("Delete Account"),
-    BLOCK_ACCOUNT("Block Account");
+    BLOCK_ACCOUNT("Block Account"),
+    UNBLOCK_ACCOUNT("Unblock Account");
+
 
     private final String description;
 }
