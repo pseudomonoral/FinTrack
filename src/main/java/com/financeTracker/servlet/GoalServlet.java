@@ -3,11 +3,9 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.GoalController;
-import com.financeTracker.dto.GoalCreateRequestDto;
+import com.financeTracker.dto.GoalRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
-import com.financeTracker.dto.GoalUpdateRequestDto;
 import com.financeTracker.dto.UserDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,10 +21,10 @@ public class GoalServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
-        GoalCreateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalCreateRequestDto.class);
+        GoalRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalRequestDto.class);
 
         GoalResponseDto createdGoal = goalController.createGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");
@@ -62,7 +60,7 @@ public class GoalServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
-        GoalUpdateRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalUpdateRequestDto.class);
+        GoalRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalRequestDto.class);
 
         GoalResponseDto updatedGoal = goalController.updateGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");

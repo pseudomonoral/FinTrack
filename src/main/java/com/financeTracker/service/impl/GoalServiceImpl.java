@@ -52,16 +52,16 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount,
+    public void updateGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,
                            boolean goalActual) {
         Goal goal = mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
-        goal.setId(id);
 
         Optional<Goal> oldActualGoal = goalDao.findGoalByNameAndId(nameGoal, userId);
         if (oldActualGoal.isPresent()) {
             if (goalActual && !oldActualGoal.get().isGoalActual()){
                 deactivateGoalByUserId(userId);
             }
+            goal.setId(oldActualGoal.get().getId());
             goalDao.updateGoal(goal);
         } else {
             throw new EntityNotFoundException(GOAL, goal.getUserId());

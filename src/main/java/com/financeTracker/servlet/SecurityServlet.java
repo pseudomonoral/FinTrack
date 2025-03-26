@@ -3,7 +3,6 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.annotation.Auditable;
-import com.financeTracker.annotation.Secured;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;

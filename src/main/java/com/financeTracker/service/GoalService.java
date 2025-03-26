@@ -55,7 +55,7 @@ public interface GoalService {
      * @param targetAmount The new target amount for the goal.
      * @param goalActual A boolean indicating whether the goal is actually achieved.
      */
-    void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount, boolean goalActual);
+    void updateGoal(Long userId, String nameGoal, double targetAmount, double currentAmount, boolean goalActual);
 
     /**
      * Retrieves the current goal that is active for a specific user.

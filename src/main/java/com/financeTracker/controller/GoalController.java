@@ -1,8 +1,7 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.GoalCreateRequestDto;
+import com.financeTracker.dto.GoalRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
-import com.financeTracker.dto.GoalUpdateRequestDto;
 import com.financeTracker.mapper.DtoGoalMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
@@ -18,7 +17,7 @@ public class GoalController {
     private final GoalService goalService;
     private final DtoGoalMapper dtoGoalMapper = Mappers.getMapper(DtoGoalMapper.class);
 
-    public GoalResponseDto createGoal(Long userId, GoalCreateRequestDto dto) {
+    public GoalResponseDto createGoal(Long userId, GoalRequestDto dto) {
         Goal goal = goalService.createGoal(userId, dto.getGoalActive(), dto.getName(), dto.getTargetAmount(), 0);
         return dtoGoalMapper.toDTO(goal);
     }
@@ -39,8 +38,8 @@ public class GoalController {
         goalService.deleteGoal(nameGoal, userId);
     }
 
-    public GoalResponseDto updateGoal(Long userId, GoalUpdateRequestDto dto) {
-        goalService.updateGoal(dto.getId(), userId, dto.getName(), dto.getTargetAmount(), 0, dto.getGoalActual());
+    public GoalResponseDto updateGoal(Long userId, GoalRequestDto dto) {
+        goalService.updateGoal(userId, dto.getName(), dto.getTargetAmount(), 0, dto.getGoalActive());
         Goal updatedGoal = goalService.getGoal(dto.getName(), userId);
         return dtoGoalMapper.toDTO(updatedGoal);
     }

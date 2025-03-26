@@ -5,7 +5,6 @@ import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.*;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ public class BudgetServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
 
         if ("/create".equals(path)) {
@@ -36,7 +35,7 @@ public class BudgetServlet extends HttpServlet {
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
-        BudgetCreateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetCreateRequestDto.class);
+        BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
 
         BudgetResponseDto response = budgetController.createBudget(userDto.getId(), request);
 
@@ -61,7 +60,7 @@ public class BudgetServlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
         Optional<BudgetResponseDto> budget = budgetController.getBudget(userDto.getId());
@@ -77,10 +76,10 @@ public class BudgetServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
-        BudgetUpdateRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetUpdateRequestDto.class);
+        BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
 
         BudgetResponseDto response = budgetController.updateBudget(userDto.getId(), request);
 
@@ -90,7 +89,7 @@ public class BudgetServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
         budgetController.deleteBudget(userDto.getId());
