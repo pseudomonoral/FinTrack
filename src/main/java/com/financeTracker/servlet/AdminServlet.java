@@ -25,6 +25,7 @@ public class AdminServlet extends HttpServlet {
     private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Secured(hasRole = "ADMIN")
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
@@ -75,5 +76,3 @@ public class AdminServlet extends HttpServlet {
         objectMapper.writeValue(resp.getWriter(), data);
     }
 }
-
-

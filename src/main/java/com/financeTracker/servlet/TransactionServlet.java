@@ -24,7 +24,6 @@ public class TransactionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
         TransactionResponseDto responseDTO = transactionController.createTransaction(userDto.getId(), dto);
 
@@ -36,9 +35,7 @@ public class TransactionServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long transactionId = extractTransactionId(req, resp);
-        if (transactionId == null) return;
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
 
         TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
         TransactionResponseDto responseDTO = transactionController.updateTransaction(userDto.getId(), transactionId, dto);
@@ -51,7 +48,6 @@ public class TransactionServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long transactionId = extractTransactionId(req, resp);
-        if (transactionId == null) return;
 
         transactionController.deleteTransaction(transactionId);
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -60,7 +56,6 @@ public class TransactionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         Long userId = userDto.getId();
         String category = req.getParameter("category");
 

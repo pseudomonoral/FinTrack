@@ -24,7 +24,6 @@ public class StatisticServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         Long userId = userDto.getId();
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();

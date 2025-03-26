@@ -34,7 +34,6 @@ public class BudgetServlet extends HttpServlet {
 
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
 
         BudgetResponseDto response = budgetController.createBudget(userDto.getId(), request);
@@ -46,7 +45,6 @@ public class BudgetServlet extends HttpServlet {
 
     private void handleCheckBudgetExceeded(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         StatisticsController statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
         double expense = statisticsController.getExpenseForPeriod(userDto.getId(),
                 LocalDate.now().minusMonths(1), LocalDate.now()).getAmount();
@@ -62,7 +60,6 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         Optional<BudgetResponseDto> budget = budgetController.getBudget(userDto.getId());
 
         resp.setContentType("application/json");
@@ -78,7 +75,6 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
 
         BudgetResponseDto response = budgetController.updateBudget(userDto.getId(), request);
@@ -91,7 +87,6 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         budgetController.deleteBudget(userDto.getId());
 
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

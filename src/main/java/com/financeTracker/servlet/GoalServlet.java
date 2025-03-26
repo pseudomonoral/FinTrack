@@ -35,7 +35,6 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         String goalName = req.getParameter("name");
 
         if (goalName != null) {
@@ -59,7 +58,6 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         GoalRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalRequestDto.class);
 
         GoalResponseDto updatedGoal = goalController.updateGoal(userDto.getId(), requestDTO);
@@ -71,7 +69,6 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         String goalName = req.getParameter("name");
 
         if (goalName != null) {
