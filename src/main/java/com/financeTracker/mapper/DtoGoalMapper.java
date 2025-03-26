@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface DtoGoalMapper {
 
     @Mapping(target = "progress", expression = "java(goal.getCurrentAmount() / goal.getTargetAmount() * 100)")
-    GoalResponseDto toDTO(Goal goal);
+    GoalResponseDto toGoalResponseDto(Goal goal);
 }
 

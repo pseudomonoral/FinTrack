@@ -16,12 +16,12 @@ public class AuthController {
 
     public UserDto register(AuthRequestDto authRequest) {
         User user = securityService.registration(authRequest.getLogin(), authRequest.getPassword());
-        return dtoUserMapper.toDto(user);
+        return dtoUserMapper.toUserDto(user);
     }
 
     public UserDto authorize(AuthRequestDto authRequest) {
         User user = securityService.authorize(authRequest.getLogin(), authRequest.getPassword());
-        return dtoUserMapper.toDto(user);
+        return dtoUserMapper.toUserDto(user);
     }
 }
 

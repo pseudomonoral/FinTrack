@@ -22,7 +22,7 @@ public class TransactionController {
         Transaction transaction = transactionService.createTransaction(userId,
                 dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType()
         );
-        return dtoTransactionMapper.toResponseDTO(transaction);
+        return dtoTransactionMapper.toResponseTransactionDto(transaction);
     }
 
     public void deleteTransaction(Long transactionId) {
@@ -31,7 +31,7 @@ public class TransactionController {
 
     public TransactionResponseDto updateTransaction(Long userId, Long transactionId, TransactionRequestDto dto) {
         transactionService.updateTransaction(userId, transactionId, dto.getAmount(), dto.getCategory(), dto.getDescription(), dto.getType());
-        return dtoTransactionMapper.toResponseDTO(transactionService.getTransactions(userId)
+        return dtoTransactionMapper.toResponseTransactionDto(transactionService.getTransactions(userId)
                 .stream().filter(transaction -> transaction.getId().equals(transactionId))
                 .findFirst().orElse(null));
         //TODO:исправить передачу с потенциальным null
@@ -39,13 +39,13 @@ public class TransactionController {
 
     public List<TransactionResponseDto> getTransactions(Long userId) {
         return transactionService.getTransactions(userId).stream()
-                .map(dtoTransactionMapper::toResponseDTO)
+                .map(dtoTransactionMapper::toResponseTransactionDto)
                 .collect(Collectors.toList());
     }
 
     public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
         return transactionService.getTransactionsByCategory(userId, category).stream()
-                .map(dtoTransactionMapper::toResponseDTO)
+                .map(dtoTransactionMapper::toResponseTransactionDto)
                 .collect(Collectors.toList());
     }
 }

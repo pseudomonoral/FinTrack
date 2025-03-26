@@ -9,6 +9,6 @@ import org.mapstruct.Mapping;
 public interface DtoTransactionMapper {
 
     @Mapping(source = "id", target = "id")
-    TransactionResponseDto toResponseDTO(Transaction transaction);
+    TransactionResponseDto toResponseTransactionDto(Transaction transaction);
 }
 

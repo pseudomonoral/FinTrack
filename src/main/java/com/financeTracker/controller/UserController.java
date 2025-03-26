@@ -26,7 +26,7 @@ public class UserController {
      * @return The user corresponding to the given ID.
      */
     public UserDto getUserById(Long id) {
-        return dtoUserMapper.toDto(userService.getUserById(id));
+        return dtoUserMapper.toUserDto(userService.getUserById(id));
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserController {
      */
     public List<UserDto> showAllUsers() {
         return userService.showAll().stream()
-                .map(dtoUserMapper::toDto)
+                .map(dtoUserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 

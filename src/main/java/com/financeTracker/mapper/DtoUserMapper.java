@@ -10,6 +10,6 @@ public interface DtoUserMapper {
 
     @Mapping(source = "userRole", target = "userRole")
     @Mapping(source = "userStatus", target = "userStatus")
-    UserDto toDto(User user);
+    UserDto toUserDto(User user);
 }
 
