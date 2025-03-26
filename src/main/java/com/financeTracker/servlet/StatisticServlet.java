@@ -21,7 +21,7 @@ public class StatisticServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
@@ -55,7 +55,7 @@ public class StatisticServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;

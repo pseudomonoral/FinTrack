@@ -2,9 +2,12 @@ package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
+import com.financeTracker.annotation.Auditable;
+import com.financeTracker.annotation.Secured;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
+import com.financeTracker.model.type.EventType;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,12 +45,14 @@ public class SecurityServlet extends HttpServlet {
         }
     }
 
+    @Auditable(eventType = EventType.REGISTER)
     private void handleRegister(AuthRequestDto authRequest, HttpServletResponse resp) throws IOException {
         UserDto userDto = authController.register(authRequest);
         resp.setStatus(HttpServletResponse.SC_CREATED);
         writeResponse(resp, userDto);
     }
 
+    @Auditable(eventType = EventType.LOGIN)
     private void handleLogin(AuthRequestDto authRequest, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = authController.authorize(authRequest);
         req.getSession().setAttribute("user", userDto);

@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum EventType {
+    REGISTER("Register"),
     LOGIN("Login"),
     LOGOUT("Logout"),
     UPDATE_PROFILE("Update Profile"),

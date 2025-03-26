@@ -22,7 +22,7 @@ public class TransactionServlet extends HttpServlet {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
         if (userDto == null) return;
         TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);

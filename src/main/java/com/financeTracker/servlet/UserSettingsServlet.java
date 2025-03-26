@@ -2,9 +2,12 @@ package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
+import com.financeTracker.annotation.Auditable;
+import com.financeTracker.annotation.Secured;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
+import com.financeTracker.model.type.EventType;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +29,8 @@ public class UserSettingsServlet extends HttpServlet {
         objectMapper.writeValue(resp.getOutputStream(), userDto);
     }
 
+    @Auditable(eventType = EventType.UPDATE_PROFILE)
+    @Secured(hasRole = "USER")
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
@@ -39,6 +44,8 @@ public class UserSettingsServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
+    @Auditable(eventType = EventType.DELETE_ACCOUNT)
+    @Secured(hasRole = "USER")
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");

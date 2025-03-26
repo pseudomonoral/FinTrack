@@ -1,5 +1,7 @@
 package com.financeTracker.servlet;
 
+import com.financeTracker.dto.UserDto;
+import com.financeTracker.model.type.UserStatus;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,11 @@ public class AuthFilter implements Filter {
         }
 
         if ((requestURI.contains("login") || requestURI.contains("register")) && session != null && session.getAttribute("user") != null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        UserDto userDto = (UserDto) session.getAttribute("user");
+        if (userDto != null && userDto.getUserStatus().equals(UserStatus.BLOCKED.toString())) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
