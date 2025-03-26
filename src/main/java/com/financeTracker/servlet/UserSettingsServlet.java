@@ -40,11 +40,10 @@ public class UserSettingsServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
         userController.deleteUser(userDto.getId());
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 }
-
