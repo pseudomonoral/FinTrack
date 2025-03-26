@@ -3,6 +3,7 @@ package com.financeTracker.mapper;
 import com.financeTracker.dto.BudgetResponseDto;
 import com.financeTracker.model.entity.Budget;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface DtoBudgetMapper {

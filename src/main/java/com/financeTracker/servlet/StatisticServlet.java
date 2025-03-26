@@ -5,7 +5,6 @@ import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.PeriodRequestDto;
 import com.financeTracker.dto.UserDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

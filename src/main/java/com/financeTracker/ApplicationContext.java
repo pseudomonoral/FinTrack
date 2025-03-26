@@ -83,7 +83,6 @@ public class ApplicationContext {
         LiquibaseMigrator liquibaseMigrator = new LiquibaseMigrator(databaseManager, config.liquibase.changelog);
         liquibaseMigrator.executeMigrations();
         DataSource dataSource = databaseManager.getDataSource();
-        //TODO:сократить строки
 
         CONTEXT.put("userDao", new UserDaoImpl(dataSource));
         CONTEXT.put("transactionDao", new TransactionDaoImpl(dataSource));

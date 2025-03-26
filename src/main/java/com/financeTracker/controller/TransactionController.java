@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final DtoTransactionMapper dtoTransactionMapper = Mappers.getMapper(DtoTransactionMapper.class);;
+    private final DtoTransactionMapper dtoTransactionMapper = Mappers.getMapper(DtoTransactionMapper.class);
 
     public TransactionResponseDto createTransaction(Long userId, TransactionRequestDto dto) {
         Transaction transaction = transactionService.createTransaction(userId,
@@ -34,7 +34,6 @@ public class TransactionController {
         return dtoTransactionMapper.toResponseTransactionDto(transactionService.getTransactions(userId)
                 .stream().filter(transaction -> transaction.getId().equals(transactionId))
                 .findFirst().orElse(null));
-        //TODO:исправить передачу с потенциальным null
     }
 
     public List<TransactionResponseDto> getTransactions(Long userId) {

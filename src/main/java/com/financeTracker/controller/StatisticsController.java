@@ -6,12 +6,15 @@ import com.financeTracker.dto.GoalStatisticsResponseDto;
 import com.financeTracker.dto.IncomeExpenseResponseDto;
 import com.financeTracker.mapper.DtoStatisticsMapper;
 import com.financeTracker.service.StatisticsService;
+import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDate;
 import java.util.Map;
 
 public class StatisticsController {
+
     private final StatisticsService statisticsService;
+    private final DtoStatisticsMapper dtoStatisticsMapper = Mappers.getMapper(DtoStatisticsMapper.class);
 
     public StatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
@@ -19,28 +22,28 @@ public class StatisticsController {
 
     public BalanceResponseDto getCurrentBalance(Long userId) {
         double balance = statisticsService.calculateCurrentBalance(userId);
-        return DtoStatisticsMapper.INSTANCE.toBalanceResponseDto(balance);
+        return dtoStatisticsMapper.toBalanceResponseDto(balance);
     }
 
     public IncomeExpenseResponseDto getIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
         double income = statisticsService.calculateIncomeForPeriod(userId, startDate, endDate);
-        return DtoStatisticsMapper.INSTANCE.toIncomeExpenseResponseDto(income);
+        return dtoStatisticsMapper.toIncomeExpenseResponseDto(income);
     }
 
     public IncomeExpenseResponseDto getExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
         double expense = statisticsService.calculateExpenseForPeriod(userId, startDate, endDate);
-        return DtoStatisticsMapper.INSTANCE.toIncomeExpenseResponseDto(expense);
+        return dtoStatisticsMapper.toIncomeExpenseResponseDto(expense);
     }
 
     public ExpenseAnalysisResponseDto getExpenseAnalysis(Long userId) {
         Map<String, Double> analysis = statisticsService.analyzeExpensesByCategory(userId);
-        return DtoStatisticsMapper.INSTANCE.toExpenseAnalysisResponseDto(analysis);
+        return dtoStatisticsMapper.toExpenseAnalysisResponseDto(analysis);
     }
 
     public GoalStatisticsResponseDto getGoalStatistics(Long userId) {
         Long completedGoals = statisticsService.calculateCountOfCompletedGoal(userId);
         Double averageGoalProgress = statisticsService.calculateAverageGoalProgress(userId);
-        return DtoStatisticsMapper.INSTANCE.toGoalStatisticsResponseDto(completedGoals, averageGoalProgress);
+        return dtoStatisticsMapper.toGoalStatisticsResponseDto(completedGoals, averageGoalProgress);
     }
 }
 
