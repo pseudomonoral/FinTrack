@@ -1,25 +1,34 @@
 package com.financeTracker.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-import java.util.logging.Logger;
-
+@Slf4j
 @Aspect
 public class LoggingAspect {
 
-    private static final Logger logger = Logger.getLogger(LoggingAspect.class.getName());
+    @Pointcut("@annotation(com.financeTracker.annotation.Loggable) && execution(* * (..))")
+    public void annotatedByLoggable() {
+    }
 
-    @Around("execution(* com.financeTracker.controller.*.*(..))")
-    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("annotatedByLoggable()")
+    public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("[{}]: Calling method {}", getFormattedCurrentDate(), joinPoint.getSignature());
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
-        long executionTime = System.currentTimeMillis() - start;
-
-        logger.info(joinPoint.getSignature() + " выполнен за " + executionTime + " мс");
+        long end = System.currentTimeMillis() - start;
+        log.info("[{}]: Execution of method {} finished. Execution time is {} ms.", getFormattedCurrentDate(), joinPoint.getSignature(), end);
         return result;
     }
-}
 
+    private String getFormattedCurrentDate() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.now().format(dateTimeFormatter);
+    }
+}
