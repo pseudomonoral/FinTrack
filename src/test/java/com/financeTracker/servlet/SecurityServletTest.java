@@ -1,127 +1,126 @@
-//package com.financeTracker.servlet;
-//
-//import com.financeTracker.controller.AuthController;
-//import com.financeTracker.dto.AuthRequestDto;
-//import com.financeTracker.dto.UserDto;
-//import jakarta.servlet.http.HttpServletResponse;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.Mockito;
-//import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-//
-//import java.io.BufferedReader;
-//import java.io.IOException;
-//import java.io.PrintWriter;
-//import java.io.StringReader;
-//
-//@DisplayName("SecurityServlet Test")
-//class SecurityServletTest extends AbstractServletTest {
-//
-//    @Mock
-//    private AuthController authController;
-//
-//    @InjectMocks
-//    private SecurityServlet servlet;
-//
-//    private final ObjectMapper objectMapper = new ObjectMapper();
-//
-//    @Mock
-//    private PrintWriter writer;
-//
-//    @Test
-//    @DisplayName("Register user, expected success")
-//    void doPostRegister() throws IOException {
-//        String pathInfo = "/register";
-//        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
-//
-//        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-//        Mockito.when(request.getReader()).thenReturn(new BufferedReader(new StringReader(objectMapper.writeValueAsString(authRequest))));
-//        Mockito.when(response.getWriter()).thenReturn(writer);
-//
-//        UserDto userDto = new UserDto(1L, "user", "password");
-//        Mockito.when(authController.register(authRequest)).thenReturn(userDto);
-//
-//
-//        servlet.doPost(request, response);
-//
-//        Mockito.verify(response).setStatus(HttpServletResponse.SC_CREATED);
-//        Mockito.verify(writer).write(objectMapper.writeValueAsString(userDto));
-//    }
-//
-//    @Test
-//    @DisplayName("Login user, expected success")
-//    void doPostLogin() throws IOException {
-//
-//        String pathInfo = "/login";
-//        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
-//
-//        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-//        Mockito.when(request.getReader()).thenReturn(new BufferedReader(new StringReader(objectMapper.writeValueAsString(authRequest))));
-//        Mockito.when(response.getWriter()).thenReturn(writer);
-//
-//
-//        UserDto userDto = new UserDto(1L, "user", "password");
-//        Mockito.when(authController.authorize(authRequest)).thenReturn(userDto);
-//        Mockito.when(request.getSession()).thenReturn(session);
-//
-//
-//        servlet.doPost(request, response);
-//
-//
-//        Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
-//        Mockito.verify(writer).write(objectMapper.writeValueAsString(userDto));
-//        Mockito.verify(session).setAttribute("user", userDto);
-//    }
-//
-//    @Test
-//    @DisplayName("Invalid path, expected 404")
-//    void doPostInvalidPath() throws IOException {
-//
-//        String pathInfo = "/invalid-path";
-//        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
-//
-//        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-//        Mockito.when(request.getReader()).thenReturn(new BufferedReader(new StringReader(objectMapper.writeValueAsString(authRequest))));
-//
-//
-//        servlet.doPost(request, response);
-//
-//
-//        Mockito.verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Неизвестный путь");
-//    }
-//
-//    @Test
-//    @DisplayName("Empty path, expected 400")
-//    void doPostEmptyPath() throws IOException {
-//
-//        String pathInfo = "";
-//        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
-//
-//        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-//        Mockito.when(request.getReader()).thenReturn(new BufferedReader(new StringReader(objectMapper.writeValueAsString(authRequest))));
-//
-//
-//        servlet.doPost(request, response);
-//
-//        Mockito.verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Не указан путь запроса");
-//    }
-//
-//    @Test
-//    @DisplayName("Invalid request data, expected 400")
-//    void doPostInvalidRequestData() throws IOException {
-//
-//        String pathInfo = "/register";
-//        String invalidRequestData = "invalid data";
-//
-//        Mockito.when(request.getPathInfo()).thenReturn(pathInfo);
-//        Mockito.when(request.getReader()).thenReturn(new BufferedReader(new StringReader(invalidRequestData)));
-//
-//
-//        servlet.doPost(request, response);
-//
-//        Mockito.verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Не указан путь запроса");
-//    }
-//}
-//
+package com.financeTracker.servlet;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.controller.AuthController;
+import com.financeTracker.dto.AuthRequestDto;
+import com.financeTracker.dto.UserDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class SecurityServletTest {
+
+    @Mock
+    private AuthController authController;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private HttpSession session;
+
+    @Mock
+    private PrintWriter writer;
+
+    @InjectMocks
+    private SecurityServlet securityServlet;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() {
+        securityServlet = new SecurityServlet();
+    }
+
+    @Test
+    @DisplayName("Регистрация нового пользователя - успешный сценарий")
+    void testRegisterSuccess() throws IOException {
+        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
+
+        UserDto userDto = UserDto.builder()
+                .id(1L)
+                .login("user128@example.com")
+                .userRole("USER")
+                .userStatus("ACTIVE")
+                .build();
+
+        String jsonRequest = objectMapper.writeValueAsString(authRequest);
+        BufferedReader reader = new BufferedReader(new StringReader(jsonRequest));
+
+        when(request.getPathInfo()).thenReturn("/register");
+        when(request.getReader()).thenReturn(reader);
+        when(response.getWriter()).thenReturn(writer);
+        when(authController.register(any(AuthRequestDto.class))).thenReturn(userDto);
+
+        securityServlet.doPost(request, response);
+
+        verify(response).setStatus(HttpServletResponse.SC_CREATED);
+        verify(writer).write(objectMapper.writeValueAsString(userDto));
+    }
+
+    @Test
+    @DisplayName("Аутентификация пользователя - успешный сценарий")
+    void testLoginSuccess() throws IOException {
+        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
+        UserDto userDto = UserDto.builder()
+                .id(1L)
+                .login("user128@example.com")
+                .userRole("USER")
+                .userStatus("ACTIVE")
+                .build();
+        String jsonRequest = objectMapper.writeValueAsString(authRequest);
+        BufferedReader reader = new BufferedReader(new StringReader(jsonRequest));
+
+        when(request.getPathInfo()).thenReturn("/login");
+        when(request.getReader()).thenReturn(reader);
+        when(request.getSession()).thenReturn(session);
+        when(response.getWriter()).thenReturn(writer);
+        when(authController.authorize(any(AuthRequestDto.class))).thenReturn(userDto);
+
+        securityServlet.doPost(request, response);
+
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(session).setAttribute("user", userDto);
+        verify(writer).write(objectMapper.writeValueAsString(userDto));
+    }
+
+    @Test
+    @DisplayName("Неизвестный путь - ошибка 404")
+    void testUnknownPath() throws IOException {
+        when(request.getPathInfo()).thenReturn("/unknown");
+
+        securityServlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Неизвестный путь");
+    }
+
+    @Test
+    @DisplayName("Пустой путь - ошибка 400")
+    void testEmptyPath() throws IOException {
+        when(request.getPathInfo()).thenReturn(null);
+
+        securityServlet.doPost(request, response);
+
+        verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Не указан путь запроса");
+    }
+}
