@@ -5,6 +5,6 @@ import com.financeTracker.model.entity.User;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface DtoUserMapper {
+public interface UserMapper {
     UserDto toUserDto(User user);
 }

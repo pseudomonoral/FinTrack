@@ -2,7 +2,7 @@ package com.financeTracker.controller;
 
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
-import com.financeTracker.mapper.DtoTransactionMapper;
+import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final DtoTransactionMapper dtoTransactionMapper = Mappers.getMapper(DtoTransactionMapper.class);
+    private final TransactionMapper dtoTransactionMapper = Mappers.getMapper(TransactionMapper.class);
 
     public TransactionResponseDto createTransaction(Long userId, TransactionRequestDto dto) {
         Transaction transaction = transactionService.createTransaction(userId,

@@ -1,9 +1,8 @@
 package com.financeTracker.controller;
 
 import com.financeTracker.dto.BudgetCheckResponseDto;
-import com.financeTracker.dto.BudgetRequestDto;
-import com.financeTracker.dto.BudgetResponseDto;
-import com.financeTracker.mapper.DtoBudgetMapper;
+import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -16,20 +15,18 @@ import org.mapstruct.factory.Mappers;
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final DtoBudgetMapper budgetMapper = Mappers.getMapper(DtoBudgetMapper.class);
+    private final BudgetMapper budgetMapper = Mappers.getMapper(BudgetMapper.class);
 
-    public BudgetResponseDto createBudget(Long userId, BudgetRequestDto request) {
+    public void createBudget(Long userId, BudgetDto request) {
         budgetService.createBudget(userId, request.getLimit());
-        return budgetMapper.toResponse(request.getLimit());
     }
 
-    public Optional<BudgetResponseDto> getBudget(long userId) {
-        return budgetService.getBudget(userId).map(budgetMapper::toResponse);
+    public Optional<BudgetDto> getBudget(long userId) {
+        return budgetService.getBudget(userId).map(budgetMapper::toBudgetDto);
     }
 
-    public BudgetResponseDto updateBudget(Long userId, BudgetRequestDto request) {
+    public void updateBudget(Long userId, BudgetDto request) {
         budgetService.updateBudget(userId, request.getLimit());
-        return budgetMapper.toResponse(request.getLimit());
     }
 
     public void deleteBudget(long userId) {

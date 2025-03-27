@@ -2,7 +2,7 @@ package com.financeTracker.controller;
 
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
-import com.financeTracker.mapper.DtoUserMapper;
+import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import static com.financeTracker.model.type.UserRole.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final DtoUserMapper dtoUserMapper = Mappers.getMapper(DtoUserMapper.class);
+    private final UserMapper dtoUserMapper = Mappers.getMapper(UserMapper.class);
     private final UserService userService;
 
     /**

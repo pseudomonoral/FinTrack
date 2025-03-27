@@ -5,8 +5,6 @@ import com.financeTracker.model.entity.Transaction;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface DtoTransactionMapper {
-
+public interface TransactionMapper {
     TransactionResponseDto toResponseTransactionDto(Transaction transaction);
 }
-

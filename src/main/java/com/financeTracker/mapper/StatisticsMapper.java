@@ -1,25 +1,20 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.*;
+import com.financeTracker.dto.BalanceResponseDto;
+import com.financeTracker.dto.ExpenseAnalysisResponseDto;
+import com.financeTracker.dto.GoalStatisticsResponseDto;
+import com.financeTracker.dto.IncomeExpenseResponseDto;
 import org.mapstruct.Mapper;
 
 import java.util.Map;
 
 @Mapper
-public interface DtoStatisticsMapper {
-
+public interface StatisticsMapper {
     BalanceResponseDto toBalanceResponseDto(Double balance);
 
     IncomeExpenseResponseDto toIncomeExpenseResponseDto(Double amount);
 
     GoalStatisticsResponseDto toGoalStatisticsResponseDto(Long completedGoals, Double averageGoalProgress);
-
-    ReportResponseDto toReportResponseDto(
-            Double currentBalance, String budgetState, String goalState,
-            Double monthlyExpenses, Double monthlyIncome,
-            Double totalExpenses, Double totalIncome,
-            Long completedGoals, Double averageGoalProgress
-    );
 
     default ExpenseAnalysisResponseDto toExpenseAnalysisResponseDto(Map<String, Double> categoryExpenses) {
         ExpenseAnalysisResponseDto dto = new ExpenseAnalysisResponseDto();
@@ -27,5 +22,3 @@ public interface DtoStatisticsMapper {
         return dto;
     }
 }
-
-

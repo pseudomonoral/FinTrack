@@ -6,16 +6,40 @@ import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
 
 
 /**
  * Represents a user in the system.
  */
 @Data
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-public class User extends BaseEntity {
+@Builder
+public class User {
+
+    /** Unique identifier of the entity. */
+    private Long id;
+
+    /** Timestamp when the entity was created. */
+    private LocalDateTime createdAt;
+
+    /** Timestamp when the entity was last updated. */
+    private LocalDateTime updatedAt;
+
+    /**
+     * Initializes timestamps when the entity is created.
+     */
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * Updates the timestamp when the entity is modified.
+     */
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     /** User's login (username). */
     private String login;

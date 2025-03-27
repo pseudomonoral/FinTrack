@@ -34,13 +34,11 @@ public class BudgetServlet extends HttpServlet {
 
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
+        BudgetDto request = objectMapper.readValue(req.getInputStream(), BudgetDto.class);
 
-        BudgetResponseDto response = budgetController.createBudget(userDto.getId(), request);
+        budgetController.createBudget(userDto.getId(), request);
 
-        resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
-        objectMapper.writeValue(resp.getOutputStream(), response);
     }
 
     private void handleCheckBudgetExceeded(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -60,28 +58,25 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        Optional<BudgetResponseDto> budget = budgetController.getBudget(userDto.getId());
+        Optional<BudgetDto> budget = budgetController.getBudget(userDto.getId());
 
-        resp.setContentType("application/json");
         if (budget.isPresent()) {
+            resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getOutputStream(), budget.get());
         } else {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("{\"error\": \"Бюджет не найден\"}");
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        BudgetRequestDto request = objectMapper.readValue(req.getInputStream(), BudgetRequestDto.class);
+        BudgetDto request = objectMapper.readValue(req.getInputStream(), BudgetDto.class);
 
-        BudgetResponseDto response = budgetController.updateBudget(userDto.getId(), request);
+        budgetController.updateBudget(userDto.getId(), request);
 
-        resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getOutputStream(), response);
     }
 
     @Override

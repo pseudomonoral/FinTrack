@@ -4,7 +4,7 @@ import com.financeTracker.dto.BalanceResponseDto;
 import com.financeTracker.dto.ExpenseAnalysisResponseDto;
 import com.financeTracker.dto.GoalStatisticsResponseDto;
 import com.financeTracker.dto.IncomeExpenseResponseDto;
-import com.financeTracker.mapper.DtoStatisticsMapper;
+import com.financeTracker.mapper.StatisticsMapper;
 import com.financeTracker.service.StatisticsService;
 import org.mapstruct.factory.Mappers;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
-    private final DtoStatisticsMapper dtoStatisticsMapper = Mappers.getMapper(DtoStatisticsMapper.class);
+    private final StatisticsMapper dtoStatisticsMapper = Mappers.getMapper(StatisticsMapper.class);
 
     public StatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
