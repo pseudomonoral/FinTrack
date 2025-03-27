@@ -13,11 +13,11 @@ import java.time.format.DateTimeFormatter;
 @Aspect
 public class LoggingAspect {
 
-    @Pointcut("com.financeTracker.service..*(..)")
-    public void allServiceMethods() {
+    @Pointcut("@annotation(com.financeTracker.annotation.Loggable) && execution(* * (..))")
+    public void annotatedByLoggable() {
     }
 
-    @Around("allServiceMethods()")
+    @Around("annotatedByLoggable()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("[{}]: Calling method {}", getFormattedCurrentDate(), joinPoint.getSignature());
         long start = System.currentTimeMillis();
