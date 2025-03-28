@@ -6,17 +6,15 @@ import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.financeTracker.model.type.UserRole.*;
 
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserMapper dtoUserMapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper dtoUserMapper = UserMapper.INSTANCE;
     private final UserService userService;
 
     /**
@@ -75,8 +73,4 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    public boolean checkAdminAccess(Long id) {
-        User user = userService.getUserById(id);
-        return user.getUserRole().equals(ADMIN);
-    }
 }

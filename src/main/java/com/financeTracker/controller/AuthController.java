@@ -6,22 +6,21 @@ import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 
 @RequiredArgsConstructor
 public class AuthController {
 
     private final SecurityService securityService;
-    private final UserMapper dtoUserMapper = Mappers.getMapper(UserMapper.class);
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     public UserDto register(AuthRequestDto authRequest) {
         User user = securityService.registration(authRequest.getLogin(), authRequest.getPassword());
-        return dtoUserMapper.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 
     public UserDto authorize(AuthRequestDto authRequest) {
         User user = securityService.authorize(authRequest.getLogin(), authRequest.getPassword());
-        return dtoUserMapper.toUserDto(user);
+        return userMapper.toUserDto(user);
     }
 }
 

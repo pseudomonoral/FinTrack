@@ -9,13 +9,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-import org.mapstruct.factory.Mappers;
-
 @RequiredArgsConstructor
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final BudgetMapper budgetMapper = Mappers.getMapper(BudgetMapper.class);
+    private final BudgetMapper budgetMapper = BudgetMapper.INSTANCE;
 
     public void createBudget(Long userId, BudgetDto request) {
         budgetService.createBudget(userId, request.getLimit());

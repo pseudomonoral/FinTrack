@@ -6,7 +6,6 @@ import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final TransactionMapper dtoTransactionMapper = Mappers.getMapper(TransactionMapper.class);
+    private final TransactionMapper dtoTransactionMapper = TransactionMapper.INSTANCE;
 
     public TransactionResponseDto createTransaction(Long userId, TransactionRequestDto dto) {
         Transaction transaction = transactionService.createTransaction(userId,

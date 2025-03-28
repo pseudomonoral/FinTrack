@@ -9,13 +9,11 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import org.mapstruct.factory.Mappers;
-
 @RequiredArgsConstructor
 public class GoalController {
 
     private final GoalService goalService;
-    private final GoalMapper goalMapper = Mappers.getMapper(GoalMapper.class);
+    private final GoalMapper goalMapper = GoalMapper.INSTANCE;
 
     public GoalResponseDto createGoal(Long userId, GoalRequestDto dto) {
         Goal goal = goalService.createGoal(userId, dto.getGoalActive(), dto.getName(), dto.getTargetAmount(), 0);

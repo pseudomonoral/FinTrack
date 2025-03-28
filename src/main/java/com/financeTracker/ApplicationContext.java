@@ -85,8 +85,10 @@ public class ApplicationContext {
     private static void loadDAOLayer() {
         Config config = ConfigLoader.loadConfig("config.yaml");
         DatabaseManager databaseManager = new DatabaseManager(config.database);
+
         LiquibaseMigrator liquibaseMigrator = new LiquibaseMigrator(databaseManager, config.liquibase.changelog);
         liquibaseMigrator.executeMigrations();
+
         DataSource dataSource = databaseManager.getDataSource();
 
         CONTEXT.put("userDao", new UserDaoImpl(dataSource));

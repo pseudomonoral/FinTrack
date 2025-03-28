@@ -6,7 +6,6 @@ import com.financeTracker.dto.GoalStatisticsResponseDto;
 import com.financeTracker.dto.IncomeExpenseResponseDto;
 import com.financeTracker.mapper.StatisticsMapper;
 import com.financeTracker.service.StatisticsService;
-import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
-    private final StatisticsMapper dtoStatisticsMapper = Mappers.getMapper(StatisticsMapper.class);
+    private final StatisticsMapper dtoStatisticsMapper = StatisticsMapper.INSTANCE;
 
     public StatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
