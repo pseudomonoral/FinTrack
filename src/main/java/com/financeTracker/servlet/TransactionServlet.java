@@ -1,6 +1,8 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.dto.TransactionRequestDto;
@@ -19,34 +21,36 @@ import java.util.List;
 public class TransactionServlet extends HttpServlet {
 
     private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .registerModule(new JavaTimeModule());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
+        TransactionRequestDto dto = objectMapper.readValue(req.getReader(), TransactionRequestDto.class);
         TransactionResponseDto responseDTO = transactionController.createTransaction(userDto.getId(), dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
-        objectMapper.writeValue(resp.getOutputStream(), responseDTO);
+        objectMapper.writeValue(resp.getWriter(), responseDTO);
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long transactionId = extractTransactionId(req, resp);
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
-        TransactionRequestDto dto = objectMapper.readValue(req.getInputStream(), TransactionRequestDto.class);
+        TransactionRequestDto dto = objectMapper.readValue(req.getReader(), TransactionRequestDto.class);
         TransactionResponseDto responseDTO = transactionController.updateTransaction(userDto.getId(), transactionId, dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getOutputStream(), responseDTO);
+        objectMapper.writeValue(resp.getWriter(), responseDTO);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long transactionId = extractTransactionId(req, resp);
 
         transactionController.deleteTransaction(transactionId);
@@ -68,7 +72,7 @@ public class TransactionServlet extends HttpServlet {
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getOutputStream(), transactions);
+        objectMapper.writeValue(resp.getWriter(), transactions);
     }
 
     private Long extractTransactionId(HttpServletRequest req, HttpServletResponse resp) throws IOException {
