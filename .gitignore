@@ -50,14 +50,6 @@ log/
 .DS_Store
 Thumbs.db
 
-# Environment variables
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-.env*.local
-
 # Maven & Gradle caches
 target/
 **/target/
