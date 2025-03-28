@@ -24,13 +24,12 @@ public class GoalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         GoalRequestDto requestDTO = objectMapper.readValue(req.getReader(), GoalRequestDto.class);
 
         GoalResponseDto createdGoal = goalController.createGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_CREATED);
-        objectMapper.writeValue(resp.getWriter(), createdGoal);
+        resp.getWriter().write(objectMapper.writeValueAsString(createdGoal));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class GoalServlet extends HttpServlet {
             if (goal != null) {
                 resp.setContentType("application/json");
                 resp.setStatus(HttpServletResponse.SC_OK);
-                objectMapper.writeValue(resp.getWriter(), goal);
+                resp.getWriter().write(objectMapper.writeValueAsString(goal));
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write("Goal not found");
@@ -52,7 +51,7 @@ public class GoalServlet extends HttpServlet {
             List<GoalResponseDto> goals = goalController.getGoals(userDto.getId());
             resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getWriter(), goals);
+            resp.getWriter().write(objectMapper.writeValueAsString(goals));
         }
     }
 
@@ -64,7 +63,7 @@ public class GoalServlet extends HttpServlet {
         GoalResponseDto updatedGoal = goalController.updateGoal(userDto.getId(), requestDTO);
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getWriter(), updatedGoal);
+        resp.getWriter().write(objectMapper.writeValueAsString(updatedGoal));
     }
 
     @Override

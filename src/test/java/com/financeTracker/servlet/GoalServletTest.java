@@ -1,16 +1,19 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.GoalController;
 import com.financeTracker.dto.GoalRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
 import com.financeTracker.dto.UserDto;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,9 +31,16 @@ class GoalServletTest extends AbstractServletTest {
     private PrintWriter writer;
 
     @InjectMocks
-    private GoalServlet servlet;
+    private GoalServlet goalServlet;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ApplicationContext.setBean("goalController", goalController);
+        goalServlet = new GoalServlet();
+    }
 
     @Test
     @DisplayName("Create a new goal, expected success")
@@ -48,7 +58,7 @@ class GoalServletTest extends AbstractServletTest {
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(goalController.createGoal(user.getId(), requestDto)).thenReturn(responseDto);
 
-        servlet.doPost(request, response);
+        goalServlet.doPost(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_CREATED);
@@ -66,7 +76,7 @@ class GoalServletTest extends AbstractServletTest {
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(goalController.getGoals(user.getId())).thenReturn(goals);
 
-        servlet.doGet(request, response);
+        goalServlet.doGet(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -89,7 +99,7 @@ class GoalServletTest extends AbstractServletTest {
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(goalController.updateGoal(user.getId(), requestDto)).thenReturn(responseDto);
 
-        servlet.doPut(request, response);
+        goalServlet.doPut(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -104,7 +114,7 @@ class GoalServletTest extends AbstractServletTest {
         Mockito.when(session.getAttribute("user")).thenReturn(user);
         Mockito.when(request.getSession()).thenReturn(session);
 
-        servlet.doDelete(request, response);
+        goalServlet.doDelete(request, response);
 
         Mockito.verify(goalController).deleteGoal("Save Money", user.getId());
         Mockito.verify(response).setStatus(HttpServletResponse.SC_NO_CONTENT);
