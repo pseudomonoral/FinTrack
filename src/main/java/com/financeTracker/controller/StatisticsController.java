@@ -1,5 +1,6 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 
@@ -53,5 +54,14 @@ public class StatisticsController {
      */
     public Map<String, Double> analyzeExpensesByCategory(Long userId) {
         return statisticsService.analyzeExpensesByCategory(userId);
+    }
+
+
+    public long calculateCountOfCompletedGoal(Long userId) {
+        return statisticsService.calculateCountOfCompletedGoal(userId);
+    }
+
+    public double calculateAverageGoalProgress(Long userId) {
+        return statisticsService.calculateAverageGoalProgress(userId);
     }
 }

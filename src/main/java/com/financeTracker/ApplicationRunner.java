@@ -8,13 +8,17 @@ import com.financeTracker.handler.*;
 import com.financeTracker.in.Input;
 import com.financeTracker.model.type.UserLocation;
 import com.financeTracker.out.OutputData;
+import com.financeTracker.util.Config;
+import com.financeTracker.util.ConfigLoader;
+import com.financeTracker.util.DatabaseManager;
+import com.financeTracker.util.LiquibaseMigrator;
 
 import static com.financeTracker.handler.SecurityHandler.handleAuthorization;
 import static com.financeTracker.handler.SecurityHandler.handleRegistration;
 import static com.financeTracker.model.type.UserLocation.*;
-import static com.financeTracker.util.ConsoleConstants.*;
-import static com.financeTracker.util.ConsoleConstants.ADMIN_MENU;
-import static com.financeTracker.util.ConsoleConstants.MAIN_MENU;
+import static com.financeTracker.constants.ConsoleConstants.*;
+import static com.financeTracker.constants.ConsoleConstants.ADMIN_MENU;
+import static com.financeTracker.constants.ConsoleConstants.MAIN_MENU;
 
 
 /**
@@ -32,6 +36,11 @@ public class ApplicationRunner {
     private static UserController userController;
 
     public static void run() {
+        Config config = ConfigLoader.loadConfig("config.yaml");
+        DatabaseManager databaseManager = new DatabaseManager(config.database);
+        LiquibaseMigrator liquibaseMigrator = new LiquibaseMigrator(databaseManager, config.liquibase.changelog);
+        liquibaseMigrator.executeMigrations();
+
         ApplicationContext.loadContext();
         Input inputData = (Input) ApplicationContext.getBean("input");
         OutputData outputData = (OutputData) ApplicationContext.getBean("output");
@@ -76,7 +85,7 @@ public class ApplicationRunner {
     /**
      * Handles the main menu interactions, where the user can navigate to other menu sections.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleMainMenu(Input inputData, OutputData outputData) {
@@ -121,7 +130,7 @@ public class ApplicationRunner {
     /**
      * Handles security menu interactions, where users can choose to register, authorize, or exit.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     public static void handleSecurity(Input inputData, OutputData outputData) {
@@ -149,7 +158,7 @@ public class ApplicationRunner {
     /**
      * Handles the user menu interactions, allowing the user to edit profile or delete it.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleUserSettings(Input inputData, OutputData outputData) {
@@ -184,7 +193,7 @@ public class ApplicationRunner {
      * Handles the admin menu interactions, allowing the admin to perform various operations such as viewing users,
      * managing transactions, and blocking/unblocking users.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleAdminMenu(Input inputData, OutputData outputData) {
@@ -220,7 +229,7 @@ public class ApplicationRunner {
     /**
      * Handles the budget menu interactions, allowing the user to create, view, update, delete, or check budget limits.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleBudgetMenu(Input inputData, OutputData outputData) {
@@ -260,7 +269,7 @@ public class ApplicationRunner {
     /**
      * Handles the goal menu interactions, allowing the user to create, view, update, delete, or check progress on goals.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleGoalMenu(Input inputData, OutputData outputData) {
@@ -312,7 +321,7 @@ public class ApplicationRunner {
     /**
      * Handles the transaction menu interactions, allowing the user to create, view, update, delete, or filter transactions.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleTransactionMenu(Input inputData, OutputData outputData) {
@@ -352,7 +361,7 @@ public class ApplicationRunner {
     /**
      * Handles the statistics menu interactions, allowing the user to view current balance, income, expenses, or expense analysis.
      *
-     * @param inputData The input interface to handle user input.
+     * @param inputData  The input interface to handle user input.
      * @param outputData The output interface to display information to the user.
      */
     private static void handleStatisticsMenu(Input inputData, OutputData outputData) {
@@ -361,7 +370,7 @@ public class ApplicationRunner {
             Object input = inputData.in();
             switch (input.toString()) {
                 case "1" -> {
-                    userLocation = StatisticsHandler.handleCurrentBalance(inputData, outputData, statisticsController);
+                    userLocation = StatisticsHandler.handleCurrentBalance(outputData, statisticsController);
                     return;
                 }
                 case "2" -> {
@@ -373,7 +382,12 @@ public class ApplicationRunner {
                     return;
                 }
                 case "4" -> {
-                    userLocation = StatisticsHandler.handleExpenseAnalysis(inputData, outputData, statisticsController);
+                    userLocation = StatisticsHandler.handleExpenseAnalysis(outputData, statisticsController);
+                    return;
+                }
+                case "5" -> {
+                    userLocation = StatisticsHandler.generateReport(outputData, statisticsController,
+                            budgetController, userController, goalController);
                     return;
                 }
                 case "0" -> {

@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.freefair.lombok' version '8.11'
+    id 'org.liquibase.gradle' version '2.2.0'
 }
 
 group = 'org.example'
@@ -17,14 +18,27 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
 
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'org.liquibase:liquibase-core:4.26.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testImplementation 'org.assertj:assertj-core:3.27.3'
 
     testImplementation 'org.mockito:mockito-core:5.14.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+
+    testImplementation 'org.testcontainers:postgresql:1.19.7'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.7'
 }
 
 test {
     useJUnitPlatform()
 }
+

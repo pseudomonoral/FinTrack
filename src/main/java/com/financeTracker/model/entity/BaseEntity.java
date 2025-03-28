@@ -35,20 +35,4 @@ public abstract class BaseEntity {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
-    /** Default constructor. */
-    public BaseEntity() {}
-
-    /**
-     * Parameterized constructor.
-     *
-     * @param id        Unique identifier
-     * @param createdAt Creation timestamp
-     * @param updatedAt Last update timestamp
-     */
-    public BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
 }

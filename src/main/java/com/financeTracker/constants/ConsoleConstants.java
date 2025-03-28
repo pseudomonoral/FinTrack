@@ -1,4 +1,4 @@
-package com.financeTracker.util;
+package com.financeTracker.constants;
 
 public interface ConsoleConstants {
 
@@ -56,6 +56,7 @@ public interface ConsoleConstants {
                 2. Доход за период
                 3. Расход за период
                 4. Анализ расходов по категориям
+                5. Сгенерировать отчёт
                 0. Вернуться в главное меню
                 """;
 

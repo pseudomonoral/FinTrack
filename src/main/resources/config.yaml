@@ -1,0 +1,9 @@
+database:
+  url: "jdbc:postgresql://localhost:5432/ENV_POSTGRES_DB"
+  username: "ENV_POSTGRES_USER"
+  password: "ENV_POSTGRES_PASSWORD"
+  poolSize: 10
+  schema: "fintrack"
+
+liquibase:
+  changelog: "db/changelog/db.changelog-master.xml"

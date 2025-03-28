@@ -5,15 +5,13 @@ import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.TransactionType;
-import com.financeTracker.model.type.UserRole;
 
 public interface TestConstants {
 
     User USER = User.builder()
-            .id(1L)
+            .name("testname")
             .login("login")
             .password("password")
-            .userRole(UserRole.USER)
             .build();
 
     Budget BUDGET = Budget.builder()

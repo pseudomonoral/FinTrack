@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="insert-users-data" author="pseudomonoral">
+        <insert tableName="users" schemaName="fintrack">
+            <column name="login" value="admin@gmail.com"/>
+            <column name="password" value="admin"/>
+            <column name="name" value="admin_user"/>
+            <column name="user_role" value="ADMIN"/>
+            <column name="user_status" value="ACTIVE"/>
+            <column name="goal_status" value="NOT_ACHIEVED"/>
+            <column name="budget_status" value="WITHIN_BUDGET"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+        <insert tableName="users" schemaName="fintrack">
+            <column name="login" value="user@gmail.com"/>
+            <column name="password" value="user"/>
+            <column name="name" value="simple_user"/>
+            <column name="user_role" value="USER"/>
+            <column name="user_status" value="ACTIVE"/>
+            <column name="goal_status" value="NOT_ACHIEVED"/>
+            <column name="budget_status" value="WITHIN_BUDGET"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

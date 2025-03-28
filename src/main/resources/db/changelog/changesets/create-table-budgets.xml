@@ -1,0 +1,27 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="create-budgets-table" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="budgets" schemaName="fintrack"/>
+            </not>
+        </preConditions>
+        <createTable tableName="budgets" schemaName="fintrack">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" unique="true" foreignKeyName="fk_budget_user" references="fintrack.users(id)"/>
+            </column>
+            <column name="limit" type="decimal(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

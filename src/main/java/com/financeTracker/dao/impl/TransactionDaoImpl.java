@@ -1,62 +1,163 @@
 package com.financeTracker.dao.impl;
 
 import com.financeTracker.dao.TransactionDao;
-import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
+import com.financeTracker.model.type.TransactionType;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.*;
+
+@RequiredArgsConstructor
 public class TransactionDaoImpl implements TransactionDao {
-
-    private final Map<Long, Transaction> transactions = new HashMap<>();
-
-    private Long id = 1L;
+    private final DataSource dataSource;
 
     @Override
     public Optional<Transaction> findByUserId(Long userId) {
-        return transactions.values().stream()
-                .filter(goal-> goal.getUserId().equals(userId))
-                .findFirst();
+        String sql = "SELECT * FROM fintrack.transactions WHERE user_id = ? LIMIT 1";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapToTransaction(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при поиске транзакции по userId", e);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Transaction updateTransaction(Transaction transaction) {
-        if (transactions.containsKey(transaction.getId())) {
-            Transaction oldTransaction = transactions.get(transaction.getId());
-            transaction.setCreatedAt(oldTransaction.getCreatedAt());
-            transaction.onUpdate();
-            return transactions.put(transaction.getId(), transaction);
-        } else {
-            throw new IllegalArgumentException("Transaction with id:" + id + " doesn't exist");
+    public void updateTransaction(Transaction transaction) {
+        String sql = "UPDATE fintrack.transactions " +
+                "SET amount = ?, category = ?, type = ?, description = ?, updated_at = now() " +
+                "WHERE id = ?";
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setBigDecimal(1, BigDecimal.valueOf(transaction.getAmount()));
+                stmt.setString(2, transaction.getCategory());
+                stmt.setObject(3, transaction.getType().name());
+                stmt.setString(4, transaction.getDescription());
+                stmt.setLong(5, transaction.getId());
+
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при обновлении транзакции", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
 
     @Override
-    public void delete(Transaction transaction) {
-        if(transactions.containsValue(transaction)) {
-           transactions.remove(transaction.getId());
-        }else {
-            throw new IllegalArgumentException("Transaction with id:" + id + " doesn't exist");
+    public void delete(Long transactionId) {
+        String sql = "DELETE FROM fintrack.transactions WHERE id = ?";
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong(1, transactionId);
+                stmt.executeUpdate();
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при удалении транзакции", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка работы с базой данных", e);
         }
     }
+
 
     @Override
     public Optional<Transaction> findById(Long id) {
-        return Optional.ofNullable(transactions.get(id));
+        String sql = "SELECT * FROM fintrack.transactions WHERE id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapToTransaction(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при поиске транзакции по ID", e);
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<Transaction> findAll() {
-        return List.copyOf(transactions.values());
+        String sql = "SELECT * FROM fintrack.transactions";
+        List<Transaction> transactions = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                transactions.add(mapToTransaction(rs));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при получении списка транзакций", e);
+        }
+        return transactions;
     }
 
     @Override
     public Transaction save(Transaction entity) {
-        entity.setId(id++);
-        transactions.put(entity.getId(), entity);
-        return transactions.get(entity.getId());
+        String sql = "INSERT INTO fintrack.transactions (user_id, amount, category, type, description, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, now(), now()) RETURNING id";
+
+        try (Connection conn = dataSource.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setLong(1, entity.getUserId());
+                stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getAmount()));
+                stmt.setString(3, entity.getCategory());
+                stmt.setObject(4, entity.getType().name());
+                stmt.setString(5, entity.getDescription());
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    entity.setId(rs.getLong(1));
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw new RuntimeException("Ошибка при сохранении транзакции", e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка работы с базой данных", e);
+        }
+
+        return entity;
     }
+
+
+    private Transaction mapToTransaction(ResultSet rs) throws SQLException {
+        return Transaction.builder()
+                .id(rs.getLong("id"))
+                .userId(rs.getLong("user_id"))
+                .amount(rs.getBigDecimal("amount").doubleValue())
+                .category(rs.getString("category"))
+                .type(TransactionType.valueOf(rs.getString("type")))
+                .description(rs.getString("description"))
+                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
+                .build();
+    }
+
 }
+
+

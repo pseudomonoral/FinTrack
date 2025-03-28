@@ -45,7 +45,7 @@ class UserServiceImplTest {
 
         userService.deleteUserById(GOAL.getUserId());
 
-        verify(userDao, times(1)).delete(USER);
+        verify(userDao, times(1)).delete(USER.getId());
     }
 
     @Test

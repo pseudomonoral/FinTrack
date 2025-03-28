@@ -7,7 +7,6 @@ import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.BudgetService;
-import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -53,7 +52,7 @@ public class BudgetServiceImpl implements BudgetService {
     public void deleteBudget(long userId) {
         Budget budget = budgetDao.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(BUDGET, userId));
-        budgetDao.delete(budget);
+        budgetDao.delete(budget.getId());
     }
 
     @Override

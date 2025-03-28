@@ -4,10 +4,13 @@ import com.financeTracker.model.entity.Goal;
 
 public class GoalMapper {
 
-    public Goal mapToGoal(Long useId, String name, double targetAmount){
+    public Goal mapToGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,
+                          boolean goalActual){
         return Goal.builder()
-                .userId(useId)
-                .name(name)
+                .userId(userId)
+                .name(nameGoal)
+                .currentAmount(currentAmount)
+                .goalActual(goalActual)
                 .targetAmount(targetAmount)
                 .build();
     }

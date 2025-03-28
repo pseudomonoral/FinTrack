@@ -25,14 +25,14 @@ public class GoalServiceImpl implements GoalService {
         if (goalDao.findGoalByNameAndId(nameGoal, userId).isPresent()) {
             throw new EntityAlreadyExistException(GOAL, userId);
         }
-        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount);
+        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
+        goal.onCreate();
         if (goalActual){
             deactivateGoalByUserId(userId);
         }
-        goal.setGoalActual(goalActual);
-        goal.setCurrentAmount(currentAmount);
-        goal.onCreate();
-        return goalDao.save(goal);
+        goalDao.save(goal);
+        return goalDao.findById(goal.getId())
+                .orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
     }
 
     @Override
@@ -50,15 +50,13 @@ public class GoalServiceImpl implements GoalService {
     public void deleteGoal(String nameGoal, Long userId) {
         Goal goal = goalDao.findGoalByNameAndId(nameGoal, userId)
                 .orElseThrow(() -> new EntityNotFoundException(GOAL, userId));
-        goalDao.delete(goal);
+        goalDao.delete(goal.getId());
     }
 
     @Override
     public void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount,
                            boolean goalActual) {
-        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount);
-        goal.setGoalActual(goalActual);
-        goal.setCurrentAmount(currentAmount);
+        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
         goal.setId(id);
 
         Optional<Goal> oldActualGoal = goalDao.findGoalByNameAndId(nameGoal, userId);

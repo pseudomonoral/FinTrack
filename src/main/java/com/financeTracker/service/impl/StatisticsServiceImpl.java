@@ -1,9 +1,10 @@
 package com.financeTracker.service.impl;
 
+import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
+import com.financeTracker.service.GoalService;
 import com.financeTracker.service.StatisticsService;
 import com.financeTracker.service.TransactionService;
-import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import static com.financeTracker.model.type.TransactionType.*;
 public class StatisticsServiceImpl implements StatisticsService {
 
     private final TransactionService transactionService;
-    private final UserService userService;
+    private final GoalService goalService;
 
     @Override
     public double calculateCurrentBalance(Long userId) {
@@ -57,5 +58,20 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .filter(transaction -> transaction.getType() == EXPENSE)
                 .collect(Collectors.groupingBy(Transaction::getCategory,
                         Collectors.summingDouble(Transaction::getAmount)));
+    }
+
+    @Override
+    public long calculateCountOfCompletedGoal(Long userId) {
+        return goalService.getAllGoals(userId).stream()
+                .filter(Goal::isGoalCompleted)
+                .count();
+    }
+
+    @Override
+    public double calculateAverageGoalProgress(Long userId) {
+        return goalService.getAllGoals(userId).stream()
+                .mapToDouble(goalService::getGoalProgress)
+                .average()
+                .orElse(0.0);
     }
 }

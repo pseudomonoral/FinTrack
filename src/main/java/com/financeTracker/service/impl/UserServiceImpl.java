@@ -34,16 +34,16 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         User user = userDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(USER, id));
-        userDao.delete(user);
+        userDao.delete(user.getId());
     }
 
     @Override
-    public void deleteCascadeUserById(Long id) {
-        userDao.delete(getUserById(id));
-        if (budgetService.getBudget(id).isPresent()) {
-            budgetService.deleteBudget(id);
+    public void deleteCascadeUserById(Long userId) {
+        userDao.delete(userId);
+        if (budgetService.getBudget(userId).isPresent()) {
+            budgetService.deleteBudget(userId);
         }
-        List<Goal> goalsByUser = goalService.getAllGoals(id);
+        List<Goal> goalsByUser = goalService.getAllGoals(userId);
         for (Goal goal : goalsByUser) {
             goalService.deleteGoal(goal.getName(), goal.getId());
         }

@@ -1,0 +1,41 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+
+    <changeSet id="create-users-table" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users" schemaName="fintrack"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users" schemaName="fintrack">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="login" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="user_role" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_status" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="goal_status" type="varchar(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="budget_status" type="varchar(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp"/>
+            <column name="updated_at" type="timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -45,5 +45,9 @@ public interface StatisticsService {
      * @return Map<String, Double> A map where keys are expense categories and values are the corresponding amounts.
      */
     Map<String, Double> analyzeExpensesByCategory(Long userId);
+
+    long calculateCountOfCompletedGoal(Long userId);
+
+    double calculateAverageGoalProgress(Long userId);
 }
 
