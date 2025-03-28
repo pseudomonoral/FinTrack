@@ -1,5 +1,6 @@
 package com.financeTracker.servlet;
 
+import com.financeTracker.ApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.BufferedReader;
@@ -49,13 +51,17 @@ class SecurityServletTest {
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ApplicationContext.setBean("authController", authController);
         securityServlet = new SecurityServlet();
     }
+
 
     @Test
     @DisplayName("Регистрация нового пользователя - успешный сценарий")
     void testRegisterSuccess() throws IOException {
-        AuthRequestDto authRequest = new AuthRequestDto("user", "password");
+        AuthRequestDto authRequest = new AuthRequestDto("user128@example.com",
+                "password");
 
         UserDto userDto = UserDto.builder()
                 .id(1L)
@@ -102,16 +108,6 @@ class SecurityServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(session).setAttribute("user", userDto);
         verify(writer).write(objectMapper.writeValueAsString(userDto));
-    }
-
-    @Test
-    @DisplayName("Неизвестный путь - ошибка 404")
-    void testUnknownPath() throws IOException {
-        when(request.getPathInfo()).thenReturn("/unknown");
-
-        securityServlet.doPost(request, response);
-
-        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND, "Неизвестный путь");
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.financeTracker.service.impl;
 
-import com.financeTracker.ApplicationContext;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.Goal;

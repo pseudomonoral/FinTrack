@@ -34,6 +34,11 @@ public class ApplicationContext {
         return CONTEXT.get(beanName);
     }
 
+    public static void setBean(String beanName, Object beanInstance) {
+        CONTEXT.put(beanName, beanInstance);
+    }
+
+
     private static void loadControllers() {
         AuthController authController = new AuthController((SecurityService) CONTEXT.get("securityService"));
         CONTEXT.put("authController", authController);
