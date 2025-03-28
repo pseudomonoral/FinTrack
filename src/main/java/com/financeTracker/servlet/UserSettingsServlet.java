@@ -3,7 +3,6 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.annotation.Auditable;
-import com.financeTracker.annotation.Secured;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
@@ -26,16 +25,15 @@ public class UserSettingsServlet extends HttpServlet {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
         resp.setContentType("application/json");
-        objectMapper.writeValue(resp.getOutputStream(), userDto);
+        resp.getWriter().write(objectMapper.writeValueAsString(userDto));
     }
 
     @Auditable(eventType = EventType.UPDATE_PROFILE)
-    @Secured(hasRole = "USER")
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
-        UserUpdateDto updateDto = objectMapper.readValue(req.getInputStream(), UserUpdateDto.class);
+        UserUpdateDto updateDto = objectMapper.readValue(req.getReader(), UserUpdateDto.class);
         userController.updateUser(userDto.getId(), updateDto);
 
         UserDto newUserDto = userController.getUserById(userDto.getId());
@@ -45,7 +43,6 @@ public class UserSettingsServlet extends HttpServlet {
     }
 
     @Auditable(eventType = EventType.DELETE_ACCOUNT)
-    @Secured(hasRole = "USER")
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");

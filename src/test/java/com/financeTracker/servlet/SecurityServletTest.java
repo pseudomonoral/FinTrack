@@ -27,19 +27,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SecurityServletTest {
+class SecurityServletTest extends AbstractServletTest {
 
     @Mock
     private AuthController authController;
-
-    @Mock
-    private HttpServletRequest request;
-
-    @Mock
-    private HttpServletResponse response;
-
-    @Mock
-    private HttpSession session;
 
     @Mock
     private PrintWriter writer;
