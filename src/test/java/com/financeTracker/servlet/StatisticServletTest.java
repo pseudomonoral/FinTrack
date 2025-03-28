@@ -1,15 +1,20 @@
 package com.financeTracker.servlet;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.MockitoAnnotations;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,9 +33,18 @@ public class StatisticServletTest extends AbstractServletTest {
     private PrintWriter writer;
 
     @InjectMocks
-    private StatisticServlet servlet;
+    private StatisticServlet statisticServlet;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .registerModule(new JavaTimeModule());
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ApplicationContext.setBean("statisticsController", statisticsController);
+        statisticServlet = new StatisticServlet();
+    }
 
     @Test
     @DisplayName("Get current balance, expected success")
@@ -43,7 +57,7 @@ public class StatisticServletTest extends AbstractServletTest {
         BalanceResponseDto balanceResponse = BalanceResponseDto.builder().balance(1000.0).build();
         Mockito.when(statisticsController.getCurrentBalance(1L)).thenReturn(balanceResponse);
 
-        servlet.doGet(request, response);
+        statisticServlet.doGet(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -63,7 +77,7 @@ public class StatisticServletTest extends AbstractServletTest {
                 .build();
         Mockito.when(statisticsController.getExpenseAnalysis(1L)).thenReturn(expenseResponse);
 
-        servlet.doGet(request, response);
+        statisticServlet.doGet(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -83,10 +97,11 @@ public class StatisticServletTest extends AbstractServletTest {
         Mockito.when(request.getReader()).thenReturn(reader);
 
         IncomeExpenseResponseDto incomeResponse = IncomeExpenseResponseDto.builder().amount(5000.0).build();
-        Mockito.when(statisticsController.getIncomeForPeriod(Mockito.eq(1L), Mockito.any(), Mockito.any()))
+        Mockito.when(statisticsController.getIncomeForPeriod(Mockito.eq(1L),
+                        Mockito.any(), Mockito.any()))
                 .thenReturn(incomeResponse);
 
-        servlet.doPost(request, response);
+        statisticServlet.doPost(request, response);
 
         Mockito.verify(response).setContentType("application/json");
         Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);

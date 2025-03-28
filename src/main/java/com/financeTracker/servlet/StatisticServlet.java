@@ -1,6 +1,8 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.PeriodRequestDto;
@@ -17,7 +19,10 @@ import java.util.stream.Collectors;
 @WebServlet("/statistic/*")
 public class StatisticServlet extends HttpServlet {
     private final StatisticsController statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .registerModule(new JavaTimeModule());
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -56,13 +61,15 @@ public class StatisticServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String path = req.getPathInfo();
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        if (userDto == null) return;
         Long userId = userDto.getId();
         resp.setContentType("application/json");
         PrintWriter writer = resp.getWriter();
         String requestBody = req.getReader().lines().collect(Collectors.joining());
 
         try {
+            System.out.println("Path: " + path);
+            System.out.println("Request Body: " + requestBody);
+            System.out.println("User: " + userDto);
             switch (path) {
                 case "/income-for-period": {
                     PeriodRequestDto requestDto = objectMapper.readValue(requestBody, PeriodRequestDto.class);
