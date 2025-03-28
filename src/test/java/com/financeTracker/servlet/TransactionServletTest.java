@@ -21,6 +21,9 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+
 @DisplayName("Transaction servlet test")
 class TransactionServletTest extends AbstractServletTest {
 
@@ -61,29 +64,61 @@ class TransactionServletTest extends AbstractServletTest {
         String json = new ObjectMapper().writeValueAsString(requestDto);
         BufferedReader reader = new BufferedReader(new StringReader(json));
 
-        Mockito.when(request.getReader()).thenReturn(reader);
-        Mockito.when(session.getAttribute("user")).thenReturn(UserDto.builder().id(1L).build());
-        Mockito.when(request.getSession()).thenReturn(session);
-        Mockito.when(transactionController.createTransaction(Mockito.eq(1L), Mockito.any())).thenReturn(responseDto);
-        Mockito.when(response.getWriter()).thenReturn(writer);
+        when(request.getReader()).thenReturn(reader);
+        when(session.getAttribute("user")).thenReturn(UserDto.builder().id(1L).build());
+        when(request.getSession()).thenReturn(session);
+        when(transactionController.createTransaction(eq(1L), any())).thenReturn(responseDto);
+        when(response.getWriter()).thenReturn(writer);
 
         transactionServlet.doPost(request, response);
 
-        Mockito.verify(response).setContentType("application/json");
-        Mockito.verify(response).setStatus(HttpServletResponse.SC_CREATED);
+        verify(response).setContentType("application/json");
+        verify(response).setStatus(HttpServletResponse.SC_CREATED);
     }
 
+    @Test
+    @DisplayName("Update a transaction, expected success")
+    void doPut() throws IOException, ServletException {
+        TransactionRequestDto requestDto = TransactionRequestDto.builder()
+                .amount(150.0)
+                .category("Transport")
+                .description("Bus ticket")
+                .type(TransactionType.EXPENSE)
+                .build();
+        TransactionResponseDto responseDto = TransactionResponseDto.builder()
+                .id(1L)
+                .amount(150.0)
+                .category("Transport")
+                .description("Bus ticket")
+                .type(TransactionType.EXPENSE)
+                .createdAt(LocalDateTime.now())
+                .build();
 
+        String json = new ObjectMapper().writeValueAsString(requestDto);
+        BufferedReader reader = new BufferedReader(new StringReader(json));
+
+        when(request.getReader()).thenReturn(reader);
+        when(request.getPathInfo()).thenReturn("/1");
+        when(session.getAttribute("user")).thenReturn(UserDto.builder().id(1L).build());
+        when(request.getSession()).thenReturn(session);
+        when(response.getWriter()).thenReturn(writer);
+        when(transactionController.updateTransaction(eq(1L), eq(1L), any())).thenReturn(responseDto);
+
+        transactionServlet.doPut(request, response);
+
+        verify(response).setContentType("application/json");
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+    }
 
     @Test
     @DisplayName("Delete a transaction, expected success")
     void doDelete() throws ServletException, IOException {
-        Mockito.when(request.getPathInfo()).thenReturn("/1");
+        when(request.getPathInfo()).thenReturn("/1");
 
         transactionServlet.doDelete(request, response);
 
-        Mockito.verify(transactionController).deleteTransaction(1L);
-        Mockito.verify(response).setStatus(HttpServletResponse.SC_NO_CONTENT);
+        verify(transactionController).deleteTransaction(1L);
+        verify(response).setStatus(HttpServletResponse.SC_NO_CONTENT);
     }
 
     @Test
@@ -93,15 +128,15 @@ class TransactionServletTest extends AbstractServletTest {
                 TransactionResponseDto.builder().id(1L).amount(200.0).category("Shopping").description("Clothes").type(TransactionType.EXPENSE).createdAt(LocalDateTime.now()).build()
         );
 
-        Mockito.when(session.getAttribute("user")).thenReturn(UserDto.builder().id(1L).build());
-        Mockito.when(request.getSession()).thenReturn(session);
-        Mockito.when(transactionController.getTransactions(1L)).thenReturn(transactions);
-        Mockito.when(response.getWriter()).thenReturn(writer);
+        when(session.getAttribute("user")).thenReturn(UserDto.builder().id(1L).build());
+        when(request.getSession()).thenReturn(session);
+        when(transactionController.getTransactions(1L)).thenReturn(transactions);
+        when(response.getWriter()).thenReturn(writer);
 
         transactionServlet.doGet(request, response);
 
-        Mockito.verify(response).setContentType("application/json");
-        Mockito.verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(response).setContentType("application/json");
+        verify(response).setStatus(HttpServletResponse.SC_OK);
     }
 }
 

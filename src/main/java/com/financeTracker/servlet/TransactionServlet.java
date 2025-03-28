@@ -42,11 +42,11 @@ public class TransactionServlet extends HttpServlet {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
 
         TransactionRequestDto dto = objectMapper.readValue(req.getReader(), TransactionRequestDto.class);
-        TransactionResponseDto responseDTO = transactionController.updateTransaction(userDto.getId(), transactionId, dto);
+        TransactionResponseDto responseDto = transactionController.updateTransaction(userDto.getId(), transactionId, dto);
 
         resp.setContentType("application/json");
         resp.setStatus(HttpServletResponse.SC_OK);
-        objectMapper.writeValue(resp.getWriter(), responseDTO);
+        objectMapper.writeValue(resp.getWriter(), responseDto);
     }
 
     @Override
