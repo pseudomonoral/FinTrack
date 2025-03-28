@@ -1,0 +1,65 @@
+# FinTrack
+
+## Project Overview
+FinTrack is a backend application for managing personal finances. It allows users to register, track transactions, monitor their balance, analyze income and expenses, set financial goals, and manage their progress. The backend provides authentication, CRUD operations for transactions, database interaction, an API for frontend integration, and report generation.
+
+## Features
+
+### User Management
+- User registration with a unique email and password.
+- Secure login authentication.
+- Editing user profiles (name, email, password).
+- Deleting an account.
+
+### Financial Transactions
+- Adding income and expenses with amount, category, date, and description.
+- Modifying transaction details.
+- Deleting transactions from the record.
+- Viewing transaction history with filtering by date, category, and type (income/expense).
+
+### Budget Management
+- Setting a monthly budget.
+- Tracking budget limits and receiving notifications for overspending.
+
+### Financial Goals
+- Setting savings goals.
+- Monitoring progress towards financial objectives.
+
+### Statistics & Reports
+- Calculating the current balance.
+- Summarizing income and expenses over a selected period.
+- Analyzing expenses by category.
+- Generating financial reports for users.
+
+### Notifications
+- API for spending limit reminders.
+- Support for email notifications.
+
+### Administration
+- Admins can view user lists and their transactions.
+- Admins can block or delete users.
+
+## Installation & Setup
+
+### Prerequisites
+- Java 17
+- Gradle
+- Git
+
+### Clone the Repository
+
+git clone <https://github.com/pseudomonoral/FinTrack>
+cd FinTrack
+
+### Build the Project
+The project uses Gradle for dependency management and builds automatically when running the main method.
+
+gradle build
+
+### Run the Application
+You can run the application by executing the `Main` class:
+java -cp build/libs/FinTrack-1.0-SNAPSHOT.jar org.example.Main
+
+### Run Tests
+JUnit is used for testing. Run tests with:
+gradle test
