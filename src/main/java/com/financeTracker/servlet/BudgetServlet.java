@@ -1,6 +1,8 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
@@ -17,7 +19,9 @@ import java.util.Optional;
 public class BudgetServlet extends HttpServlet {
 
     private final BudgetController budgetController = (BudgetController) ApplicationContext.getBean("budgetController");
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .registerModule(new JavaTimeModule());
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -34,7 +38,7 @@ public class BudgetServlet extends HttpServlet {
 
     private void handleCreateBudget(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        BudgetDto request = objectMapper.readValue(req.getInputStream(), BudgetDto.class);
+        BudgetDto request = objectMapper.readValue(req.getReader(), BudgetDto.class);
 
         budgetController.createBudget(userDto.getId(), request);
 
@@ -63,7 +67,7 @@ public class BudgetServlet extends HttpServlet {
         if (budget.isPresent()) {
             resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getOutputStream(), budget.get());
+            objectMapper.writeValue(resp.getWriter(), budget.get());
         } else {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -72,7 +76,7 @@ public class BudgetServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        BudgetDto request = objectMapper.readValue(req.getInputStream(), BudgetDto.class);
+        BudgetDto request = objectMapper.readValue(req.getReader(), BudgetDto.class);
 
         budgetController.updateBudget(userDto.getId(), request);
 

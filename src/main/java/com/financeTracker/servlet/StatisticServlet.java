@@ -67,9 +67,6 @@ public class StatisticServlet extends HttpServlet {
         String requestBody = req.getReader().lines().collect(Collectors.joining());
 
         try {
-            System.out.println("Path: " + path);
-            System.out.println("Request Body: " + requestBody);
-            System.out.println("User: " + userDto);
             switch (path) {
                 case "/income-for-period": {
                     PeriodRequestDto requestDto = objectMapper.readValue(requestBody, PeriodRequestDto.class);

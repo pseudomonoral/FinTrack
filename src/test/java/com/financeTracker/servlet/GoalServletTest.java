@@ -21,6 +21,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 @DisplayName("GoalServlet Test")
 class GoalServletTest extends AbstractServletTest {
 
@@ -52,11 +54,11 @@ class GoalServletTest extends AbstractServletTest {
         String json = objectMapper.writeValueAsString(requestDto);
         BufferedReader reader = new BufferedReader(new StringReader(json));
 
-        Mockito.when(request.getReader()).thenReturn(reader);
-        Mockito.when(session.getAttribute("user")).thenReturn(user);
-        Mockito.when(request.getSession()).thenReturn(session);
-        Mockito.when(response.getWriter()).thenReturn(writer);
-        Mockito.when(goalController.createGoal(user.getId(), requestDto)).thenReturn(responseDto);
+        when(request.getReader()).thenReturn(reader);
+        when(session.getAttribute("user")).thenReturn(user);
+        when(request.getSession()).thenReturn(session);
+        when(response.getWriter()).thenReturn(writer);
+        when(goalController.createGoal(user.getId(), requestDto)).thenReturn(responseDto);
 
         goalServlet.doPost(request, response);
 
@@ -71,10 +73,10 @@ class GoalServletTest extends AbstractServletTest {
         UserDto user = UserDto.builder().id(1L).login("test@example.com").build();
         List<GoalResponseDto> goals = List.of(GoalResponseDto.builder().id(1L).name("Save Money").build());
 
-        Mockito.when(session.getAttribute("user")).thenReturn(user);
-        Mockito.when(request.getSession()).thenReturn(session);
-        Mockito.when(response.getWriter()).thenReturn(writer);
-        Mockito.when(goalController.getGoals(user.getId())).thenReturn(goals);
+        when(session.getAttribute("user")).thenReturn(user);
+        when(request.getSession()).thenReturn(session);
+        when(response.getWriter()).thenReturn(writer);
+        when(goalController.getGoals(user.getId())).thenReturn(goals);
 
         goalServlet.doGet(request, response);
 
@@ -93,11 +95,11 @@ class GoalServletTest extends AbstractServletTest {
         String json = objectMapper.writeValueAsString(requestDto);
         BufferedReader reader = new BufferedReader(new StringReader(json));
 
-        Mockito.when(request.getReader()).thenReturn(reader);
-        Mockito.when(session.getAttribute("user")).thenReturn(user);
-        Mockito.when(request.getSession()).thenReturn(session);
-        Mockito.when(response.getWriter()).thenReturn(writer);
-        Mockito.when(goalController.updateGoal(user.getId(), requestDto)).thenReturn(responseDto);
+        when(request.getReader()).thenReturn(reader);
+        when(session.getAttribute("user")).thenReturn(user);
+        when(request.getSession()).thenReturn(session);
+        when(response.getWriter()).thenReturn(writer);
+        when(goalController.updateGoal(user.getId(), requestDto)).thenReturn(responseDto);
 
         goalServlet.doPut(request, response);
 
@@ -110,9 +112,9 @@ class GoalServletTest extends AbstractServletTest {
     @DisplayName("Delete goal by name, expected success")
     void doDelete() throws IOException {
         UserDto user = UserDto.builder().id(1L).login("test@example.com").build();
-        Mockito.when(request.getParameter("name")).thenReturn("Save Money");
-        Mockito.when(session.getAttribute("user")).thenReturn(user);
-        Mockito.when(request.getSession()).thenReturn(session);
+        when(request.getParameter("name")).thenReturn("Save Money");
+        when(session.getAttribute("user")).thenReturn(user);
+        when(request.getSession()).thenReturn(session);
 
         goalServlet.doDelete(request, response);
 

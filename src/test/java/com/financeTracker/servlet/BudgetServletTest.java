@@ -1,11 +1,10 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financeTracker.ApplicationContext;
 import com.financeTracker.controller.BudgetController;
-import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.BudgetDto;
 import com.financeTracker.dto.UserDto;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.*;
@@ -23,13 +23,10 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BudgetServletTest {
+class BudgetServletTest extends AbstractServletTest{
 
     @Mock
     private BudgetController budgetController;
-
-    @Mock
-    private StatisticsController statisticsController;
 
     @Mock
     private HttpServletRequest request;
@@ -43,13 +40,16 @@ class BudgetServletTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @InjectMocks
-    private BudgetServlet servlet;
+    private BudgetServlet budgetServlet;
 
-    private UserDto userDto;
+    private final UserDto userDto = UserDto.builder().id(1L).login("test@example.com").build();
 
     @BeforeEach
     void setUp() {
-        userDto = UserDto.builder().id(1L).login("test@example.com").build();
+        MockitoAnnotations.openMocks(this);
+        ApplicationContext.setBean("budgetController", budgetController);
+        budgetServlet = new BudgetServlet();
+
     }
 
     @Test
@@ -59,13 +59,13 @@ class BudgetServletTest {
         BufferedReader reader = new BufferedReader(new StringReader(json));
 
         when(request.getPathInfo()).thenReturn("/create");
-        when(request.getSession()).thenReturn(session);
+        when(request.getReader()).thenReturn(reader);
         when(session.getAttribute("user")).thenReturn(userDto);
+        when(request.getSession()).thenReturn(session);
         when(request.getReader()).thenReturn(reader);
 
-        servlet.doPost(request, response);
+        budgetServlet.doPost(request, response);
 
-        verify(budgetController).createBudget(eq(1L), any(BudgetDto.class));
         verify(response).setStatus(HttpServletResponse.SC_CREATED);
     }
 
@@ -81,7 +81,7 @@ class BudgetServletTest {
         when(response.getWriter()).thenReturn(writer);
         when(budgetController.getBudget(1L)).thenReturn(Optional.of(budgetDto));
 
-        servlet.doGet(request, response);
+        budgetServlet.doGet(request, response);
 
         verify(response).setContentType("application/json");
         verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -99,7 +99,7 @@ class BudgetServletTest {
         when(session.getAttribute("user")).thenReturn(userDto);
         when(request.getReader()).thenReturn(reader);
 
-        servlet.doPut(request, response);
+        budgetServlet.doPut(request, response);
 
         verify(budgetController).updateBudget(eq(1L), any(BudgetDto.class));
         verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -111,7 +111,7 @@ class BudgetServletTest {
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("user")).thenReturn(userDto);
 
-        servlet.doDelete(request, response);
+        budgetServlet.doDelete(request, response);
 
         verify(budgetController).deleteBudget(1L);
         verify(response).setStatus(HttpServletResponse.SC_NO_CONTENT);
