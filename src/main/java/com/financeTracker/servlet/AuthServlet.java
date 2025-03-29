@@ -3,6 +3,7 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.ApplicationContext;
 import com.financeTracker.annotation.Auditable;
+import com.financeTracker.annotation.Loggable;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/auth/*")
-public class SecurityServlet extends HttpServlet {
+public class AuthServlet extends HttpServlet {
 
     private final AuthController authController = (AuthController) ApplicationContext.getBean("authController");
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -34,7 +35,7 @@ public class SecurityServlet extends HttpServlet {
 
         switch (pathInfo) {
             case "/register":
-                handleRegister(authRequest, resp);
+                handleRegister(authRequest, req, resp);
                 break;
             case "/login":
                 handleLogin(authRequest, req, resp);
@@ -45,13 +46,15 @@ public class SecurityServlet extends HttpServlet {
     }
 
     @Auditable(eventType = EventType.REGISTER)
-    private void handleRegister(AuthRequestDto authRequest, HttpServletResponse resp) throws IOException {
+    @Loggable
+    private void handleRegister(AuthRequestDto authRequest, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = authController.register(authRequest);
         resp.setStatus(HttpServletResponse.SC_CREATED);
         writeResponse(resp, userDto);
     }
 
     @Auditable(eventType = EventType.LOGIN)
+    @Loggable
     private void handleLogin(AuthRequestDto authRequest, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = authController.authorize(authRequest);
         req.getSession().setAttribute("user", userDto);

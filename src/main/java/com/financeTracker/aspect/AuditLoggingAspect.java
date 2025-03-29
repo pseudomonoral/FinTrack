@@ -30,6 +30,11 @@ public class AuditLoggingAspect {
 
     private String createMessage(JoinPoint joinPoint) {
         HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
+
+        if (request == null) {
+            return "Request not found";
+        }
+
         UserDto user = (UserDto) request.getSession().getAttribute("user");
 
         String userName = (user != null) ? user.getLogin() : "Guest";

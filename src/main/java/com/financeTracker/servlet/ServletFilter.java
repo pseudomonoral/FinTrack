@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @WebFilter("/*")
-public class AuthFilter implements Filter {
+public class ServletFilter implements Filter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;

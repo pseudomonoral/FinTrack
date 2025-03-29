@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.controller.AuthController;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SecurityServletTest extends AbstractServletTest {
+class AuthServletTest extends AbstractServletTest {
 
     @Mock
     private AuthController authController;
@@ -36,7 +34,7 @@ class SecurityServletTest extends AbstractServletTest {
     private PrintWriter writer;
 
     @InjectMocks
-    private SecurityServlet securityServlet;
+    private AuthServlet authServlet;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -44,7 +42,7 @@ class SecurityServletTest extends AbstractServletTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ApplicationContext.setBean("authController", authController);
-        securityServlet = new SecurityServlet();
+        authServlet = new AuthServlet();
     }
 
 
@@ -69,7 +67,7 @@ class SecurityServletTest extends AbstractServletTest {
         when(response.getWriter()).thenReturn(writer);
         when(authController.register(any(AuthRequestDto.class))).thenReturn(userDto);
 
-        securityServlet.doPost(request, response);
+        authServlet.doPost(request, response);
 
         verify(response).setStatus(HttpServletResponse.SC_CREATED);
         verify(writer).write(objectMapper.writeValueAsString(userDto));
@@ -94,7 +92,7 @@ class SecurityServletTest extends AbstractServletTest {
         when(response.getWriter()).thenReturn(writer);
         when(authController.authorize(any(AuthRequestDto.class))).thenReturn(userDto);
 
-        securityServlet.doPost(request, response);
+        authServlet.doPost(request, response);
 
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(session).setAttribute("user", userDto);
@@ -106,7 +104,7 @@ class SecurityServletTest extends AbstractServletTest {
     void testEmptyPath() throws IOException {
         when(request.getPathInfo()).thenReturn(null);
 
-        securityServlet.doPost(request, response);
+        authServlet.doPost(request, response);
 
         verify(response).sendError(HttpServletResponse.SC_BAD_REQUEST, "Не указан путь запроса");
     }

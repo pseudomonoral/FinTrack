@@ -49,23 +49,23 @@ public class AdminServlet extends HttpServlet {
 
         if ("/block".equals(path)) {
             TargetUserDto targetUser = objectMapper.readValue(req.getInputStream(), TargetUserDto.class);
-            blockUser(resp, targetUser);
+            blockUser(req, resp, targetUser);
         } else if ("/unblock".equals(path)) {
             TargetUserDto targetUser = objectMapper.readValue(req.getInputStream(), TargetUserDto.class);
-            unblockUser(resp, targetUser);
+            unblockUser(req, resp, targetUser);
         } else {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown endpoint");
         }
     }
 
     @Auditable(eventType = EventType.BLOCK_ACCOUNT)
-    private void blockUser(HttpServletResponse resp, TargetUserDto targetUser) {
+    private void blockUser(HttpServletRequest req, HttpServletResponse resp, TargetUserDto targetUser) {
         userController.blockedUserById(targetUser.getUserId());
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
     @Auditable(eventType = EventType.UNBLOCK_ACCOUNT)
-    private void unblockUser(HttpServletResponse resp, TargetUserDto targetUser) {
+    private void unblockUser(HttpServletRequest req, HttpServletResponse resp, TargetUserDto targetUser) {
         userController.blockedUserById(targetUser.getUserId());
         userController.unblockedUserById(targetUser.getUserId());
         resp.setStatus(HttpServletResponse.SC_OK);
