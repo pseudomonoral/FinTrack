@@ -5,12 +5,9 @@ import com.financeTracker.model.entity.Goal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface GoalMapper {
-    GoalMapper INSTANCE = Mappers.getMapper(GoalMapper.class);
-
     @Mapping(target = "progress", source = "goal", qualifiedByName = "calculateProgress")
     GoalResponseDto toGoalResponseDto(Goal goal);
 

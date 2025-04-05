@@ -1,53 +1,61 @@
 package com.financeTracker.service;
 
+import com.financeTracker.dto.BalanceResponseDto;
+import com.financeTracker.dto.ExpenseAnalysisResponseDto;
+import com.financeTracker.dto.GoalStatisticsResponseDto;
+import com.financeTracker.dto.IncomeExpenseResponseDto;
+
 import java.time.LocalDate;
-import java.util.Map;
 
 
 /**
- * The StatisticsService interface provides methods for calculating and analyzing financial statistics for users.
- * It includes operations for calculating current balance, income, expenses, and analyzing expenses by category.
+ * Service interface for calculating financial statistics and analyzing goals.
  */
 public interface StatisticsService {
 
     /**
-     * Calculates the current balance for a specific user.
+     * Calculates the current balance for a user by subtracting total expenses from total income.
      *
-     * @param userId The ID of the user whose current balance is to be calculated.
-     * @return double The current balance of the user.
+     * @param userId the ID of the user.
+     * @return {@link BalanceResponseDto} containing the current balance.
      */
-    double calculateCurrentBalance(Long userId);
+    BalanceResponseDto calculateCurrentBalance(Long userId);
 
     /**
-     * Calculates the total income for a specific user within a given period.
+     * Calculates total income for a user within a specified date range.
      *
-     * @param userId The ID of the user whose income is to be calculated.
-     * @param startDate The start date of the period.
-     * @param endDate The end date of the period.
-     * @return double The total income for the user during the specified period.
+     * @param userId    the ID of the user.
+     * @param startDate the start date of the period (inclusive).
+     * @param endDate   the end date of the period (inclusive).
+     * @return {@link IncomeExpenseResponseDto} containing the total income.
      */
-    double calculateIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate);
+    IncomeExpenseResponseDto calculateIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate);
 
     /**
-     * Calculates the total expenses for a specific user within a given period.
+     * Calculates total expenses for a user within a specified date range.
      *
-     * @param userId The ID of the user whose expenses are to be calculated.
-     * @param startDate The start date of the period.
-     * @param endDate The end date of the period.
-     * @return double The total expenses for the user during the specified period.
+     * @param userId    the ID of the user.
+     * @param startDate the start date of the period (inclusive).
+     * @param endDate   the end date of the period (inclusive).
+     * @return {@link IncomeExpenseResponseDto} containing the total expenses.
      */
-    double calculateExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate);
+    IncomeExpenseResponseDto calculateExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate);
 
     /**
-     * Analyzes the user's expenses by category and returns the breakdown.
+     * Analyzes user expenses by category and summarizes them.
      *
-     * @param userId The ID of the user whose expenses are to be analyzed.
-     * @return Map<String, Double> A map where keys are expense categories and values are the corresponding amounts.
+     * @param userId the ID of the user.
+     * @return {@link ExpenseAnalysisResponseDto} containing categorized expense data.
      */
-    Map<String, Double> analyzeExpensesByCategory(Long userId);
+    ExpenseAnalysisResponseDto analyzeExpensesByCategory(Long userId);
 
-    long calculateCountOfCompletedGoal(Long userId);
-
-    double calculateAverageGoalProgress(Long userId);
+    /**
+     * Analyzes user goals, returning goal-related statistics such as count of completed goals and average progress.
+     *
+     * @param userId the ID of the user.
+     * @return {@link GoalStatisticsResponseDto} containing goal analysis results.
+     */
+    GoalStatisticsResponseDto analyzeGoalsByUserId(Long userId);
 }
+
 

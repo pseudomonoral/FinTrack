@@ -3,7 +3,7 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
@@ -20,7 +20,7 @@ import java.util.List;
 @WebServlet("/transactions/*")
 public class TransactionServlet extends HttpServlet {
 
-    private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
+    private final TransactionController transactionController = (TransactionController) ServletContext.getBean("transactionController");
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .registerModule(new JavaTimeModule());

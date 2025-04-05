@@ -40,6 +40,8 @@ public interface TransactionDao {
      */
     Optional<Transaction> findById(Long id);
 
+    List<Transaction> findAllByUserId(Long id);
+
     /**
      * Retrieves a list of all transactions in the database.
      *

@@ -2,7 +2,7 @@ package com.financeTracker.servlet;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.controller.GoalController;
 import com.financeTracker.dto.GoalRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
@@ -18,7 +18,7 @@ import java.util.List;
 @WebServlet("/goals/*")
 public class GoalServlet extends HttpServlet {
 
-    private final GoalController goalController = (GoalController) ApplicationContext.getBean("goalController");
+    private final GoalController goalController = (GoalController) ServletContext.getBean("goalController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

@@ -1,13 +1,21 @@
 package com.financeTracker.service.impl;
 
+import com.financeTracker.dao.BudgetDao;
+import com.financeTracker.dao.GoalDao;
 import com.financeTracker.dao.TransactionDao;
+import com.financeTracker.dao.UserDao;
+import com.financeTracker.dto.TransactionRequestDto;
+import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
+import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,67 +24,39 @@ import java.util.Optional;
 
 import static com.financeTracker.model.type.BudgetStatus.OVER_BUDGET;
 import static com.financeTracker.model.type.BudgetStatus.WITHIN_BUDGET;
-import static com.financeTracker.model.type.EntityName.TRANSACTION;
+import static com.financeTracker.model.type.EntityName.*;
 import static com.financeTracker.model.type.GoalStatus.ACHIEVED;
 import static com.financeTracker.model.type.TransactionType.*;
 
+@Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-    private final UserService userService;
-    private final TransactionDao transactionDao;
     private final BudgetService budgetService;
-    private final GoalService goalService;
+    private final TransactionDao transactionDao;
+    private final GoalDao goalDao;
+    private final BudgetDao budgetDao;
+    private final UserDao userDao;
+    private final TransactionMapper transactionMapper;
 
     @Override
-    public Transaction createTransaction(Long userId, double amount, String category, String description, TransactionType type) {
-        Transaction transaction = transactionDao.save(mapToTransaction(userId, amount, category, description, type));
+    @Transactional
+    public TransactionResponseDto createTransaction(Long userId, TransactionRequestDto transactionRequestDto) {
+        Transaction transaction = transactionDao.save(mapToTransaction(userId, transactionRequestDto.getAmount(),
+                transactionRequestDto.getCategory(),
+                transactionRequestDto.getDescription(),
+                transactionRequestDto.getType()));
         applyTransaction(transaction);
-        return transaction;
-    }
-
-    private void applyTransaction(Transaction transaction){
-        goalService.getActualGoalByUserId(transaction.getUserId())
-                .ifPresent(goal -> applyTransactionToGoal(transaction, goal));
-
-        budgetService.getBudget(transaction.getUserId())
-                .ifPresent(budget -> applyTransactionToBudget(transaction));
-    }
-
-    private void applyTransactionToBudget(Transaction transaction) {
-        Long userId = transaction.getUserId();
-        User user = userService.getUserById(userId);
-        if(budgetService.isBudgetExceeded(userId)) {
-            user.setBudgetStatus(OVER_BUDGET);
-        }else {
-            user.setBudgetStatus(WITHIN_BUDGET);
-        }
-        userService.updateUser(user);
-    }
-
-    private void applyTransactionToGoal(Transaction transaction, Goal actualGoal) {
-        Long userId = transaction.getUserId();
-        double amount = transaction.getAmount();
-        if (transaction.getType().equals(EXPENSE)){
-            amount = amount * -1;
-        }
-        actualGoal.setCurrentAmount(actualGoal.getCurrentAmount() + amount);
-
-        if (goalService.getGoalProgress(actualGoal) == 100.0){
-            actualGoal.setGoalActual(false);
-            actualGoal.onUpdate();
-            User user = userService.getUserById(userId);
-            user.setGoalStatus(ACHIEVED);
-            userService.updateUser(user);
-        }
-        goalService.updateGoal(userId, actualGoal.getName(),
-                actualGoal.getTargetAmount(), actualGoal.getCurrentAmount(), actualGoal.isGoalActual());
+        return transactionMapper.toResponseTransactionDto(transaction);
     }
 
     @Override
-    public void deleteTransaction(Long id) {
-        Transaction transaction = transactionDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(TRANSACTION, id));
+    @Transactional
+    public void deleteTransaction(Long transactionId) {
+        Transaction transaction = transactionDao.findById(transactionId)
+                .orElseThrow(() -> new EntityNotFoundException(TRANSACTION,
+                        transactionId));
         transaction.setType(transaction.getType().equals(INCOME) ? EXPENSE : INCOME);
 
         applyTransaction(transaction);
@@ -84,13 +64,19 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateTransaction(Long userId, Long id, double amount, String category, String description,
-                                  TransactionType type) {
-        Optional<Transaction> old = transactionDao.findById(id);
+    @Transactional
+    public void updateTransaction(Long userId, Long transactionId,
+                                  TransactionRequestDto transactionRequestDto) {
+        Optional<Transaction> old = transactionDao.findById(transactionId);
         if (old.isPresent()) {
-            Transaction newTransaction = mapToTransaction(userId, amount, category, description, type);
-            newTransaction.setId(id);
+            Transaction newTransaction = mapToTransaction(userId,
+                    transactionRequestDto.getAmount(),
+                    transactionRequestDto.getCategory(),
+                    transactionRequestDto.getDescription(),
+                    transactionRequestDto.getType());
+            newTransaction.setId(transactionId);
             newTransaction.setCreatedAt(old.get().getCreatedAt());
+
             if (!old.get().getType().equals(newTransaction.getType())
             || old.get().getAmount() != newTransaction.getAmount()) {
                 applyTransaction(getDiffTransaction(old.get(), newTransaction));
@@ -98,7 +84,7 @@ public class TransactionServiceImpl implements TransactionService {
 
             transactionDao.updateTransaction(newTransaction);
         } else {
-            throw new EntityNotFoundException(TRANSACTION, id);
+            throw new EntityNotFoundException(TRANSACTION, transactionId);
         }
     }
 
@@ -120,42 +106,42 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
     }
 
-
     @Override
-    public List<Transaction> getTransactions(Long userId) {
-        List<Transaction> transactions = transactionDao.findAll();
-
-        return transactions.stream()
-                .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
-                .toList();
+    public List<TransactionResponseDto> getTransactionsByUserId(Long userId) {
+        return transactionDao.findAllByUserId(userId).stream()
+                .map(transactionMapper::toResponseTransactionDto).toList();
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-        return transactionDao.findAll();
+    public List<TransactionResponseDto> getAllTransactions() {
+        return transactionDao.findAll().stream()
+                .map(transactionMapper::toResponseTransactionDto).toList();
     }
 
     @Override
-    public List<Transaction> getTransactionsByDate(Long userId, LocalDateTime date) {
+    public List<TransactionResponseDto> getTransactionsByDate(Long userId, LocalDateTime date) {
         return transactionDao.findAll().stream()
                 .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
                 .filter(transaction -> !transaction.getCreatedAt().isBefore(date))
+                .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
 
     @Override
-    public List<Transaction> getTransactionsByCategory(Long userId, String category) {
+    public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
         return transactionDao.findAll().stream()
                 .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
                 .filter(transaction -> transaction.getCategory().equalsIgnoreCase(category))
+                .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
 
     @Override
-    public List<Transaction> getTransactionsByType(Long userId, TransactionType type) {
+    public List<TransactionResponseDto> getTransactionsByType(Long userId, TransactionType type) {
         return transactionDao.findAll().stream()
                 .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
                 .filter(transaction -> transaction.getType() == type)
+                .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
 
@@ -168,5 +154,53 @@ public class TransactionServiceImpl implements TransactionService {
                 .description(description)
                 .type(type)
                 .build();
+    }
+
+    private void applyTransaction(Transaction transaction){
+        goalDao.findAllByUserId(transaction.getUserId()).stream()
+                .filter(Goal::isGoalActual)
+                .findFirst()
+                .ifPresent(goal -> applyTransactionToGoal(transaction, goal));
+
+        if (budgetDao.findByUserId(transaction.getUserId()).isPresent()) {
+            applyTransactionToBudget(transaction);
+        }
+    }
+
+    private void applyTransactionToBudget(Transaction transaction) {
+        Long userId = transaction.getUserId();
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(USER, userId));
+        if(budgetService.isBudgetExceeded(userId)) {
+            user.setBudgetStatus(OVER_BUDGET);
+        }else {
+            user.setBudgetStatus(WITHIN_BUDGET);
+        }
+        userDao.update(user);
+    }
+
+    private void applyTransactionToGoal(Transaction transaction, Goal actualGoal) {
+        Long userId = transaction.getUserId();
+        double amount = transaction.getAmount();
+        if (transaction.getType().equals(EXPENSE)){
+            amount = amount * -1;
+        }
+        actualGoal.setCurrentAmount(actualGoal.getCurrentAmount() + amount);
+
+        if (getGoalProgress(actualGoal) == 100.0){
+            actualGoal.setGoalActual(false);
+            actualGoal.onUpdate();
+            User user = userDao.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException(USER, userId));
+            user.setGoalStatus(ACHIEVED);
+            userDao.update(user);
+        }
+
+        goalDao.updateGoal(actualGoal);
+    }
+
+    private double getGoalProgress(Goal goal) {
+        return goal.getTargetAmount() == 0 ? 100.0 :
+                Math.min((goal.getCurrentAmount() / goal.getTargetAmount()) * 100, 100.0);
     }
 }

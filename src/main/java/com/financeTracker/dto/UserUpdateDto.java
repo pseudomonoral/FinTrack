@@ -14,11 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserUpdateDto {
 
-    @NotBlank(message = "Имя не может быть пустым")
     @Size(max = 50, message = "Имя не может быть длиннее 50 символов")
     private String name;
 
     @Email(message = "Некорректный email")
     @NotBlank(message = "Email не может быть пустым")
     private String login;
+
+    @NotBlank(message = "Пароль не может быть пустым")
+    @Size(min = 5, message = "Пароль должен содержать минимум 5 символов")
+    private String password;
 }

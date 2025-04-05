@@ -1,86 +1,87 @@
 package com.financeTracker.service;
 
 
-import com.financeTracker.model.entity.Transaction;
+import com.financeTracker.dto.TransactionRequestDto;
+import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.model.type.TransactionType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * The TransactionService interface provides methods for managing financial transactions.
- * It includes operations for creating, deleting, updating, and retrieving transactions.
+ * Service for managing user financial transactions.
+ * Provides operations for creating, updating, deleting, and retrieving transactions,
+ * as well as applying business logic to budgets and goals based on transactions.
  */
 public interface TransactionService {
 
     /**
-     * Creates a new transaction for a user.
+     * Creates a new transaction for the specified user.
+     * Automatically updates the user's budget and goal progress if applicable.
      *
-     * @param amount The amount of the transaction.
-     * @param category The category of the transaction (e.g., food, rent, salary).
-     * @param description A brief description of the transaction.
-     * @param type The type of the transaction (income or expense).
-     * @return Transaction The created transaction entity.
+     * @param userId the ID of the user making the transaction
+     * @param transactionRequestDto the DTO containing transaction data
+     * @return the created transaction as a response DTO
      */
-    Transaction createTransaction(Long userId, double amount, String category, String description, TransactionType type);
+    TransactionResponseDto createTransaction(Long userId, TransactionRequestDto transactionRequestDto);
 
     /**
-     * Deletes a specific transaction by its ID.
+     * Deletes a transaction by its ID.
+     * Reverts its effects on the user's budget and goal progress.
      *
-     * @param transactionId The ID of the transaction to be deleted.
+     * @param transactionId the ID of the transaction to be deleted
      */
     void deleteTransaction(Long transactionId);
 
     /**
-     * Updates an existing transaction with new details.
+     * Updates an existing transaction for the given user.
+     * If the transaction type or amount changes, its effects on budget and goal will be adjusted accordingly.
      *
-     * @param amount     The new amount of the transaction.
-     * @param category   The new category of the transaction.
-     * @param description A description of the transaction.
-     * @param type       The type of the transaction (e.g., INCOME, EXPENSE).
+     * @param userId the ID of the user who owns the transaction
+     * @param transactionId the ID of the transaction to update
+     * @param transactionRequestDto the DTO containing updated transaction data
      */
-    void updateTransaction(Long userId, Long id, double amount, String category, String description, TransactionType type);
+    void updateTransaction(Long userId, Long transactionId, TransactionRequestDto transactionRequestDto);
 
     /**
-     * Retrieves all transactions for a specific user.
+     * Retrieves all transactions made by a specific user.
      *
-     * @param userId The ID of the user whose transactions are to be retrieved.
-     * @return List<Transaction> A list of transactions associated with the given user ID.
+     * @param userId the ID of the user
+     * @return a list of transaction response DTOs
      */
-    List<Transaction> getTransactions(Long userId);
+    List<TransactionResponseDto> getTransactionsByUserId(Long userId);
 
     /**
      * Retrieves all transactions in the system.
      *
-     * @return List<Transaction> A list of all transactions in the system.
+     * @return a list of all transaction response DTOs
      */
-    List<Transaction> getAllTransactions();
+    List<TransactionResponseDto> getAllTransactions();
 
     /**
-     * Retrieves all transactions for a specific user on a given date.
+     * Retrieves all transactions made by a user from a specific date onward.
      *
-     * @param userId The ID of the user whose transactions are to be retrieved.
-     * @param date The date on which the transactions occurred.
-     * @return List<Transaction> A list of transactions on the specified date.
+     * @param userId the ID of the user
+     * @param date the starting date (inclusive)
+     * @return a list of transaction response DTOs
      */
-    List<Transaction> getTransactionsByDate(Long userId, LocalDateTime date);
+    List<TransactionResponseDto> getTransactionsByDate(Long userId, LocalDateTime date);
 
     /**
-     * Retrieves all transactions for a specific user in a given category.
+     * Retrieves all transactions by a specific user that match a given category.
      *
-     * @param userId The ID of the user whose transactions are to be retrieved.
-     * @param category The category of the transactions (e.g., food, entertainment).
-     * @return List<Transaction> A list of transactions in the specified category.
+     * @param userId the ID of the user
+     * @param category the transaction category to filter by
+     * @return a list of transaction response DTOs
      */
-    List<Transaction> getTransactionsByCategory(Long userId, String category);
+    List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category);
 
     /**
-     * Retrieves all transactions for a specific user of a given type (income or expense).
+     * Retrieves all transactions by a specific user that match a given type (INCOME or EXPENSE).
      *
-     * @param userId The ID of the user whose transactions are to be retrieved.
-     * @param type The type of the transaction (income or expense).
-     * @return List<Transaction> A list of transactions of the specified type.
+     * @param userId the ID of the user
+     * @param type the transaction type to filter by
+     * @return a list of transaction response DTOs
      */
-    List<Transaction> getTransactionsByType(Long userId, TransactionType type);
+    List<TransactionResponseDto> getTransactionsByType(Long userId, TransactionType type);
 }
-

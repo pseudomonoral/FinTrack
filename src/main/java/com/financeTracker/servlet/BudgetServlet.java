@@ -3,7 +3,7 @@ package com.financeTracker.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.controller.BudgetController;
 import com.financeTracker.controller.StatisticsController;
 import com.financeTracker.dto.*;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @WebServlet("/budget/*")
 public class BudgetServlet extends HttpServlet {
 
-    private final BudgetController budgetController = (BudgetController) ApplicationContext.getBean("budgetController");
+    private final BudgetController budgetController = (BudgetController) ServletContext.getBean("budgetController");
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .registerModule(new JavaTimeModule());
@@ -47,7 +47,7 @@ public class BudgetServlet extends HttpServlet {
 
     private void handleCheckBudgetExceeded(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("user");
-        StatisticsController statisticsController = (StatisticsController) ApplicationContext.getBean("statisticsController");
+        StatisticsController statisticsController = (StatisticsController) ServletContext.getBean("statisticsController");
         double expense = statisticsController.getExpenseForPeriod(userDto.getId(),
                 LocalDate.now().minusMonths(1), LocalDate.now()).getAmount();
 

@@ -1,12 +1,11 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.annotation.Auditable;
 import com.financeTracker.annotation.Secured;
 import com.financeTracker.controller.TransactionController;
 import com.financeTracker.controller.UserController;
-import com.financeTracker.dto.TargetUserDto;
 import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.model.type.EventType;
@@ -21,8 +20,8 @@ import java.util.List;
 @WebServlet("/admin/*")
 public class AdminServlet extends HttpServlet {
 
-    private final UserController userController = (UserController) ApplicationContext.getBean("userController");
-    private final TransactionController transactionController = (TransactionController) ApplicationContext.getBean("transactionController");
+    private final UserController userController = (UserController) ServletContext.getBean("userController");
+    private final TransactionController transactionController = (TransactionController) ServletContext.getBean("transactionController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Secured(hasRole = "ADMIN")

@@ -3,170 +3,95 @@ package com.financeTracker.dao.impl;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.model.entity.Goal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
 
+@Repository
 @RequiredArgsConstructor
 public class GoalDaoImpl implements GoalDao {
-    private final DataSource dataSource;
 
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Goal> findAllByUserId(Long userId) {
         String sql = "SELECT * FROM fintrack.goals WHERE user_id = ?";
-        List<Goal> goals = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, userId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                goals.add(mapToGoalFromDatabase(rs));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при получении целей пользователя", e);
-        }
-        return goals;
+        return jdbcTemplate.query(sql, this::mapToGoalFromDatabase, userId);
     }
 
     @Override
     public Optional<Goal> findGoalByNameAndId(String goalName, Long userId) {
         String sql = "SELECT * FROM fintrack.goals WHERE name = ? AND user_id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, goalName);
-            stmt.setLong(2, userId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapToGoalFromDatabase(rs));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при поиске цели", e);
-        }
-        return Optional.empty();
+        return jdbcTemplate.query(sql, this::mapToGoalFromDatabase, goalName, userId)
+                .stream().findFirst();
     }
 
     @Override
     public Optional<Goal> findById(Long id) {
         String sql = "SELECT * FROM fintrack.goals WHERE id = ?";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(mapToGoalFromDatabase(rs));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при поиске цели по ID", e);
-        }
-        return Optional.empty();
+        return jdbcTemplate.query(sql, this::mapToGoalFromDatabase, id)
+                .stream().findFirst();
     }
 
     @Override
     public List<Goal> findAll() {
         String sql = "SELECT * FROM fintrack.goals";
-        List<Goal> goals = new ArrayList<>();
-        try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                goals.add(mapToGoalFromDatabase(rs));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при получении всех целей", e);
-        }
-        return goals;
+        return jdbcTemplate.query(sql, this::mapToGoalFromDatabase);
     }
 
     @Override
     public Goal save(Goal entity) {
-        String sql = "INSERT INTO fintrack.goals " +
-                "(user_id, name, target_amount, current_amount, goal_completed, goal_actual, " +
-                "created_at, updated_at) " +
-                "VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id";
+        String sql = """
+                INSERT INTO fintrack.goals 
+                (user_id, name, target_amount, current_amount, goal_completed, goal_actual, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id
+                """;
 
-        try (Connection conn = dataSource.getConnection()) {
-            conn.setAutoCommit(false);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            stmt.setLong(1, entity.getUserId());
+            stmt.setString(2, entity.getName());
+            stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getTargetAmount()));
+            stmt.setBigDecimal(4, BigDecimal.valueOf(entity.getCurrentAmount()));
+            stmt.setBoolean(5, entity.isGoalCompleted());
+            stmt.setBoolean(6, entity.isGoalActual());
+            return stmt;
+        }, keyHolder);
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                stmt.setLong(1, entity.getUserId());
-                stmt.setString(2, entity.getName());
-                stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getTargetAmount()));
-                stmt.setBigDecimal(4, BigDecimal.valueOf(entity.getCurrentAmount()));
-                stmt.setBoolean(5, entity.isGoalCompleted());
-                stmt.setBoolean(6, entity.isGoalActual());
-                stmt.executeUpdate();
-
-                ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next()) {
-                    entity.setId(rs.getLong(1));
-                }
-
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw new RuntimeException("Ошибка при сохранении цели", e);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка работы с базой данных", e);
-        }
-
+        entity.setId(keyHolder.getKey().longValue());
         return entity;
     }
 
     @Override
     public void delete(Long goalId) {
         String sql = "DELETE FROM fintrack.goals WHERE id = ?";
-
-        try (Connection conn = dataSource.getConnection()) {
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, goalId);
-                stmt.executeUpdate();
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw new RuntimeException("Ошибка при удалении цели", e);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка работы с базой данных", e);
-        }
+        jdbcTemplate.update(sql, goalId);
     }
 
     @Override
     public void updateGoal(Goal entity) {
-        String sql = "UPDATE fintrack.goals " +
-                "SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, " +
-                "goal_actual = ?, updated_at = now() " +
-                "WHERE id = ?";
-
-        try (Connection conn = dataSource.getConnection()) {
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, entity.getName());
-                stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getTargetAmount()));
-                stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getCurrentAmount()));
-                stmt.setBoolean(4, entity.isGoalCompleted());
-                stmt.setBoolean(5, entity.isGoalActual());
-                stmt.setLong(6, entity.getId());
-
-                stmt.executeUpdate();
-                conn.commit();
-            } catch (SQLException e) {
-                conn.rollback();
-                throw new RuntimeException("Ошибка при обновлении цели", e);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка работы с базой данных", e);
-        }
+        String sql = """
+                UPDATE fintrack.goals 
+                SET name = ?, target_amount = ?, current_amount = ?, goal_completed = ?, goal_actual = ?, updated_at = now() 
+                WHERE id = ?
+                """;
+        jdbcTemplate.update(sql,
+                entity.getName(),
+                entity.getTargetAmount(),
+                entity.getCurrentAmount(),
+                entity.isGoalCompleted(),
+                entity.isGoalActual(),
+                entity.getId());
     }
 
-    private Goal mapToGoalFromDatabase(ResultSet rs) throws SQLException {
+    private Goal mapToGoalFromDatabase(ResultSet rs, int rowNum) throws SQLException {
         return Goal.builder()
                 .id(rs.getLong("id"))
                 .userId(rs.getLong("user_id"))
@@ -180,5 +105,6 @@ public class GoalDaoImpl implements GoalDao {
                 .build();
     }
 }
+
 
 

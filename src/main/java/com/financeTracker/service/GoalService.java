@@ -1,5 +1,7 @@
 package com.financeTracker.service;
 
+import com.financeTracker.dto.GoalRequestDto;
+import com.financeTracker.dto.GoalResponseDto;
 import com.financeTracker.model.entity.Goal;
 
 import java.util.List;
@@ -14,70 +16,58 @@ public interface GoalService {
     /**
      * Creates a new goal for a specific user.
      *
-     * @param userId The ID of the user who is setting the goal.
-     * @param goalActive A boolean indicating whether the goal is active.
-     * @param name The name of the goal.
-     * @param targetAmount The target amount for the goal.
-     * @return Goal The created goal entity.
+     * @param userId The ID of the user creating the goal.
+     * @param goalRequestDto The DTO containing goal creation data.
+     * @return GoalResponseDto The created goal's response DTO.
      */
-    Goal createGoal(Long userId, boolean goalActive, String name, double targetAmount, double currentAmount);
+    GoalResponseDto createGoal(Long userId, GoalRequestDto goalRequestDto);
 
     /**
-     * Retrieves a specific goal by its name and associated user ID.
+     * Retrieves a specific goal by its name and user ID from a given DTO.
      *
-     * @param nameGoal The name of the goal.
-     * @param userId The ID of the user whose goal is to be retrieved.
-     * @return Goal The retrieved goal entity.
+     * @param goalResponseDto A DTO containing goal identification info (name).
+     * @param userId The ID of the user.
+     * @return GoalResponseDto The retrieved goal response.
      */
-    Goal getGoal(String nameGoal, Long userId);
+    GoalResponseDto getGoal(GoalResponseDto goalResponseDto, Long userId);
 
     /**
-     * Retrieves all goals associated with a specific user.
+     * Retrieves all goals for a specific user.
      *
-     * @param userId The ID of the user whose goals are to be retrieved.
-     * @return List<Goal> A list of goals associated with the given user ID.
+     * @param userId The ID of the user.
+     * @return List of GoalResponseDto containing all goals for the user.
      */
-    List<Goal> getAllGoals(Long userId);
+    List<GoalResponseDto> getAllGoals(Long userId);
 
     /**
-     * Deletes a specific goal by its name and associated user ID.
+     * Deletes a goal for a user based on the goal's name in the request DTO.
      *
-     * @param nameGoal The name of the goal to be deleted.
-     * @param userId The ID of the user whose goal is to be deleted.
+     * @param userId The ID of the user.
      */
-    void deleteGoal(String nameGoal, Long userId);
+    void deleteGoal(GoalRequestDto requestDto, Long userId);
 
     /**
-     * Updates a specific goal for a user with new target amount and completion status.
+     * Updates an existing goal for a user.
      *
-     * @param userId The ID of the user whose goal is to be updated.
-     * @param nameGoal The name of the goal to be updated.
-     * @param targetAmount The new target amount for the goal.
-     * @param goalActual A boolean indicating whether the goal is actually achieved.
+     * @param userId The ID of the user.
+     * @param goalRequestDto The DTO containing updated goal data.
      */
-    void updateGoal(Long userId, String nameGoal, double targetAmount, double currentAmount, boolean goalActual);
+    void updateGoal(Long userId, GoalRequestDto goalRequestDto);
 
     /**
-     * Retrieves the current goal that is active for a specific user.
+     * Retrieves the currently active goal of a user.
      *
-     * @param userId The ID of the user whose active goal is to be retrieved.
-     * @return Optional<Goal> An Optional containing the active goal if found, or an empty Optional if not found.
+     * @param userId The ID of the user.
+     * @return Optional containing GoalResponseDto if an active goal is found.
      */
-    Optional<Goal> getActualGoalByUserId(Long userId);
+    Optional<GoalResponseDto> getActualGoalByUserId(Long userId);
 
     /**
-     * Deactivates the current goal of a specific user.
+     * Deactivates the currently active goal of a user, if any.
      *
-     * @param userId The ID of the user whose active goal is to be deactivated.
+     * @param userId The ID of the user.
      */
     void deactivateGoalByUserId(Long userId);
-
-    /**
-     * Calculates the progress made towards achieving a specific goal.
-     *
-     * @param goal The goal for which progress needs to be calculated.
-     * @return double The progress made towards the target amount, expressed as a percentage.
-     */
-    double getGoalProgress(Goal goal);
 }
+
 

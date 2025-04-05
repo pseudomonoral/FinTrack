@@ -1,7 +1,7 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.annotation.Auditable;
 import com.financeTracker.controller.UserController;
 import com.financeTracker.dto.UserDto;
@@ -17,7 +17,7 @@ import java.io.IOException;
 @WebServlet("/settings/*")
 public class UserSettingsServlet extends HttpServlet {
 
-    private final UserController userController = (UserController) ApplicationContext.getBean("userController");
+    private final UserController userController = (UserController) ServletContext.getBean("userController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

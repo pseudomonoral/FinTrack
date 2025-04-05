@@ -26,4 +26,3 @@ public class TransactionRequestDto {
     @NotNull(message = "Тип транзакции обязателен")
     private TransactionType type;
 }
-

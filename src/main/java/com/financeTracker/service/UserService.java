@@ -1,63 +1,79 @@
 package com.financeTracker.service;
 
+import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.UserUpdateDto;
+import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
+import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.User;
 
 import java.util.List;
 
+import java.util.List;
+
 /**
- * The UserService interface provides methods for managing user accounts.
- * It includes operations for retrieving, deleting, updating, and blocking/unblocking users.
+ * Service interface for managing users.
+ * Provides methods for retrieving, updating, deleting, blocking, and unblocking users.
  */
 public interface UserService {
 
     /**
-     * Retrieves a user by their unique ID.
+     * Retrieves a user by their ID.
      *
-     * @param id The ID of the user to be retrieved.
-     * @return User The user entity associated with the given ID.
+     * @param id the ID of the user to retrieve
+     * @return a {@link UserDto} representing the user
+     * @throws EntityNotFoundException if the user is not found
      */
-    User getUserById(Long id);
+    UserDto getUserById(Long id);
 
     /**
-     * Deletes a user by their unique ID.
+     * Deletes a user by their ID.
+     * Used for admin-level deletion that may include checks.
      *
-     * @param id The ID of the user to be deleted.
+     * @param id the ID of the user to delete
+     * @throws EntityNotFoundException if the user is not found
      */
     void deleteUserById(Long id);
 
     /**
-     * Deletes a user by their unique ID and cascades the deletion of related entities.
+     * Deletes a user account by their ID.
+     * Used for direct account removal, for example, by the user themself.
      *
-     * @param id The ID of the user to be deleted.
+     * @param userId the ID of the user to delete
      */
-    void deleteAccountUserById(Long id);
+    void deleteAccountUserById(Long userId);
 
     /**
-     * Updates an existing user.
+     * Updates user information such as login, password, and name.
      *
-     * @param user The user entity to be updated.
+     * @param userId the ID of the user to update
+     * @param userUpdateDto the DTO containing the new user data
+     * @throws EntityAlreadyExistException if the new login is already taken by another user
+     * @throws EntityNotFoundException if the user is not found
      */
-    void updateUser(User user);
+    void updateUser(Long userId, UserUpdateDto userUpdateDto);
 
     /**
-     * Blocks a user by their unique ID.
+     * Blocks a user by their ID.
+     * This will set the user status to {@code BLOCKED}.
      *
-     * @param id The ID of the user to be blocked.
+     * @param id the ID of the user to block
+     * @throws EntityNotFoundException if the user is not found
      */
     void blockedUserById(Long id);
 
     /**
-     * Unblocks a previously blocked user by their unique ID.
+     * Unblocks a user by their ID.
+     * This will set the user status to {@code ACTIVE}.
      *
-     * @param id The ID of the user to be unblocked.
+     * @param id the ID of the user to unblock
+     * @throws EntityNotFoundException if the user is not found
      */
     void unblockedUserById(Long id);
 
     /**
-     * Retrieves a list of all users.
+     * Retrieves a list of all users in the system.
      *
-     * @return List<User> A list of all user entities in the system.
+     * @return a list of {@link UserDto}
      */
-    List<User> showAll();
+    List<UserDto> showAll();
 }
-

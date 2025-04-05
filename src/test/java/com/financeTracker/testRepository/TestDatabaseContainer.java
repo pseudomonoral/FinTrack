@@ -1,8 +1,5 @@
 package com.financeTracker.testRepository;
 
-import com.financeTracker.util.Config;
-import com.financeTracker.util.DatabaseManager;
-import com.financeTracker.util.LiquibaseMigrator;
 import lombok.Getter;
 import org.testcontainers.containers.PostgreSQLContainer;
 

@@ -1,51 +1,58 @@
 package com.financeTracker.service;
 
+import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.Budget;
 
 import java.util.Optional;
 
+import java.util.Optional;
+
 /**
- * The BudgetService interface provides the operations for managing a user's budget.
- * It includes methods for creating, retrieving, updating, deleting a budget, and checking if the budget is exceeded.
+ * Service interface for managing user budgets.
  */
 public interface BudgetService {
 
     /**
-     * Creates a budget for a specific user with a given spending limit.
+     * Creates a budget for the specified user.
      *
-     * @param userId The ID of the user for whom the budget is to be created.
-     * @param limit The spending limit for the user's budget.
+     * @param userId    the ID of the user for whom the budget is being created.
+     * @param budgetDto the DTO containing budget details such as the spending limit.
      */
-    void createBudget(Long userId, double limit);
+    void createBudget(Long userId, BudgetDto budgetDto);
 
     /**
-     * Retrieves the budget for a specific user.
+     * Retrieves the budget for the specified user.
      *
-     * @param userId The ID of the user whose budget is to be retrieved.
-     * @return Optional<Budget> An Optional containing the user's budget if found, or an empty Optional if not found.
+     * @param userId the ID of the user whose budget is to be retrieved.
+     * @return an {@link Optional} containing the {@link BudgetDto} if the budget exists, or empty if not.
      */
-    Optional<Budget> getBudget(long userId);
+    Optional<BudgetDto> getBudget(long userId);
 
     /**
-     * Updates the budget for a specific user with a new spending limit.
+     * Updates the existing budget for the specified user.
      *
-     * @param userId The ID of the user whose budget is to be updated.
-     * @param limit The new spending limit for the user's budget.
+     * @param userId    the ID of the user whose budget is to be updated.
+     * @param budgetDto the DTO containing the updated budget information.
+     * @throws EntityNotFoundException if no budget exists for the given user.
      */
-    void updateBudget(Long userId, double limit);
+    void updateBudget(Long userId, BudgetDto budgetDto);
 
     /**
-     * Deletes the budget for a specific user.
+     * Deletes the budget for the specified user.
      *
-     * @param userId The ID of the user whose budget is to be deleted.
+     * @param userId the ID of the user whose budget is to be deleted.
+     * @throws EntityNotFoundException if no budget exists for the given user.
      */
     void deleteBudget(long userId);
 
     /**
-     * Checks if the user's budget has been exceeded.
+     * Checks if the user has exceeded their budget in the past month.
      *
-     * @param userId The ID of the user whose budget is being checked.
-     * @return boolean True if the budget has been exceeded, false otherwise.
+     * @param userId the ID of the user.
+     * @return true if the total expenses in the last month exceed the budget limit; false otherwise.
+     * @throws EntityNotFoundException if no budget exists for the given user.
      */
     boolean isBudgetExceeded(long userId);
 }
+

@@ -7,14 +7,11 @@ import com.financeTracker.dto.IncomeExpenseResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
 
 import java.util.Map;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface StatisticsMapper {
-    StatisticsMapper INSTANCE = Mappers.getMapper(StatisticsMapper.class);
-
     BalanceResponseDto toBalanceResponseDto(Double balance);
 
     IncomeExpenseResponseDto toIncomeExpenseResponseDto(Double amount);

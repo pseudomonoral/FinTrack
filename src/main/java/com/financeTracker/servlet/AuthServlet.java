@@ -1,7 +1,7 @@
 package com.financeTracker.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.ApplicationContext;
+import com.financeTracker.ServletContext;
 import com.financeTracker.annotation.Auditable;
 import com.financeTracker.annotation.Loggable;
 import com.financeTracker.controller.AuthController;
@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 @WebServlet("/auth/*")
 public class AuthServlet extends HttpServlet {
 
-    private final AuthController authController = (AuthController) ApplicationContext.getBean("authController");
+    private final AuthController authController = (AuthController) ServletContext.getBean("authController");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
