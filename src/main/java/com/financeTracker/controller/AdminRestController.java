@@ -1,0 +1,50 @@
+package com.financeTracker.controller;
+
+import com.financeTracker.annotation.Auditable;
+import com.financeTracker.dto.TargetUserDto;
+import com.financeTracker.dto.TransactionResponseDto;
+import com.financeTracker.dto.UserDto;
+import com.financeTracker.model.type.EventType;
+import com.financeTracker.service.TransactionService;
+import com.financeTracker.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin")
+@RequiredArgsConstructor
+public class AdminRestController {
+
+    private final UserService userService;
+    private final TransactionService transactionService;
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = userService.showAll();
+        return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/transactions")
+    public ResponseEntity<List<TransactionResponseDto>> getUserTransactions(@RequestBody TargetUserDto targetUserDto) {
+        List<TransactionResponseDto> transactions = transactionService.getTransactionsByUserId(targetUserDto.getUserId());
+        return ResponseEntity.ok(transactions);
+    }
+
+    @PostMapping("/block")
+    @Auditable(eventType = EventType.BLOCK_ACCOUNT)
+    public ResponseEntity<Void> blockUser(@RequestBody TargetUserDto targetUserDto) {
+        userService.blockedUserById(targetUserDto.getUserId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/unblock")
+    @Auditable(eventType = EventType.UNBLOCK_ACCOUNT)
+    public ResponseEntity<Void> unblockUser(@RequestBody TargetUserDto targetUserDto) {
+        userService.unblockedUserById(targetUserDto.getUserId());
+        return ResponseEntity.ok().build();
+    }
+}
+

@@ -64,7 +64,7 @@ cd FinTrack
 
 
 ### Run with IntelliJ IDEA  
-Open the `com.financeTracker.Main` class and run the `main()` method.
+Open the `com.financeTracker.ApplicationRunner` class and run the `main()` method.
 
 ### Default Credentials
 

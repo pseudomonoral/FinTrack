@@ -88,24 +88,6 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
-    private Transaction getDiffTransaction(Transaction old, Transaction newTransaction) {
-        double oldAmount = old.getAmount();
-        double newAmount = newTransaction.getAmount();
-
-        double diffAmount;
-        if (old.getType() == newTransaction.getType()) {
-            diffAmount = newAmount - oldAmount;
-        } else {
-            diffAmount = newAmount + oldAmount;
-        }
-        return Transaction.builder()
-                .type(diffAmount > 0 ? INCOME : EXPENSE)
-                .amount(Math.abs(diffAmount))
-                .id(old.getId())
-                .userId(old.getUserId())
-                .build();
-    }
-
     @Override
     public List<TransactionResponseDto> getTransactionsByUserId(Long userId) {
         return transactionDao.findAllByUserId(userId).stream()
@@ -137,10 +119,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionResponseDto> getTransactionsByType(Long userId, TransactionType type) {
+    public List<TransactionResponseDto> getTransactionsByType(Long userId, String type) {
+        TransactionType transactionType = TransactionType.valueOf(type);
         return transactionDao.findAll().stream()
                 .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
-                .filter(transaction -> transaction.getType() == type)
+                .filter(transaction -> transaction.getType() == transactionType)
                 .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
@@ -171,7 +154,7 @@ public class TransactionServiceImpl implements TransactionService {
         Long userId = transaction.getUserId();
         User user = userDao.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(USER, userId));
-        if(budgetService.isBudgetExceeded(userId)) {
+        if(budgetService.isBudgetExceeded(userId).isExceeded()) {
             user.setBudgetStatus(OVER_BUDGET);
         }else {
             user.setBudgetStatus(WITHIN_BUDGET);
@@ -197,6 +180,24 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         goalDao.updateGoal(actualGoal);
+    }
+
+    private Transaction getDiffTransaction(Transaction old, Transaction newTransaction) {
+        double oldAmount = old.getAmount();
+        double newAmount = newTransaction.getAmount();
+
+        double diffAmount;
+        if (old.getType() == newTransaction.getType()) {
+            diffAmount = newAmount - oldAmount;
+        } else {
+            diffAmount = newAmount + oldAmount;
+        }
+        return Transaction.builder()
+                .type(diffAmount > 0 ? INCOME : EXPENSE)
+                .amount(Math.abs(diffAmount))
+                .id(old.getId())
+                .userId(old.getUserId())
+                .build();
     }
 
     private double getGoalProgress(Goal goal) {

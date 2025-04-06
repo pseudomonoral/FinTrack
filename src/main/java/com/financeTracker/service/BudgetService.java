@@ -1,5 +1,6 @@
 package com.financeTracker.service;
 
+import com.financeTracker.dto.BudgetCheckResponseDto;
 import com.financeTracker.dto.BudgetDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.model.entity.Budget;
@@ -50,9 +51,9 @@ public interface BudgetService {
      * Checks if the user has exceeded their budget in the past month.
      *
      * @param userId the ID of the user.
-     * @return true if the total expenses in the last month exceed the budget limit; false otherwise.
+     * @return BudgetCheckResponseDto.
      * @throws EntityNotFoundException if no budget exists for the given user.
      */
-    boolean isBudgetExceeded(long userId);
+    BudgetCheckResponseDto isBudgetExceeded(long userId);
 }
 

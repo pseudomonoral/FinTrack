@@ -83,5 +83,5 @@ public interface TransactionService {
      * @param type the transaction type to filter by
      * @return a list of transaction response DTOs
      */
-    List<TransactionResponseDto> getTransactionsByType(Long userId, TransactionType type);
+    List<TransactionResponseDto> getTransactionsByType(Long userId, String type);
 }

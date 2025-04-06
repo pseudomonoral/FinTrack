@@ -2,6 +2,7 @@ package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
+import com.financeTracker.dto.BudgetCheckResponseDto;
 import com.financeTracker.dto.BudgetDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.BudgetMapper;
@@ -65,7 +66,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public boolean isBudgetExceeded(long userId) {
+    public BudgetCheckResponseDto isBudgetExceeded(long userId) {
         Budget budget = budgetDao.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException(BUDGET, userId));
 
@@ -78,7 +79,11 @@ public class BudgetServiceImpl implements BudgetService {
                 .mapToDouble(Transaction::getAmount)
                 .sum();
 
-        return actualExpenses > budget.getLimit();
+        return BudgetCheckResponseDto.builder()
+                .budgetLimit(budget.getLimit())
+                .monthlyExpense(actualExpenses)
+                .exceeded(actualExpenses > budget.getLimit())
+                .build();
     }
     private Budget mapToBudget(Long userId, double limit) {
         return Budget.builder()
