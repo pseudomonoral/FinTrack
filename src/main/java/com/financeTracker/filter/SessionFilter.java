@@ -15,7 +15,17 @@ import java.util.List;
 @Component
 public class SessionFilter extends OncePerRequestFilter {
 
-    private static final List<String> PUBLIC_PATHS = List.of("/login", "/register");
+    private static final List<String> PUBLIC_PATHS = List.of(
+            "/login",
+            "/register",
+            // Swagger UI endpoints (can be removed or disabled in production)
+            "/swagger-ui",
+            "/swagger-ui.html",
+            "/v3/api-docs",
+            "/v3/api-docs/",
+            "/swagger-ui/index.html"
+    );
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

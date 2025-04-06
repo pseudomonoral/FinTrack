@@ -18,11 +18,9 @@ public interface StatisticsMapper {
 
     GoalStatisticsResponseDto toGoalStatisticsResponseDto(Long completedGoals, Double averageGoalProgress);
 
-    @Mapping(source = "categoryExpenses", target = "categoryExpenses", qualifiedByName = "mapCategoryExpenses")
-    ExpenseAnalysisResponseDto toExpenseAnalysisResponseDto(Map<String, Double> categoryExpenses);
-
-    @Named("mapCategoryExpenses")
-    static Map<String, Double> mapCategoryExpenses(Map<String, Double> categoryExpenses) {
-        return categoryExpenses;
+    default ExpenseAnalysisResponseDto toExpenseAnalysisResponseDto(Map<String, Double> categoryExpenses) {
+        return ExpenseAnalysisResponseDto.builder()
+                .categoryExpenses(categoryExpenses)
+                .build();
     }
 }
