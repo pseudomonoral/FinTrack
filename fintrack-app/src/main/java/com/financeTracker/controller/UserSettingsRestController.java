@@ -1,5 +1,7 @@
 package com.financeTracker.controller;
 
+import com.audit.Auditable;
+import com.audit.EventType;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
 import com.financeTracker.service.UserService;
@@ -22,6 +24,7 @@ public class UserSettingsRestController {
         return ResponseEntity.ok(user);
     }
 
+    @Auditable(eventType = EventType.UPDATE_PROFILE)
     @PutMapping
     public ResponseEntity<Void> updateUserProfile(
             @Valid @RequestBody UserUpdateDto userUpdateDto,
@@ -36,6 +39,7 @@ public class UserSettingsRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @Auditable(eventType = EventType.DELETE_ACCOUNT)
     @DeleteMapping
     public ResponseEntity<Void> deleteAccount(HttpSession session) {
         UserDto user = (UserDto) session.getAttribute("user");

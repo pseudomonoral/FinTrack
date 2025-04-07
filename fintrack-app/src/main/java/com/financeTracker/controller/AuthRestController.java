@@ -1,5 +1,7 @@
 package com.financeTracker.controller;
 
+import com.audit.Auditable;
+import com.audit.EventType;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.mapper.UserMapper;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class AuthRestController {
     private final SecurityService securityService;
     private final UserMapper userMapper;
 
+    @Auditable(eventType = EventType.REGISTER)
     @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<UserDto> register(@RequestBody AuthRequestDto authRequest) {
@@ -31,6 +35,7 @@ public class AuthRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
     }
 
+    @Auditable(eventType = EventType.LOGIN)
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<UserDto> login(@RequestBody AuthRequestDto authRequest, HttpSession session) {
