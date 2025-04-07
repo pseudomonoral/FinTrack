@@ -1,17 +1,21 @@
 package com.financeTracker.mapper;
 
+import com.financeTracker.dto.GoalResponseDto;
 import com.financeTracker.model.entity.Goal;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
 
-public class GoalMapper {
+@Mapper
+public interface GoalMapper {
+    GoalMapper INSTANCE = Mappers.getMapper(GoalMapper.class);
 
-    public Goal mapToGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,
-                          boolean goalActual){
-        return Goal.builder()
-                .userId(userId)
-                .name(nameGoal)
-                .currentAmount(currentAmount)
-                .goalActual(goalActual)
-                .targetAmount(targetAmount)
-                .build();
+    @Mapping(target = "progress", source = "goal", qualifiedByName = "calculateProgress")
+    GoalResponseDto toGoalResponseDto(Goal goal);
+
+    @Named("calculateProgress")
+    static double calculateProgress(Goal goal) {
+        return goal.getTargetAmount() > 0 ? (goal.getCurrentAmount() * 100.0 / goal.getTargetAmount()) : 0.0;
     }
 }

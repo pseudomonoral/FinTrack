@@ -1,5 +1,8 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.dto.BudgetCheckResponseDto;
+import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.service.BudgetService;
 import lombok.RequiredArgsConstructor;
@@ -10,54 +13,37 @@ import java.util.Optional;
 public class BudgetController {
 
     private final BudgetService budgetService;
+    private final BudgetMapper budgetMapper = BudgetMapper.INSTANCE;
 
-    /**
-     * Creates a budget for the user with a given limit.
-     *
-     * @param userId The user's ID.
-     * @param limit  The limit for the user's budget.
-     */
-    public void createBudget(Long userId, double limit) {
-        budgetService.createBudget(userId, limit);
+    public void createBudget(Long userId, BudgetDto request) {
+        budgetService.createBudget(userId, request.getLimit());
     }
 
-    /**
-     * Gets the current budget of the user.
-     *
-     * @param userId The user's ID.
-     * @return An Optional containing the user's budget if present.
-     */
-    public Optional<Budget> getBudget(long userId) {
-        return budgetService.getBudget(userId);
+    public Optional<BudgetDto> getBudget(long userId) {
+        return budgetService.getBudget(userId).map(budgetMapper::toBudgetDto);
     }
 
-    /**
-     * Updates the user's budget with a new limit.
-     *
-     * @param userId The user's ID.
-     * @param limit  The new limit for the user's budget.
-     */
-    public void updateBudget(Long userId, double limit) {
-        budgetService.updateBudget(userId, limit);
+    public void updateBudget(Long userId, BudgetDto request) {
+        budgetService.updateBudget(userId, request.getLimit());
     }
 
-    /**
-     * Deletes the user's budget.
-     *
-     * @param userId The user's ID.
-     */
     public void deleteBudget(long userId) {
         budgetService.deleteBudget(userId);
     }
 
-    /**
-     * Checks if the user's budget has been exceeded.
-     *
-     * @param userId The user's ID.
-     * @return A boolean indicating whether the budget has been exceeded.
-     */
-    public boolean isBudgetExceeded(long userId) {
-        return budgetService.isBudgetExceeded(userId);
+    public BudgetCheckResponseDto checkBudgetExceeded(long userId, double monthlyExpense) {
+        boolean exceeded = budgetService.isBudgetExceeded(userId);
+        double limit = budgetService.getBudget(userId)
+                .map(Budget::getLimit)
+                .orElse(0.0);
+
+        BudgetCheckResponseDto response = new BudgetCheckResponseDto();
+        response.setExceeded(exceeded);
+        response.setMonthlyExpense(monthlyExpense);
+        response.setBudgetLimit(limit);
+
+        return response;
     }
 }
+
 

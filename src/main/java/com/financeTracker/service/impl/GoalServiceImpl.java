@@ -3,7 +3,6 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.mapper.GoalMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.GoalService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import static com.financeTracker.model.type.EntityName.*;
 public class GoalServiceImpl implements GoalService {
 
     private final GoalDao goalDao;
-    private final GoalMapper mapper;
 
     @Override
     public Goal createGoal(Long userId, boolean goalActual, String nameGoal,
@@ -25,7 +23,7 @@ public class GoalServiceImpl implements GoalService {
         if (goalDao.findGoalByNameAndId(nameGoal, userId).isPresent()) {
             throw new EntityAlreadyExistException(GOAL, userId);
         }
-        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
+        Goal goal = mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
         goal.onCreate();
         if (goalActual){
             deactivateGoalByUserId(userId);
@@ -54,16 +52,16 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void updateGoal(Long id, Long userId, String nameGoal, double targetAmount, double currentAmount,
+    public void updateGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,
                            boolean goalActual) {
-        Goal goal = mapper.mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
-        goal.setId(id);
+        Goal goal = mapToGoal(userId, nameGoal, targetAmount, currentAmount, goalActual);
 
         Optional<Goal> oldActualGoal = goalDao.findGoalByNameAndId(nameGoal, userId);
         if (oldActualGoal.isPresent()) {
             if (goalActual && !oldActualGoal.get().isGoalActual()){
                 deactivateGoalByUserId(userId);
             }
+            goal.setId(oldActualGoal.get().getId());
             goalDao.updateGoal(goal);
         } else {
             throw new EntityNotFoundException(GOAL, goal.getUserId());
@@ -95,5 +93,16 @@ public class GoalServiceImpl implements GoalService {
             return 100.0;
         }
         return Math.min((goal.getCurrentAmount() / goal.getTargetAmount()) * 100, 100.0);
+    }
+
+    private Goal mapToGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,
+                           boolean goalActual){
+        return Goal.builder()
+                .userId(userId)
+                .name(nameGoal)
+                .currentAmount(currentAmount)
+                .goalActual(goalActual)
+                .targetAmount(targetAmount)
+                .build();
     }
 }

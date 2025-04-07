@@ -30,7 +30,7 @@ public interface UserService {
      *
      * @param id The ID of the user to be deleted.
      */
-    void deleteCascadeUserById(Long id);
+    void deleteAccountUserById(Long id);
 
     /**
      * Updates an existing user.

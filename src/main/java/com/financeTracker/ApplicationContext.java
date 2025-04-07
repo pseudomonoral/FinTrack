@@ -9,17 +9,12 @@ import com.financeTracker.dao.impl.BudgetDaoImpl;
 import com.financeTracker.dao.impl.GoalDaoImpl;
 import com.financeTracker.dao.impl.TransactionDaoImpl;
 import com.financeTracker.dao.impl.UserDaoImpl;
-import com.financeTracker.in.ConsoleInput;
-import com.financeTracker.mapper.BudgetMapper;
-import com.financeTracker.mapper.GoalMapper;
-import com.financeTracker.mapper.TransactionMapper;
-import com.financeTracker.model.entity.User;
-import com.financeTracker.out.ConsoleOutputData;
 import com.financeTracker.service.*;
 import com.financeTracker.service.impl.*;
 import com.financeTracker.util.Config;
 import com.financeTracker.util.ConfigLoader;
 import com.financeTracker.util.DatabaseManager;
+import com.financeTracker.util.LiquibaseMigrator;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -29,34 +24,20 @@ public class ApplicationContext {
 
     private static final Map<String, Object> CONTEXT = new HashMap<>();
 
-    public static void loadContext() {
+    static {
         loadDAOLayer();
-        loadMapper();
         loadServiceLayer();
         loadControllers();
-        loadInputOutputLayers();
-    }
-
-    public static void loadAuthorizedUser(User user) {
-        CONTEXT.put("authorize", user);
-    }
-
-    public static void cleanAuthorizedUser() {
-        CONTEXT.remove("authorize");
-    }
-
-    public static User getAuthorizeUser() {
-        return (User) CONTEXT.get("authorize");
     }
 
     public static Object getBean(String beanName) {
         return CONTEXT.get(beanName);
     }
 
-    private static void loadInputOutputLayers() {
-        CONTEXT.put("input", new ConsoleInput());
-        CONTEXT.put("output", new ConsoleOutputData());
+    public static void setBean(String beanName, Object beanInstance) {
+        CONTEXT.put(beanName, beanInstance);
     }
+
 
     private static void loadControllers() {
         AuthController authController = new AuthController((SecurityService) CONTEXT.get("securityService"));
@@ -87,10 +68,8 @@ public class ApplicationContext {
     private static void loadServiceLayer() {
         CONTEXT.put("securityService", new SecurityServiceImpl((UserDao) CONTEXT.get("userDao")));
         CONTEXT.put("budgetService", new BudgetServiceImpl((BudgetDao) CONTEXT.get("budgetDao"),
-                (TransactionDao) CONTEXT.get("transactionDao"),
-                (BudgetMapper) CONTEXT.get("budgetMapper")));
-        CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao"),
-                (GoalMapper) CONTEXT.get("goalMapper")));
+                (TransactionDao) CONTEXT.get("transactionDao")));
+        CONTEXT.put("goalService", new GoalServiceImpl((GoalDao) CONTEXT.get("goalDao")));
         CONTEXT.put("userService", new UserServiceImpl((UserDao) CONTEXT.get("userDao"),
                 (BudgetService) CONTEXT.get("budgetService"),
                 (GoalService) CONTEXT.get("goalService")));
@@ -98,8 +77,7 @@ public class ApplicationContext {
                 new TransactionServiceImpl((UserService) CONTEXT.get("userService"),
                         (TransactionDao) CONTEXT.get("transactionDao"),
                         (BudgetService) CONTEXT.get("budgetService"),
-                        (GoalService) CONTEXT.get("goalService"),
-                        new TransactionMapper()));
+                        (GoalService) CONTEXT.get("goalService")));
         CONTEXT.put("statisticsService", new StatisticsServiceImpl((TransactionService) CONTEXT.get("transactionService"),
                 (GoalService) CONTEXT.get("goalService")));
     }
@@ -107,17 +85,15 @@ public class ApplicationContext {
     private static void loadDAOLayer() {
         Config config = ConfigLoader.loadConfig("config.yaml");
         DatabaseManager databaseManager = new DatabaseManager(config.database);
+
+        LiquibaseMigrator liquibaseMigrator = new LiquibaseMigrator(databaseManager, config.liquibase.changelog);
+        liquibaseMigrator.executeMigrations();
+
         DataSource dataSource = databaseManager.getDataSource();
 
         CONTEXT.put("userDao", new UserDaoImpl(dataSource));
         CONTEXT.put("transactionDao", new TransactionDaoImpl(dataSource));
         CONTEXT.put("budgetDao", new BudgetDaoImpl(dataSource));
         CONTEXT.put("goalDao", new GoalDaoImpl(dataSource));
-    }
-
-
-    private static void loadMapper() {
-        CONTEXT.put("budgetMapper", new BudgetMapper());
-        CONTEXT.put("goalMapper", new GoalMapper());
     }
 }

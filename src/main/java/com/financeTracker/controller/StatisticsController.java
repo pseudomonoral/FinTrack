@@ -1,67 +1,48 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.model.entity.Goal;
+import com.financeTracker.dto.BalanceResponseDto;
+import com.financeTracker.dto.ExpenseAnalysisResponseDto;
+import com.financeTracker.dto.GoalStatisticsResponseDto;
+import com.financeTracker.dto.IncomeExpenseResponseDto;
+import com.financeTracker.mapper.StatisticsMapper;
 import com.financeTracker.service.StatisticsService;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Map;
 
-@RequiredArgsConstructor
 public class StatisticsController {
 
     private final StatisticsService statisticsService;
+    private final StatisticsMapper dtoStatisticsMapper = StatisticsMapper.INSTANCE;
 
-    /**
-     * Calculates the current balance of the user.
-     *
-     * @param userId The user's ID.
-     * @return The current balance of the user.
-     */
-    public double calculateCurrentBalance(Long userId) {
-        return statisticsService.calculateCurrentBalance(userId);
+    public StatisticsController(StatisticsService statisticsService) {
+        this.statisticsService = statisticsService;
     }
 
-    /**
-     * Calculates the income of the user for a specific period.
-     *
-     * @param userId   The user's ID.
-     * @param startDate The start date of the period.
-     * @param endDate   The end date of the period.
-     * @return The income of the user for the period.
-     */
-    public double calculateIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
-        return statisticsService.calculateIncomeForPeriod(userId, startDate, endDate);
+    public BalanceResponseDto getCurrentBalance(Long userId) {
+        double balance = statisticsService.calculateCurrentBalance(userId);
+        return dtoStatisticsMapper.toBalanceResponseDto(balance);
     }
 
-    /**
-     * Calculates the expenses of the user for a specific period.
-     *
-     * @param userId   The user's ID.
-     * @param startDate The start date of the period.
-     * @param endDate   The end date of the period.
-     * @return The expenses of the user for the period.
-     */
-    public double calculateExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
-        return statisticsService.calculateExpenseForPeriod(userId, startDate, endDate);
+    public IncomeExpenseResponseDto getIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
+        double income = statisticsService.calculateIncomeForPeriod(userId, startDate, endDate);
+        return dtoStatisticsMapper.toIncomeExpenseResponseDto(income);
     }
 
-    /**
-     * Analyzes the user's expenses by category.
-     *
-     * @param userId The user's ID.
-     * @return A map with the categories and their corresponding expenses.
-     */
-    public Map<String, Double> analyzeExpensesByCategory(Long userId) {
-        return statisticsService.analyzeExpensesByCategory(userId);
+    public IncomeExpenseResponseDto getExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
+        double expense = statisticsService.calculateExpenseForPeriod(userId, startDate, endDate);
+        return dtoStatisticsMapper.toIncomeExpenseResponseDto(expense);
     }
 
-
-    public long calculateCountOfCompletedGoal(Long userId) {
-        return statisticsService.calculateCountOfCompletedGoal(userId);
+    public ExpenseAnalysisResponseDto getExpenseAnalysis(Long userId) {
+        Map<String, Double> analysis = statisticsService.analyzeExpensesByCategory(userId);
+        return dtoStatisticsMapper.toExpenseAnalysisResponseDto(analysis);
     }
 
-    public double calculateAverageGoalProgress(Long userId) {
-        return statisticsService.calculateAverageGoalProgress(userId);
+    public GoalStatisticsResponseDto getGoalStatistics(Long userId) {
+        Long completedGoals = statisticsService.calculateCountOfCompletedGoal(userId);
+        Double averageGoalProgress = statisticsService.calculateAverageGoalProgress(userId);
+        return dtoStatisticsMapper.toGoalStatisticsResponseDto(completedGoals, averageGoalProgress);
     }
 }
+

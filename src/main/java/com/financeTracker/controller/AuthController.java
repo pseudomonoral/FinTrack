@@ -1,5 +1,8 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.dto.AuthRequestDto;
+import com.financeTracker.dto.UserDto;
+import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -8,26 +11,18 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 
     private final SecurityService securityService;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
-    /**
-     * Registers a new user with the provided login and password.
-     *
-     * @param login    The login username for the new user.
-     * @param password The password for the new user.
-     * @return The registered User object.
-     */
-    public User register(String login, String password) {
-        return securityService.registration(login, password);
+    public UserDto register(AuthRequestDto authRequest) {
+        User user = securityService.registration(authRequest.getLogin(), authRequest.getPassword());
+        return userMapper.toUserDto(user);
     }
 
-    /**
-     * Authorizes a user with the provided login and password.
-     *
-     * @param login    The login username of the user to authorize.
-     * @param password The password of the user to authorize.
-     * @return An Optional containing the authorized User object, if authorization is successful.
-     */
-    public User authorize(String login, String password) {
-        return securityService.authorize(login, password);
+    public UserDto authorize(AuthRequestDto authRequest) {
+        User user = securityService.authorize(authRequest.getLogin(), authRequest.getPassword());
+        return userMapper.toUserDto(user);
     }
 }
+
+
+
