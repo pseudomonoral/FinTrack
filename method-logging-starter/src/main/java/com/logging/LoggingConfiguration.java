@@ -9,4 +9,3 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @ComponentScan("com.logging")
 public class LoggingConfiguration {
 }
-

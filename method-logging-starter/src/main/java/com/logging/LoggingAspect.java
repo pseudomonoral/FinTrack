@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,19 +14,22 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class LoggingAspect {
 
-    @Pointcut("execution(* * (..))")
-    public void annotatedByLoggable() {
-    }
-
-    @Around("annotatedByLoggable()")
+    @Around("execution(public * *(..))")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("[{}]: Calling method {}", getFormattedCurrentDate(), joinPoint.getSignature());
+        String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
 
+        if (!declaringTypeName.startsWith("com.financeTracker")) {
+            return joinPoint.proceed();
+        }
+
+        log.info("[{}]: Calling method {}", getFormattedCurrentDate(), joinPoint.getSignature());
 
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long end = System.currentTimeMillis() - start;
-        log.info("[{}]: Execution of method {} finished. Execution time is {} ms.", getFormattedCurrentDate(), joinPoint.getSignature(), end);
+
+        log.info("[{}]: Execution of method {} finished. Execution time is {} ms.",
+                getFormattedCurrentDate(), joinPoint.getSignature(), end);
         return result;
     }
 
