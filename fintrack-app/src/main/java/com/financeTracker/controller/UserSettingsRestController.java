@@ -1,9 +1,7 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.annotation.Auditable;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
-import com.financeTracker.model.type.EventType;
 import com.financeTracker.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -25,7 +23,6 @@ public class UserSettingsRestController {
     }
 
     @PutMapping
-    @Auditable(eventType = EventType.UPDATE_PROFILE)
     public ResponseEntity<Void> updateUserProfile(
             @Valid @RequestBody UserUpdateDto userUpdateDto,
             HttpSession session
@@ -40,7 +37,6 @@ public class UserSettingsRestController {
     }
 
     @DeleteMapping
-    @Auditable(eventType = EventType.DELETE_ACCOUNT)
     public ResponseEntity<Void> deleteAccount(HttpSession session) {
         UserDto user = (UserDto) session.getAttribute("user");
 

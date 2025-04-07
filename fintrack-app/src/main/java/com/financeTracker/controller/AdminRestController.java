@@ -1,10 +1,8 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.annotation.Auditable;
 import com.financeTracker.dto.TargetUserDto;
 import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.dto.UserDto;
-import com.financeTracker.model.type.EventType;
 import com.financeTracker.service.TransactionService;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +32,12 @@ public class AdminRestController {
     }
 
     @PostMapping("/block")
-    @Auditable(eventType = EventType.BLOCK_ACCOUNT)
     public ResponseEntity<Void> blockUser(@RequestBody TargetUserDto targetUserDto) {
         userService.blockedUserById(targetUserDto.getUserId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/unblock")
-    @Auditable(eventType = EventType.UNBLOCK_ACCOUNT)
     public ResponseEntity<Void> unblockUser(@RequestBody TargetUserDto targetUserDto) {
         userService.unblockedUserById(targetUserDto.getUserId());
         return ResponseEntity.ok().build();

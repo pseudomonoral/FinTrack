@@ -14,7 +14,7 @@ import org.aspectj.lang.annotation.Pointcut;
 
 @Aspect
 public class SecuredServletAspect {
-    @Pointcut("@annotation(secured) && execution(* com.financeTracker.servlet.*Servlet.*(..))")
+    @Pointcut("@annotation(secured)")
     public void callAtSecuredMethod(Secured secured) {
     }
 

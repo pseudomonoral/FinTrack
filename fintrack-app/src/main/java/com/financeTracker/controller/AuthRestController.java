@@ -1,11 +1,8 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.annotation.Auditable;
-import com.financeTracker.annotation.Loggable;
 import com.financeTracker.dto.AuthRequestDto;
 import com.financeTracker.dto.UserDto;
 import com.financeTracker.mapper.UserMapper;
-import com.financeTracker.model.type.EventType;
 import com.financeTracker.service.SecurityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,8 +25,6 @@ public class AuthRestController {
     private final UserMapper userMapper;
 
     @PostMapping("/register")
-    @Auditable(eventType = EventType.REGISTER)
-    @Loggable
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<UserDto> register(@RequestBody AuthRequestDto authRequest) {
         UserDto registeredUser = userMapper.toUserDto(securityService.registration(authRequest));
@@ -37,8 +32,6 @@ public class AuthRestController {
     }
 
     @PostMapping("/login")
-    @Auditable(eventType = EventType.LOGIN)
-    @Loggable
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<UserDto> login(@RequestBody AuthRequestDto authRequest, HttpSession session) {
         UserDto authorizedUser = userMapper.toUserDto(securityService.authorize(authRequest));

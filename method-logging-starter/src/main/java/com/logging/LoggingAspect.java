@@ -1,4 +1,4 @@
-package com.financeTracker.aspect;
+package com.logging;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -13,13 +13,15 @@ import java.time.format.DateTimeFormatter;
 @Aspect
 public class LoggingAspect {
 
-    @Pointcut("@annotation(com.financeTracker.annotation.Loggable) && execution(* * (..))")
+    @Pointcut("execution(* * (..))")
     public void annotatedByLoggable() {
     }
 
     @Around("annotatedByLoggable()")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("[{}]: Calling method {}", getFormattedCurrentDate(), joinPoint.getSignature());
+
+
         long start = System.currentTimeMillis();
         Object result = joinPoint.proceed();
         long end = System.currentTimeMillis() - start;

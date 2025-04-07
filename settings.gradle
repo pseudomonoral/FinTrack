@@ -1,2 +1,5 @@
 rootProject.name = 'FinTrack'
+include 'audit-logging-starter'
+include 'method-logging-starter'
+include 'fintrack-app'
 
