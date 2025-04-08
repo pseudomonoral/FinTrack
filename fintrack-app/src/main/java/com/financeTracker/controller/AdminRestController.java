@@ -6,7 +6,6 @@ import com.financeTracker.annotation.Secured;
 import com.financeTracker.dto.TargetUserDto;
 import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.dto.UserDto;
-import com.financeTracker.model.type.UserRole;
 import com.financeTracker.service.TransactionService;
 import com.financeTracker.service.UserService;
 import lombok.RequiredArgsConstructor;
