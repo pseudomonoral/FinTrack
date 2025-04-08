@@ -5,8 +5,6 @@ import com.financeTracker.dto.ExpenseAnalysisResponseDto;
 import com.financeTracker.dto.GoalStatisticsResponseDto;
 import com.financeTracker.dto.IncomeExpenseResponseDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.Map;
 

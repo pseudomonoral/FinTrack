@@ -4,9 +4,6 @@ import com.financeTracker.dto.UserDto;
 import com.financeTracker.dto.UserUpdateDto;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.model.entity.User;
-
-import java.util.List;
 
 import java.util.List;
 

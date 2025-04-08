@@ -2,7 +2,6 @@ package com.financeTracker.service;
 
 import com.financeTracker.dto.GoalRequestDto;
 import com.financeTracker.dto.GoalResponseDto;
-import com.financeTracker.model.entity.Goal;
 
 import java.util.List;
 import java.util.Optional;

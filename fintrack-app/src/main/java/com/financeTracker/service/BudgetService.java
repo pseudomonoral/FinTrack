@@ -3,9 +3,6 @@ package com.financeTracker.service;
 import com.financeTracker.dto.BudgetCheckResponseDto;
 import com.financeTracker.dto.BudgetDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
-import com.financeTracker.model.entity.Budget;
-
-import java.util.Optional;
 
 import java.util.Optional;
 

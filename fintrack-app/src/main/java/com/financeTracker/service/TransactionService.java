@@ -3,7 +3,6 @@ package com.financeTracker.service;
 
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
-import com.financeTracker.model.type.TransactionType;
 
 import java.time.LocalDateTime;
 import java.util.List;

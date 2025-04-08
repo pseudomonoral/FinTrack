@@ -14,7 +14,9 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class LoggingAspect {
 
-    @Around("execution(public * *(..))")
+    @Around("within(com.financeTracker.controller..*) " +
+            "|| within(com.financeTracker.dao.impl..*) " +
+            "|| within(com.financeTracker.service.impl..*)")
     public Object logging(ProceedingJoinPoint joinPoint) throws Throwable {
         String declaringTypeName = joinPoint.getSignature().getDeclaringTypeName();
 
