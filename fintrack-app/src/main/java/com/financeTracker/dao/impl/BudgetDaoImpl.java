@@ -1,6 +1,7 @@
 package com.financeTracker.dao.impl;
 
 
+import com.financeTracker.constants.BudgetSql;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.model.entity.Budget;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class BudgetDaoImpl implements BudgetDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Budget> budgetRowMapper = (rs, rowNum) -> Budget.builder()
@@ -26,41 +28,42 @@ public class BudgetDaoImpl implements BudgetDao {
 
     @Override
     public Optional<Budget> findByUserId(Long userId) {
-        String sql = "SELECT * FROM fintrack.budgets WHERE user_id = ?";
-        return jdbcTemplate.query(sql, budgetRowMapper, userId).stream().findFirst();
+        return jdbcTemplate.query(BudgetSql.FIND_BY_USER_ID, budgetRowMapper, userId)
+                .stream()
+                .findFirst();
     }
 
     @Override
     public Optional<Budget> findById(Long id) {
-        String sql = "SELECT * FROM fintrack.budgets WHERE id = ?";
-        return jdbcTemplate.query(sql, budgetRowMapper, id).stream().findFirst();
+        return jdbcTemplate.query(BudgetSql.FIND_BY_ID, budgetRowMapper, id)
+                .stream()
+                .findFirst();
     }
 
     @Override
     public List<Budget> findAll() {
-        String sql = "SELECT * FROM fintrack.budgets";
-        return jdbcTemplate.query(sql, budgetRowMapper);
+        return jdbcTemplate.query(BudgetSql.FIND_ALL, budgetRowMapper);
     }
 
     @Override
     public Budget save(Budget entity) {
-        String sql = "INSERT INTO fintrack.budgets (user_id, \"limit\", created_at, updated_at) " +
-                "VALUES (?, ?, now(), now()) RETURNING id";
-
-        Long generatedId = jdbcTemplate.queryForObject(sql, Long.class, entity.getUserId(), entity.getLimit());
+        Long generatedId = jdbcTemplate.queryForObject(
+                BudgetSql.INSERT,
+                Long.class,
+                entity.getUserId(),
+                entity.getLimit()
+        );
         entity.setId(generatedId);
         return entity;
     }
 
     @Override
     public void delete(Long budgetId) {
-        String sql = "DELETE FROM fintrack.budgets WHERE id = ?";
-        jdbcTemplate.update(sql, budgetId);
+        jdbcTemplate.update(BudgetSql.DELETE, budgetId);
     }
 
     @Override
     public void updateBudget(Budget entity) {
-        String sql = "UPDATE fintrack.budgets SET \"limit\" = ?, updated_at = now() WHERE id = ?";
-        jdbcTemplate.update(sql, entity.getLimit(), entity.getId());
+        jdbcTemplate.update(BudgetSql.UPDATE, entity.getLimit(), entity.getId());
     }
 }

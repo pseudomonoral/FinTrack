@@ -1,5 +1,6 @@
 package com.financeTracker.dao.impl;
 
+import com.financeTracker.constants.UserSql;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.BudgetStatus;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -28,19 +30,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        String sql = "SELECT * FROM fintrack.users WHERE login = ?";
-        return jdbcTemplate.query(sql, this::mapToUser, login).stream().findFirst();
+        return jdbcTemplate.query(UserSql.FIND_BY_LOGIN, this::mapToUser, login).stream().findFirst();
     }
 
     @Override
     public void update(User user) {
-        String sql = """
-                UPDATE fintrack.users 
-                SET login = ?, password = ?, name = ?, user_role = ?, 
-                    user_status = ?, goal_status = ?, budget_status = ?, updated_at = now() 
-                WHERE id = ?
-                """;
-        jdbcTemplate.update(sql,
+        jdbcTemplate.update(UserSql.UPDATE,
                 user.getLogin(),
                 user.getPassword(),
                 user.getName(),
@@ -53,33 +48,24 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(Long userId) {
-        String sql = "DELETE FROM fintrack.users WHERE id = ?";
-        jdbcTemplate.update(sql, userId);
+        jdbcTemplate.update(UserSql.DELETE, userId);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        String sql = "SELECT * FROM fintrack.users WHERE id = ?";
-        return jdbcTemplate.query(sql, this::mapToUser, id).stream().findFirst();
+        return jdbcTemplate.query(UserSql.FIND_BY_ID, this::mapToUser, id).stream().findFirst();
     }
 
     @Override
     public List<User> findAll() {
-        String sql = "SELECT * FROM fintrack.users";
-        return jdbcTemplate.query(sql, this::mapToUser);
+        return jdbcTemplate.query(UserSql.FIND_ALL, this::mapToUser);
     }
 
     @Override
     public User save(User entity) {
-        String sql = """
-                INSERT INTO fintrack.users 
-                (login, password, name, user_role, user_status, goal_status, budget_status, created_at, updated_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, now(), now()) RETURNING id
-                """;
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(UserSql.INSERT, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, entity.getLogin());
             stmt.setString(2, entity.getPassword());
             stmt.setString(3, entity.getName());
@@ -90,7 +76,7 @@ public class UserDaoImpl implements UserDao {
             return stmt;
         }, keyHolder);
 
-        entity.setId(keyHolder.getKey().longValue());
+        entity.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return entity;
     }
 

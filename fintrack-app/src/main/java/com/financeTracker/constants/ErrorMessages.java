@@ -8,4 +8,3 @@ public interface ErrorMessages {
     String EMPTY_CREDENTIALS = "Логин и пароль не должны быть пустыми.";
     String WEAK_PASSWORD = "Длина пароля должна составлять не менее 5 символов.";
 }
-

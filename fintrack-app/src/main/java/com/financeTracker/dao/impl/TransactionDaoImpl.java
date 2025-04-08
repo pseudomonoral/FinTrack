@@ -1,6 +1,7 @@
 package com.financeTracker.dao.impl;
 
 
+import com.financeTracker.constants.TransactionSql;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
@@ -16,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -26,19 +28,13 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public Optional<Transaction> findByUserId(Long userId) {
-        String sql = "SELECT * FROM fintrack.transactions WHERE user_id = ? LIMIT 1";
-        return jdbcTemplate.query(sql, this::mapToTransaction, userId)
+        return jdbcTemplate.query(TransactionSql.FIND_BY_USER_ID_LIMIT_1, this::mapToTransaction, userId)
                 .stream().findFirst();
     }
 
     @Override
     public void updateTransaction(Transaction transaction) {
-        String sql = """
-                UPDATE fintrack.transactions 
-                SET amount = ?, category = ?, type = ?, description = ?, updated_at = now() 
-                WHERE id = ?
-                """;
-        jdbcTemplate.update(sql,
+        jdbcTemplate.update(TransactionSql.UPDATE,
                 transaction.getAmount(),
                 transaction.getCategory(),
                 transaction.getType().name(),
@@ -48,40 +44,30 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public void delete(Long transactionId) {
-        String sql = "DELETE FROM fintrack.transactions WHERE id = ?";
-        jdbcTemplate.update(sql, transactionId);
+        jdbcTemplate.update(TransactionSql.DELETE, transactionId);
     }
 
     @Override
     public Optional<Transaction> findById(Long id) {
-        String sql = "SELECT * FROM fintrack.transactions WHERE id = ?";
-        return jdbcTemplate.query(sql, this::mapToTransaction, id)
+        return jdbcTemplate.query(TransactionSql.FIND_BY_ID, this::mapToTransaction, id)
                 .stream().findFirst();
     }
 
     @Override
     public List<Transaction> findAllByUserId(Long id) {
-        String sql = "SELECT * FROM fintrack.transactions WHERE user_id = ?";
-        return jdbcTemplate.query(sql, this::mapToTransaction, id);
+        return jdbcTemplate.query(TransactionSql.FIND_ALL_BY_USER_ID, this::mapToTransaction, id);
     }
 
     @Override
     public List<Transaction> findAll() {
-        String sql = "SELECT * FROM fintrack.transactions";
-        return jdbcTemplate.query(sql, this::mapToTransaction);
+        return jdbcTemplate.query(TransactionSql.FIND_ALL, this::mapToTransaction);
     }
 
     @Override
     public Transaction save(Transaction entity) {
-        String sql = """
-                INSERT INTO fintrack.transactions 
-                (user_id, amount, category, type, description, created_at, updated_at) 
-                VALUES (?, ?, ?, ?, ?, now(), now()) RETURNING id
-                """;
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(TransactionSql.INSERT, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, entity.getUserId());
             stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getAmount()));
             stmt.setString(3, entity.getCategory());
@@ -90,7 +76,7 @@ public class TransactionDaoImpl implements TransactionDao {
             return stmt;
         }, keyHolder);
 
-        entity.setId(keyHolder.getKey().longValue());
+        entity.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return entity;
     }
 
@@ -107,6 +93,3 @@ public class TransactionDaoImpl implements TransactionDao {
                 .build();
     }
 }
-
-
-
