@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static com.financeTracker.constants.SqlTestConst.BUDGET_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.Assert.*;
 
 class BudgetDaoTest extends AbstractDaoTest {
@@ -20,16 +21,7 @@ class BudgetDaoTest extends AbstractDaoTest {
 
     @Override
     protected void setupSchema() {
-        jdbcTemplate.execute("""
-            CREATE SCHEMA IF NOT EXISTS fintrack;
-            CREATE TABLE IF NOT EXISTS fintrack.budgets (
-                id SERIAL PRIMARY KEY,
-                user_id BIGINT NOT NULL,
-                "limit" NUMERIC NOT NULL,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL
-            );
-        """);
+        jdbcTemplate.execute(BUDGET_SCHEMA_AND_TABLE_CREATE);
     }
 
     @Test

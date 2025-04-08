@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
+import static com.financeTracker.constants.SqlTestConst.GOAL_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.Assert.*;
 
 class GoalDaoTest extends AbstractDaoTest {
@@ -21,21 +22,7 @@ class GoalDaoTest extends AbstractDaoTest {
 
     @Override
     protected void setupSchema() {
-        jdbcTemplate.execute("""
-            CREATE SCHEMA IF NOT EXISTS fintrack;
-
-            CREATE TABLE IF NOT EXISTS fintrack.goals (
-                id SERIAL PRIMARY KEY,
-                user_id BIGINT NOT NULL,
-                name TEXT NOT NULL,
-                target_amount NUMERIC NOT NULL,
-                current_amount NUMERIC NOT NULL,
-                goal_completed BOOLEAN NOT NULL,
-                goal_actual BOOLEAN NOT NULL,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL
-            );
-        """);
+        jdbcTemplate.execute(GOAL_SCHEMA_AND_TABLE_CREATE);
     }
 
     @Test

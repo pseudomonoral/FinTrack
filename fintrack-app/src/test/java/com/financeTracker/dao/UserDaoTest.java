@@ -15,6 +15,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 
+import static com.financeTracker.constants.SqlTestConst.USER_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
@@ -31,22 +32,7 @@ public class UserDaoTest extends AbstractDaoTest {
 
     @Override
     protected void setupSchema() {
-        jdbcTemplate.execute("""
-            CREATE SCHEMA IF NOT EXISTS fintrack;
-
-            CREATE TABLE IF NOT EXISTS fintrack.users (
-                id SERIAL PRIMARY KEY,
-                login TEXT NOT NULL,
-                password TEXT NOT NULL,
-                name TEXT NOT NULL,
-                user_role TEXT NOT NULL,
-                user_status TEXT NOT NULL,
-                goal_status TEXT NOT NULL,
-                budget_status TEXT NOT NULL,
-                created_at TIMESTAMP NOT NULL DEFAULT now(),
-                updated_at TIMESTAMP NOT NULL DEFAULT now()
-            );
-        """);
+        jdbcTemplate.execute(USER_SCHEMA_AND_TABLE_CREATE);
     }
 
     @Test

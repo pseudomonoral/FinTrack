@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 
+import static com.financeTracker.constants.SqlTestConst.TRANSACTION_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
@@ -29,20 +30,7 @@ public class TransactionDaoTest extends AbstractDaoTest {
 
     @Override
     protected void setupSchema() {
-        jdbcTemplate.execute("""
-            CREATE SCHEMA IF NOT EXISTS fintrack;
-
-            CREATE TABLE IF NOT EXISTS fintrack.transactions (
-                id SERIAL PRIMARY KEY,
-                user_id BIGINT NOT NULL,
-                amount NUMERIC NOT NULL,
-                category TEXT NOT NULL,
-                type TEXT NOT NULL,
-                description TEXT,
-                created_at TIMESTAMP NOT NULL DEFAULT now(),
-                updated_at TIMESTAMP NOT NULL DEFAULT now()
-            );
-        """);
+        jdbcTemplate.execute(TRANSACTION_SCHEMA_AND_TABLE_CREATE);
     }
 
     @Test
