@@ -1,8 +1,8 @@
 package com.financeTracker.service;
 
 import com.financeTracker.dao.GoalDao;
-import com.financeTracker.dto.GoalRequestDto;
-import com.financeTracker.dto.GoalResponseDto;
+import com.financeTracker.dto.goal.GoalRequestDto;
+import com.financeTracker.dto.goal.GoalResponseDto;
 import com.financeTracker.mapper.GoalMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.service.impl.GoalServiceImpl;

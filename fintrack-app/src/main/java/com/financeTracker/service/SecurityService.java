@@ -1,6 +1,6 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.AuthRequestDto;
+import com.financeTracker.dto.auth.AuthRequestDto;
 import com.financeTracker.exceptions.authorization.InvalidPasswordException;
 import com.financeTracker.exceptions.authorization.UserBlockedException;
 import com.financeTracker.exceptions.authorization.UserNotFoundException;

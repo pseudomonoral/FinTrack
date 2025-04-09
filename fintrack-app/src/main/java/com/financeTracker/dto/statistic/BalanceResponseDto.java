@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.statistic;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class IncomeExpenseResponseDto {
-    private double amount;
+public class BalanceResponseDto {
+    private double balance;
 }
-

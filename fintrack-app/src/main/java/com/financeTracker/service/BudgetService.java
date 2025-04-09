@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.BudgetCheckResponseDto;
-import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.dto.budget.BudgetCheckResponseDto;
+import com.financeTracker.dto.budget.BudgetDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 
 import java.util.Optional;

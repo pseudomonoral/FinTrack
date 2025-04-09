@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GoalResponseDto {
+public class UserDto {
     private Long id;
+    private String login;
     private String name;
-    private double targetAmount;
-    private double currentAmount;
-    private boolean goalActual;
-    private double progress;
+    private String userRole;
+    private String userStatus;
 }
-

@@ -1,7 +1,8 @@
 package com.financeTracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.dto.*;
+import com.financeTracker.dto.statistic.*;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.StatisticsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

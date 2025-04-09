@@ -1,9 +1,9 @@
 package com.financeTracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.dto.TargetUserDto;
-import com.financeTracker.dto.TransactionResponseDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.user.TargetUserDto;
+import com.financeTracker.dto.transaction.TransactionResponseDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.TransactionService;
 import com.financeTracker.service.UserService;

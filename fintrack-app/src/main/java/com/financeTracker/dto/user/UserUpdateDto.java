@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

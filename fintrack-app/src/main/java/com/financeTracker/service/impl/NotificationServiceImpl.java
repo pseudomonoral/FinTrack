@@ -2,8 +2,8 @@ package com.financeTracker.service.impl;
 
 
 import com.financeTracker.dao.NotificationDao;
-import com.financeTracker.dto.NotificationDto;
-import com.financeTracker.dto.TargetUserDto;
+import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.mapper.NotificationMapper;
 import com.financeTracker.model.entity.Notification;
 import com.financeTracker.model.type.NotificationType;

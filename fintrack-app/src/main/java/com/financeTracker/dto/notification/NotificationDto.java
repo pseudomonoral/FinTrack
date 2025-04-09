@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.notification;
 
 import com.financeTracker.model.type.NotificationType;
 import lombok.AllArgsConstructor;
@@ -13,10 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationDto {
-
     private LocalDateTime createdAt;
-
     private Long userId;
-
     private NotificationType type;
 }

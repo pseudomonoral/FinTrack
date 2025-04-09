@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.statistic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;

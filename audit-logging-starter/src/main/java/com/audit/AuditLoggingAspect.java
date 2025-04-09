@@ -20,8 +20,8 @@ public class AuditLoggingAspect {
     @Pointcut("@annotation(auditable)")
     private void annotatedByAuditable(Auditable auditable) {}
 
-    @Before(value = "annotatedByAuditable(auditable)", argNames = "joinPoint,auditable")
-    public void audit(JoinPoint joinPoint, Auditable auditable) {
+    @Before(value = "annotatedByAuditable(auditable)", argNames = "auditable")
+    public void audit(Auditable auditable) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         UserDto user = (UserDto) request.getSession().getAttribute("user");

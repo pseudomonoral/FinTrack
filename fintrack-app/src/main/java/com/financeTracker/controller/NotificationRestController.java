@@ -1,8 +1,8 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.NotificationDto;
-import com.financeTracker.dto.TargetUserDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.user.TargetUserDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

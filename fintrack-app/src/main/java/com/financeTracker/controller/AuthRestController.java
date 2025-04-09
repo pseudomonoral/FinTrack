@@ -2,8 +2,8 @@ package com.financeTracker.controller;
 
 import com.audit.Auditable;
 import com.audit.EventType;
-import com.financeTracker.dto.AuthRequestDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.auth.AuthRequestDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.service.SecurityService;
 import io.swagger.v3.oas.annotations.Operation;

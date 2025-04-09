@@ -1,7 +1,7 @@
 package com.financeTracker.aspect;
 
 import com.financeTracker.annotation.Secured;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.model.type.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

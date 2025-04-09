@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.GoalRequestDto;
-import com.financeTracker.dto.GoalResponseDto;
+import com.financeTracker.dto.goal.GoalRequestDto;
+import com.financeTracker.dto.goal.GoalResponseDto;
 
 import java.util.List;
 import java.util.Optional;

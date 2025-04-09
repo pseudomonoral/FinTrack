@@ -1,8 +1,8 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.BudgetCheckResponseDto;
-import com.financeTracker.dto.BudgetDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.budget.BudgetCheckResponseDto;
+import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.BudgetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

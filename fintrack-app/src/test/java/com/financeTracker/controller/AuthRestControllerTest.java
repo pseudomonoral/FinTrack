@@ -1,8 +1,8 @@
 package com.financeTracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.dto.AuthRequestDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.auth.AuthRequestDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.BudgetStatus;
@@ -62,8 +62,6 @@ class AuthRestControllerTest {
             .updatedAt(LocalDateTime.now())
             .userRole(UserRole.USER)
             .userStatus(UserStatus.ACTIVE)
-            .goalStatus(GoalStatus.NOT_ACHIEVED)
-            .budgetStatus(BudgetStatus.WITHIN_BUDGET)
             .build();
 
     @Test

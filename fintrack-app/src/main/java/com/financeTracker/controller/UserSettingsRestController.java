@@ -2,8 +2,8 @@ package com.financeTracker.controller;
 
 import com.audit.Auditable;
 import com.audit.EventType;
-import com.financeTracker.dto.UserDto;
-import com.financeTracker.dto.UserUpdateDto;
+import com.financeTracker.dto.user.UserDto;
+import com.financeTracker.dto.user.UserUpdateDto;
 import com.financeTracker.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

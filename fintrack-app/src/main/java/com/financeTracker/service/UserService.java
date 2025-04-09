@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.UserDto;
-import com.financeTracker.dto.UserUpdateDto;
+import com.financeTracker.dto.user.UserDto;
+import com.financeTracker.dto.user.UserUpdateDto;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 

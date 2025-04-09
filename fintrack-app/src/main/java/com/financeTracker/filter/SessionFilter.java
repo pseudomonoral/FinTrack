@@ -1,6 +1,6 @@
 package com.financeTracker.filter;
 
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.user.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

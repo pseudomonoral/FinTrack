@@ -1,6 +1,7 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.*;
+import com.financeTracker.dto.statistic.*;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.StatisticsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

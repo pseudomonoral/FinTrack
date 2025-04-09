@@ -1,6 +1,6 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.TransactionResponseDto;
+import com.financeTracker.dto.transaction.TransactionResponseDto;
 import com.financeTracker.model.entity.Transaction;
 import org.mapstruct.Mapper;
 

@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.NotificationDto;
-import com.financeTracker.dto.TargetUserDto;
+import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.model.type.NotificationType;
 
 import java.util.List;

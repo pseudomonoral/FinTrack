@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.budget;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

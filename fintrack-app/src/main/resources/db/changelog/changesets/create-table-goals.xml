@@ -33,8 +33,10 @@
 
         <addForeignKeyConstraint
                 baseTableName="goals"
+                baseTableSchemaName="fintrack"
                 baseColumnNames="user_id"
                 referencedTableName="users"
+                referencedTableSchemaName="fintrack"
                 referencedColumnNames="id"
                 constraintName="fk_goal_user"
                 onDelete="CASCADE"/>

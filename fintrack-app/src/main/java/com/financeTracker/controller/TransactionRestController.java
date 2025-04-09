@@ -1,8 +1,8 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.TransactionRequestDto;
-import com.financeTracker.dto.TransactionResponseDto;
-import com.financeTracker.dto.UserDto;
+import com.financeTracker.dto.transaction.TransactionRequestDto;
+import com.financeTracker.dto.transaction.TransactionResponseDto;
+import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.TransactionService;
 import jakarta.validation.Valid;

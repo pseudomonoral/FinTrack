@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.goal;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

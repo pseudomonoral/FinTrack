@@ -2,8 +2,8 @@ package com.financeTracker.service;
 
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
-import com.financeTracker.dto.BudgetCheckResponseDto;
-import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.dto.budget.BudgetCheckResponseDto;
+import com.financeTracker.dto.budget.BudgetDto;
 import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.entity.Transaction;

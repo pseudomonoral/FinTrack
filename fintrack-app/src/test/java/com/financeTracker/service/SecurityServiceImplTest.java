@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
 import com.financeTracker.dao.UserDao;
-import com.financeTracker.dto.AuthRequestDto;
+import com.financeTracker.dto.auth.AuthRequestDto;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.service.impl.SecurityServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

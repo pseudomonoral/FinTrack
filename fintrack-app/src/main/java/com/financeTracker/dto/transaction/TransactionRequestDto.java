@@ -1,4 +1,4 @@
-package com.financeTracker.dto;
+package com.financeTracker.dto.transaction;
 
 import com.financeTracker.model.type.TransactionType;
 import jakarta.validation.constraints.Min;

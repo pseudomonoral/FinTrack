@@ -1,6 +1,6 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.NotificationDto;
+import com.financeTracker.dto.notification.NotificationDto;
 import com.financeTracker.model.entity.Notification;
 import org.mapstruct.Mapper;
 

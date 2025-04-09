@@ -29,8 +29,10 @@
 
         <addForeignKeyConstraint
                 baseTableName="notification"
+                baseTableSchemaName="fintrack"
                 baseColumnNames="user_id"
                 referencedTableName="users"
+                referencedTableSchemaName="fintrack"
                 referencedColumnNames="id"
                 constraintName="fk_notification_user"
                 onDelete="CASCADE"/>

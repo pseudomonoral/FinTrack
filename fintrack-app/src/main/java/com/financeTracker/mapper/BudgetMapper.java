@@ -1,6 +1,6 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.BudgetDto;
+import com.financeTracker.dto.budget.BudgetDto;
 import com.financeTracker.model.entity.Budget;
 import org.mapstruct.Mapper;
 

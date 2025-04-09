@@ -1,9 +1,9 @@
 package com.financeTracker.mapper;
 
-import com.financeTracker.dto.BalanceResponseDto;
-import com.financeTracker.dto.ExpenseAnalysisResponseDto;
-import com.financeTracker.dto.GoalStatisticsResponseDto;
-import com.financeTracker.dto.IncomeExpenseResponseDto;
+import com.financeTracker.dto.statistic.BalanceResponseDto;
+import com.financeTracker.dto.statistic.ExpenseAnalysisResponseDto;
+import com.financeTracker.dto.statistic.GoalStatisticsResponseDto;
+import com.financeTracker.dto.statistic.IncomeExpenseResponseDto;
 import org.mapstruct.Mapper;
 
 import java.util.Map;
