@@ -4,6 +4,7 @@ import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.dao.UserDao;
+import com.financeTracker.dto.TargetUserDto;
 import com.financeTracker.dto.TransactionRequestDto;
 import com.financeTracker.dto.TransactionResponseDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
@@ -26,6 +27,8 @@ import static com.financeTracker.model.type.BudgetStatus.OVER_BUDGET;
 import static com.financeTracker.model.type.BudgetStatus.WITHIN_BUDGET;
 import static com.financeTracker.model.type.EntityName.*;
 import static com.financeTracker.model.type.GoalStatus.ACHIEVED;
+import static com.financeTracker.model.type.NotificationType.BUDGET_EXCEEDED;
+import static com.financeTracker.model.type.NotificationType.GOAL_ACHIEVED;
 import static com.financeTracker.model.type.TransactionType.*;
 
 @Service
@@ -34,10 +37,10 @@ import static com.financeTracker.model.type.TransactionType.*;
 public class TransactionServiceImpl implements TransactionService {
 
     private final BudgetService budgetService;
+    private final NotificationService notificationService;
     private final TransactionDao transactionDao;
     private final GoalDao goalDao;
     private final BudgetDao budgetDao;
-    private final UserDao userDao;
     private final TransactionMapper transactionMapper;
 
     @Override
@@ -152,14 +155,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void applyTransactionToBudget(Transaction transaction) {
         Long userId = transaction.getUserId();
-        User user = userDao.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(USER, userId));
         if(budgetService.isBudgetExceeded(userId).isExceeded()) {
-            user.setBudgetStatus(OVER_BUDGET);
-        }else {
-            user.setBudgetStatus(WITHIN_BUDGET);
+            notificationService.createNotification(BUDGET_EXCEEDED,
+                    new TargetUserDto(userId));
         }
-        userDao.update(user);
     }
 
     private void applyTransactionToGoal(Transaction transaction, Goal actualGoal) {
@@ -173,10 +172,8 @@ public class TransactionServiceImpl implements TransactionService {
         if (getGoalProgress(actualGoal) == 100.0){
             actualGoal.setGoalActual(false);
             actualGoal.onUpdate();
-            User user = userDao.findById(userId)
-                    .orElseThrow(() -> new EntityNotFoundException(USER, userId));
-            user.setGoalStatus(ACHIEVED);
-            userDao.update(user);
+            notificationService.createNotification(GOAL_ACHIEVED,
+                    new TargetUserDto(userId));
         }
 
         goalDao.updateGoal(actualGoal);

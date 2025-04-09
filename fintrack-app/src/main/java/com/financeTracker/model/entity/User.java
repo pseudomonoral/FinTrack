@@ -57,12 +57,4 @@ public class User {
     /** Status of the user (active, inactive, etc.). Default is ACTIVE. */
     @Builder.Default
     private UserStatus userStatus = UserStatus.ACTIVE;
-
-    /** Status of the user's goal achievement. Default is NOT_ACHIEVED. */
-    @Builder.Default
-    private GoalStatus goalStatus = GoalStatus.NOT_ACHIEVED;
-
-    /** Status of the user's budget. Default is WITHIN_BUDGET. */
-    @Builder.Default
-    private BudgetStatus budgetStatus = BudgetStatus.WITHIN_BUDGET;
 }

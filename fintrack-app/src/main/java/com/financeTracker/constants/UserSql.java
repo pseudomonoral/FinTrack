@@ -7,15 +7,15 @@ public interface UserSql {
     String DELETE = "DELETE FROM fintrack.users WHERE id = ?";
 
     String INSERT = """
-            INSERT INTO fintrack.users 
-            (login, password, name, user_role, user_status, goal_status, budget_status, created_at, updated_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, now(), now()) RETURNING id
+            INSERT INTO fintrack.users
+            (login, password, name, user_role, user_status, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, now(), now()) RETURNING id
             """;
 
     String UPDATE = """
-            UPDATE fintrack.users 
-            SET login = ?, password = ?, name = ?, user_role = ?, 
-                user_status = ?, goal_status = ?, budget_status = ?, updated_at = now() 
+            UPDATE fintrack.users
+            SET login = ?, password = ?, name = ?, user_role = ?,
+                user_status = ?, updated_at = now()
             WHERE id = ?
             """;
 }

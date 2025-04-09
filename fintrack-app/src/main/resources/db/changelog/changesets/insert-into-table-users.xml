@@ -11,8 +11,6 @@
             <column name="name" value="admin_user"/>
             <column name="user_role" value="ADMIN"/>
             <column name="user_status" value="ACTIVE"/>
-            <column name="goal_status" value="NOT_ACHIEVED"/>
-            <column name="budget_status" value="WITHIN_BUDGET"/>
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>
@@ -22,8 +20,6 @@
             <column name="name" value="simple_user"/>
             <column name="user_role" value="USER"/>
             <column name="user_status" value="ACTIVE"/>
-            <column name="goal_status" value="NOT_ACHIEVED"/>
-            <column name="budget_status" value="WITHIN_BUDGET"/>
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>

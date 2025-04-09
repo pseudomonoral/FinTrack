@@ -9,6 +9,7 @@
     <include file="db/changelog/changesets/create-table-budgets.xml"/>
     <include file="db/changelog/changesets/create-table-goals.xml"/>
     <include file="db/changelog/changesets/create-table-transactions.xml"/>
+    <include file="db/changelog/changesets/create-table-notification.xml"/>
     <include file="db/changelog/changesets/insert-into-table-users.xml"/>
     <include file="db/changelog/changesets/insert-into-table-goals.xml"/>
     <include file="db/changelog/changesets/insert-into-table-transactions.xml"/>

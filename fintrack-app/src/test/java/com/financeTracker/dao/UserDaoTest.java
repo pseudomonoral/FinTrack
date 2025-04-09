@@ -43,8 +43,6 @@ public class UserDaoTest extends AbstractDaoTest {
                 .name("John Doe")
                 .userRole(UserRole.USER)
                 .userStatus(UserStatus.ACTIVE)
-                .goalStatus(GoalStatus.NOT_ACHIEVED)
-                .budgetStatus(BudgetStatus.WITHIN_BUDGET)
                 .build();
 
         User saved = userDao.save(user);

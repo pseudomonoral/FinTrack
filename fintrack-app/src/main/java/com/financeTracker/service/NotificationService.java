@@ -1,27 +1,18 @@
 package com.financeTracker.service;
 
-import com.financeTracker.model.entity.User;
+import com.financeTracker.dto.NotificationDto;
+import com.financeTracker.dto.TargetUserDto;
+import com.financeTracker.model.type.NotificationType;
 
-/**
- * The NotificationService interface provides methods for notifying users about
- * important events such as achieving a goal or exceeding their budget.
- */
+import java.util.List;
+
 public interface NotificationService {
 
-    /**
-     * Sends a notification to the user when they have achieved a goal.
-     *
-     * @param user The user who will receive the notification.
-     * @return boolean True if the notification was successfully sent, false otherwise.
-     */
-    boolean notifyGoalAchieved(User user);
+    void createNotification(NotificationType notificationType, TargetUserDto targetUserDto);
 
-    /**
-     * Sends a notification to the user when their budget has been exceeded.
-     *
-     * @param user The user who will receive the notification.
-     * @return boolean True if the notification was successfully sent, false otherwise.
-     */
-    boolean notifyBudgetExceeded(User user);
+    List<NotificationDto> getAllByUserId(TargetUserDto targetUserDto);
+
+    List<NotificationDto> getUnreadByUserId(TargetUserDto targetUserDto);
+
+    void deleteAllByUserId(TargetUserDto targetUserDto);
 }
-

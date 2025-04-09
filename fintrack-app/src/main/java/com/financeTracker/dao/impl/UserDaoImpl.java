@@ -3,8 +3,6 @@ package com.financeTracker.dao.impl;
 import com.financeTracker.constants.UserSql;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.BudgetStatus;
-import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +39,6 @@ public class UserDaoImpl implements UserDao {
                 user.getName(),
                 user.getUserRole().name(),
                 user.getUserStatus().name(),
-                user.getGoalStatus().name(),
-                user.getBudgetStatus().name(),
                 user.getId());
     }
 
@@ -71,8 +67,6 @@ public class UserDaoImpl implements UserDao {
             stmt.setString(3, entity.getName());
             stmt.setString(4, entity.getUserRole().name());
             stmt.setString(5, entity.getUserStatus().name());
-            stmt.setString(6, entity.getGoalStatus().name());
-            stmt.setString(7, entity.getBudgetStatus().name());
             return stmt;
         }, keyHolder);
 
@@ -88,8 +82,6 @@ public class UserDaoImpl implements UserDao {
                 .name(rs.getString("name"))
                 .userRole(UserRole.valueOf(rs.getString("user_role")))
                 .userStatus(UserStatus.valueOf(rs.getString("user_status")))
-                .goalStatus(GoalStatus.valueOf(rs.getString("goal_status")))
-                .budgetStatus(BudgetStatus.valueOf(rs.getString("budget_status")))
                 .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                 .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
                 .build();
