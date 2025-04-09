@@ -12,10 +12,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,12 +25,6 @@ import java.util.Optional;
 public class TransactionDaoImpl implements TransactionDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Override
-    public Optional<Transaction> findByUserId(Long userId) {
-        return jdbcTemplate.query(TransactionSql.FIND_BY_USER_ID_LIMIT_1, this::mapToTransaction, userId)
-                .stream().findFirst();
-    }
 
     @Override
     public void updateTransaction(Transaction transaction) {
@@ -54,8 +48,8 @@ public class TransactionDaoImpl implements TransactionDao {
     }
 
     @Override
-    public List<Transaction> findAllByUserId(Long id) {
-        return jdbcTemplate.query(TransactionSql.FIND_ALL_BY_USER_ID, this::mapToTransaction, id);
+    public List<Transaction> findAllByUserId(Long userId) {
+        return jdbcTemplate.query(TransactionSql.FIND_ALL_BY_USER_ID, this::mapToTransaction, userId);
     }
 
     @Override
@@ -78,6 +72,42 @@ public class TransactionDaoImpl implements TransactionDao {
 
         entity.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
         return entity;
+    }
+
+    @Override
+    public List<Transaction> findAllByUserIdAndDate(Long userId, LocalDateTime date) {
+        return jdbcTemplate.query(
+                TransactionSql.FIND_ALL_BY_USER_ID_AND_DATE,
+                this::mapToTransaction,
+                userId, date
+        );
+    }
+
+    @Override
+    public List<Transaction> findAllByUserIdAndCategory(Long userId, String category) {
+        return jdbcTemplate.query(
+                TransactionSql.FIND_ALL_BY_USER_ID_AND_CATEGORY,
+                this::mapToTransaction,
+                userId, category
+        );
+    }
+
+    @Override
+    public List<Transaction> findAllByUserIdAndType(Long userId, TransactionType type) {
+        return jdbcTemplate.query(
+                TransactionSql.FIND_ALL_BY_USER_ID_AND_TYPE,
+                this::mapToTransaction,
+                userId, type.name()
+        );
+    }
+
+    @Override
+    public double calculateTotalForPeriod(Long userId, TransactionType type, LocalDateTime from, LocalDateTime to) {
+        return jdbcTemplate.queryForObject(
+                TransactionSql.CALCULATE_TOTAL_FOR_PERIOD,
+                Double.class,
+                userId, type.name(), Timestamp.valueOf(from), Timestamp.valueOf(to)
+        );
     }
 
     private Transaction mapToTransaction(ResultSet rs, int rowNum) throws SQLException {

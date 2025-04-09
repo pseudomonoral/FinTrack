@@ -67,22 +67,6 @@ public class TransactionDaoTest extends AbstractDaoTest {
         assertEquals(2, list.size());
     }
 
-    @Test
-    void findByUserId_shouldReturnFirstMatch() {
-        Transaction tx = Transaction.builder()
-                .userId(3L)
-                .amount(300.0)
-                .category("Travel")
-                .type(TransactionType.EXPENSE)
-                .description("Bus ticket")
-                .build();
-
-        transactionDao.save(tx);
-
-        Optional<Transaction> result = transactionDao.findByUserId(3L);
-        assertTrue(result.isPresent());
-        assertEquals("Travel", result.get().getCategory());
-    }
 
     @Test
     void updateTransaction_shouldUpdateValues() {

@@ -100,18 +100,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<TransactionResponseDto> getTransactionsByDate(Long userId, LocalDateTime date) {
-        return transactionDao.findAll().stream()
-                .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
-                .filter(transaction -> !transaction.getCreatedAt().isBefore(date))
+        return transactionDao.findAllByUserIdAndDate(userId, date).stream()
                 .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
 
     @Override
     public List<TransactionResponseDto> getTransactionsByCategory(Long userId, String category) {
-        return transactionDao.findAll().stream()
-                .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
-                .filter(transaction -> transaction.getCategory().equalsIgnoreCase(category))
+        return transactionDao.findAllByUserIdAndCategory(userId, category).stream()
                 .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }
@@ -119,9 +115,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<TransactionResponseDto> getTransactionsByType(Long userId, String type) {
         TransactionType transactionType = TransactionType.valueOf(type);
-        return transactionDao.findAll().stream()
-                .filter(transaction -> Objects.equals(transaction.getUserId(), userId))
-                .filter(transaction -> transaction.getType() == transactionType)
+        return transactionDao.findAllByUserIdAndType(userId, transactionType).stream()
                 .map(transactionMapper::toResponseTransactionDto)
                 .toList();
     }

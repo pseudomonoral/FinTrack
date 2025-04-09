@@ -6,17 +6,16 @@ import com.financeTracker.dto.statistic.BalanceResponseDto;
 import com.financeTracker.dto.statistic.ExpenseAnalysisResponseDto;
 import com.financeTracker.dto.statistic.GoalStatisticsResponseDto;
 import com.financeTracker.dto.statistic.IncomeExpenseResponseDto;
-import com.financeTracker.dto.transaction.TransactionResponseDto;
 import com.financeTracker.mapper.StatisticsMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.service.StatisticsService;
-import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,19 +26,16 @@ import static com.financeTracker.model.type.TransactionType.*;
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private final TransactionService transactionService;
     private final TransactionDao transactionDao;
     private final StatisticsMapper statisticsMapper;
     private final GoalDaoImpl goalDaoImpl;
 
     @Override
     public BalanceResponseDto calculateCurrentBalance(Long userId) {
-        double income = transactionDao.findAllByUserId(userId).stream()
-                .filter(transaction -> transaction.getType() == INCOME)
+        double income = transactionDao.findAllByUserIdAndType(userId, INCOME).stream()
                 .mapToDouble(Transaction::getAmount)
                 .sum();
-        double expense = transactionDao.findAllByUserId(userId).stream()
-                .filter(transaction -> transaction.getType() == EXPENSE)
+        double expense = transactionDao.findAllByUserIdAndType(userId, EXPENSE).stream()
                 .mapToDouble(Transaction::getAmount)
                 .sum();
         return statisticsMapper.toBalanceResponseDto(income - expense);
@@ -47,28 +43,21 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public IncomeExpenseResponseDto calculateIncomeForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
-        double income = transactionService.getTransactionsByDate(userId, startDate.atStartOfDay()).stream()
-                .filter(transaction -> isWithinPeriod(transaction, startDate, endDate))
-                .filter(transaction -> transaction.getType() == INCOME)
-                .mapToDouble(TransactionResponseDto::getAmount)
-                .sum();
+        double income = transactionDao.calculateTotalForPeriod(userId, INCOME, startDate.atStartOfDay(),
+                endDate.atTime(LocalTime.MAX));
         return statisticsMapper.toIncomeExpenseResponseDto(income);
     }
 
     @Override
     public IncomeExpenseResponseDto calculateExpenseForPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
-        double expense = transactionService.getTransactionsByDate(userId, startDate.atStartOfDay()).stream()
-                .filter(transaction -> isWithinPeriod(transaction, startDate, endDate))
-                .filter(transaction -> transaction.getType() == EXPENSE)
-                .mapToDouble(TransactionResponseDto::getAmount)
-                .sum();
+        double expense = transactionDao.calculateTotalForPeriod(userId, EXPENSE, startDate.atStartOfDay(),
+                endDate.atTime(LocalTime.MAX));
         return statisticsMapper.toIncomeExpenseResponseDto(expense);
     }
 
     @Override
     public ExpenseAnalysisResponseDto analyzeExpensesByCategory(Long userId) {
-        Map<String, Double> analyzeExpenses = transactionDao.findAllByUserId(userId).stream()
-                .filter(transaction -> transaction.getType() == EXPENSE)
+        Map<String, Double> analyzeExpenses = transactionDao.findAllByUserIdAndType(userId, EXPENSE).stream()
                 .collect(Collectors.groupingBy(Transaction::getCategory,
                         Collectors.summingDouble(Transaction::getAmount)));
         return statisticsMapper.toExpenseAnalysisResponseDto(analyzeExpenses);
@@ -91,11 +80,6 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .mapToDouble(this::getGoalProgress)
                 .average()
                 .orElse(0.0);
-    }
-
-    private boolean isWithinPeriod(TransactionResponseDto transaction, LocalDate startDate, LocalDate endDate) {
-        LocalDate transactionDate = transaction.getCreatedAt().toLocalDate();
-        return !transactionDate.isBefore(startDate) && !transactionDate.isAfter(endDate);
     }
 
     private double getGoalProgress(Goal goal) {
