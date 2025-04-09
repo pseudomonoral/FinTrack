@@ -7,41 +7,49 @@ import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.mapper.UserMapper;
 import com.financeTracker.service.SecurityService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
 
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Tag(name = "Аутентификация", description = "Регистрация и вход пользователей")
+@Validated
 public class AuthRestController {
 
     private final SecurityService securityService;
     private final UserMapper userMapper;
 
     @Auditable(eventType = EventType.REGISTER)
-    @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
-    public ResponseEntity<UserDto> register(@RequestBody AuthRequestDto authRequest) {
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthRequestDto authRequest) {
         UserDto registeredUser = userMapper.toUserDto(securityService.registration(authRequest));
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+        URI location = URI.create("/users/" + registeredUser.getId());
+        return ResponseEntity.created(location).body(registeredUser);
     }
 
     @Auditable(eventType = EventType.LOGIN)
-    @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
-    public ResponseEntity<UserDto> login(@RequestBody AuthRequestDto authRequest, HttpSession session) {
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@Valid @RequestBody AuthRequestDto authRequest,
+                                         @Parameter(hidden = true) HttpSession session) {
         UserDto authorizedUser = userMapper.toUserDto(securityService.authorize(authRequest));
         session.setAttribute("user", authorizedUser);
         return ResponseEntity.ok(authorizedUser);
     }
 }
+
 

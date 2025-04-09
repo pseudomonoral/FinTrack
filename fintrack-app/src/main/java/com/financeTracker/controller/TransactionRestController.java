@@ -5,10 +5,14 @@ import com.financeTracker.dto.transaction.TransactionResponseDto;
 import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,40 +21,48 @@ import java.util.Locale;
 @RestController
 @RequestMapping("/api/transactions")
 @RequiredArgsConstructor
+@Tag(name = "Транзакции", description = "Создание, обновление, удаление и получение транзакций")
+@Validated
 public class TransactionRestController {
 
     private final TransactionService transactionService;
 
+    @Operation(summary = "Создание транзакции")
     @PostMapping
     public ResponseEntity<TransactionResponseDto> createTransaction(
-            @SessionAttribute("user") UserDto user,
-            @RequestBody @Valid TransactionRequestDto requestDto) {
+            @Parameter(hidden = true) @SessionAttribute("user") UserDto user,
+            @Valid @RequestBody TransactionRequestDto requestDto) {
 
         TransactionResponseDto created = transactionService.createTransaction(user.getId(), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @Operation(summary = "Обновление транзакции")
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateTransaction(
-            @SessionAttribute("user") UserDto user,
+            @Parameter(hidden = true) @SessionAttribute("user") UserDto user,
             @PathVariable("id") Long transactionId,
-            @RequestBody @Valid TransactionRequestDto requestDto) {
+            @Valid @RequestBody TransactionRequestDto requestDto) {
 
         transactionService.updateTransaction(user.getId(), transactionId, requestDto);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Удаление транзакции")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable("id") Long transactionId) {
+    public ResponseEntity<Void> deleteTransaction(
+            @Parameter(description = "Идентификатор транзакции") @PathVariable("id") Long transactionId) {
+
         transactionService.deleteTransaction(transactionId);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Получение списка транзакций")
     @GetMapping
     public ResponseEntity<List<TransactionResponseDto>> getTransactions(
-            @SessionAttribute("user") UserDto user,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String type) {
+            @Parameter(hidden = true) @SessionAttribute("user") UserDto user,
+            @Parameter(description = "Фильтр по категории") @RequestParam(required = false) String category,
+            @Parameter(description = "Фильтр по типу транзакции (INCOME или EXPENSE)") @RequestParam(required = false) String type) {
 
         List<TransactionResponseDto> result;
 
