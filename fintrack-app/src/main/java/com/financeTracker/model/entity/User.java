@@ -1,8 +1,6 @@
 package com.financeTracker.model.entity;
 
 
-import com.financeTracker.model.type.BudgetStatus;
-import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import lombok.*;

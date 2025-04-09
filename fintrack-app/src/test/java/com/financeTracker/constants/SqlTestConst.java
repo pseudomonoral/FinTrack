@@ -53,8 +53,6 @@ public interface SqlTestConst {
                 name TEXT NOT NULL,
                 user_role TEXT NOT NULL,
                 user_status TEXT NOT NULL,
-                goal_status TEXT NOT NULL,
-                budget_status TEXT NOT NULL,
                 created_at TIMESTAMP NOT NULL DEFAULT now(),
                 updated_at TIMESTAMP NOT NULL DEFAULT now()
             );

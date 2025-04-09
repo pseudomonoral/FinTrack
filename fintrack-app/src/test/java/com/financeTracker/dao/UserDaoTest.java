@@ -2,8 +2,6 @@ package com.financeTracker.dao;
 
 import com.financeTracker.dao.impl.UserDaoImpl;
 import com.financeTracker.model.entity.User;
-import com.financeTracker.model.type.BudgetStatus;
-import com.financeTracker.model.type.GoalStatus;
 import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
