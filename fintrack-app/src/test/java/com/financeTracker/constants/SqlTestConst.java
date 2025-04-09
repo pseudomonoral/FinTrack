@@ -57,4 +57,16 @@ public interface SqlTestConst {
                 updated_at TIMESTAMP NOT NULL DEFAULT now()
             );
         """;
+
+    String NOTIFICATION_SCHEMA_AND_TABLE_CREATE = """
+    CREATE SCHEMA IF NOT EXISTS fintrack;
+
+    CREATE TABLE IF NOT EXISTS fintrack.notification (
+        id SERIAL PRIMARY KEY,
+        created_at TIMESTAMP NOT NULL,
+        user_id BIGINT NOT NULL,
+        type VARCHAR(30) NOT NULL,
+        read BOOLEAN NOT NULL DEFAULT false
+    );
+    """;
 }
