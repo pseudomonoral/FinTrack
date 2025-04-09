@@ -1,6 +1,9 @@
 package com.financeTracker.model.entity;
 
-import lombok.*;
+
+
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
