@@ -8,27 +8,23 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.financeTracker.constants.SqlTestConst.GOAL_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.Assert.*;
 
 class GoalDaoTest extends AbstractDaoTest {
 
     private GoalDaoImpl goalDao;
+    private Long userId;
 
     @BeforeEach
     void setUpDao() {
         goalDao = new GoalDaoImpl(jdbcTemplate);
-    }
-
-    @Override
-    protected void setupSchema() {
-        jdbcTemplate.execute(GOAL_SCHEMA_AND_TABLE_CREATE);
+        userId = super.insertTestUserWithRandomId();
     }
 
     @Test
     void saveAndFindById_shouldWorkCorrectly() {
         Goal goal = Goal.builder()
-                .userId(1L)
+                .userId(userId)
                 .name("Buy a car")
                 .targetAmount(10000.0)
                 .currentAmount(2000.0)
@@ -51,20 +47,20 @@ class GoalDaoTest extends AbstractDaoTest {
 
     @Test
     void findAllByUserId_shouldReturnList() {
-        Goal g1 = Goal.builder().userId(2L).name("Goal1").targetAmount(500.0).currentAmount(100.0).goalCompleted(false).goalActual(true).build();
-        Goal g2 = Goal.builder().userId(2L).name("Goal2").targetAmount(1000.0).currentAmount(250.0).goalCompleted(false).goalActual(false).build();
+        Goal g1 = Goal.builder().userId(userId).name("Goal1").targetAmount(500.0).currentAmount(100.0).goalCompleted(false).goalActual(true).build();
+        Goal g2 = Goal.builder().userId(userId).name("Goal2").targetAmount(1000.0).currentAmount(250.0).goalCompleted(false).goalActual(false).build();
 
         goalDao.save(g1);
         goalDao.save(g2);
 
-        List<Goal> goals = goalDao.findAllByUserId(2L);
+        List<Goal> goals = goalDao.findAllByUserId(userId);
         assertEquals(2, goals.size());
     }
 
     @Test
     void findGoalByNameAndId_shouldReturnCorrectGoal() {
         Goal goal = Goal.builder()
-                .userId(3L)
+                .userId(userId)
                 .name("Vacation")
                 .targetAmount(3000.0)
                 .currentAmount(500.0)
@@ -74,7 +70,7 @@ class GoalDaoTest extends AbstractDaoTest {
 
         goalDao.save(goal);
 
-        Optional<Goal> result = goalDao.findGoalByNameAndId("Vacation", 3L);
+        Optional<Goal> result = goalDao.findGoalByNameAndId("Vacation", userId);
         assertTrue(result.isPresent());
         assertEquals("Vacation", result.get().getName());
     }
@@ -82,7 +78,7 @@ class GoalDaoTest extends AbstractDaoTest {
     @Test
     void updateGoal_shouldModifyFields() {
         Goal goal = Goal.builder()
-                .userId(4L)
+                .userId(userId)
                 .name("Bike")
                 .targetAmount(800.0)
                 .currentAmount(100.0)
@@ -110,7 +106,7 @@ class GoalDaoTest extends AbstractDaoTest {
     @Test
     void delete_shouldRemoveGoal() {
         Goal goal = Goal.builder()
-                .userId(5L)
+                .userId(userId)
                 .name("Delete me")
                 .targetAmount(1000.0)
                 .currentAmount(0.0)

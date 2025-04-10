@@ -28,10 +28,6 @@ public class UserDaoTest extends AbstractDaoTest {
         userDao = new UserDaoImpl(jdbcTemplate);
     }
 
-    @Override
-    protected void setupSchema() {
-        jdbcTemplate.execute(USER_SCHEMA_AND_TABLE_CREATE);
-    }
 
     @Test
     void saveAndFindById_shouldWorkCorrectly() {

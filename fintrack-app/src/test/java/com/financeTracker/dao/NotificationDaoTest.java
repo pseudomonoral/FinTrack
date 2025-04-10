@@ -8,34 +8,30 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.financeTracker.constants.SqlTestConst.NOTIFICATION_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.Assert.*;
 
 class NotificationDaoTest extends AbstractDaoTest {
 
     private NotificationDaoImpl notificationDao;
+    private Long userId;
 
     @BeforeEach
     void setUpDao() {
         notificationDao = new NotificationDaoImpl(jdbcTemplate);
-    }
-
-    @Override
-    protected void setupSchema() {
-        jdbcTemplate.execute(NOTIFICATION_SCHEMA_AND_TABLE_CREATE);
+        userId = super.insertTestUserWithRandomId();
     }
 
     @Test
     void save_shouldInsertNotificationWithDefaults() {
         Notification notification = Notification.builder()
-                .userId(1L)
+                .userId(userId)
                 .type(NotificationType.GOAL_ACHIEVED)
                 .build();
         notification.onCreate();
 
         notificationDao.save(notification);
 
-        List<Notification> notifications = notificationDao.findAllByUserId(1L);
+        List<Notification> notifications = notificationDao.findAllByUserId(userId);
         assertEquals(1, notifications.size());
         Notification saved = notifications.get(0);
 
@@ -47,14 +43,14 @@ class NotificationDaoTest extends AbstractDaoTest {
     @Test
     void findUnreadByUserId_shouldReturnOnlyUnread() {
         Notification read = Notification.builder()
-                .userId(2L)
+                .userId(userId)
                 .type(NotificationType.BUDGET_EXCEEDED)
                 .read(true)
                 .build();
         read.onCreate();
 
         Notification unread = Notification.builder()
-                .userId(2L)
+                .userId(userId)
                 .type(NotificationType.GOAL_ACHIEVED)
                 .build();
         unread.onCreate();
@@ -62,7 +58,7 @@ class NotificationDaoTest extends AbstractDaoTest {
         notificationDao.save(read);
         notificationDao.save(unread);
 
-        List<Notification> unreadList = notificationDao.findUnreadByUserId(2L);
+        List<Notification> unreadList = notificationDao.findUnreadByUserId(userId);
         assertEquals(1, unreadList.size());
         assertEquals(NotificationType.GOAL_ACHIEVED, unreadList.get(0).getType());
     }
@@ -70,13 +66,13 @@ class NotificationDaoTest extends AbstractDaoTest {
     @Test
     void deleteAllByUserId_shouldRemoveNotifications() {
         Notification n1 = Notification.builder()
-                .userId(3L)
+                .userId(userId)
                 .type(NotificationType.GOAL_ACHIEVED)
                 .build();
         n1.onCreate();
 
         Notification n2 = Notification.builder()
-                .userId(3L)
+                .userId(userId)
                 .type(NotificationType.BUDGET_EXCEEDED)
                 .build();
         n2.onCreate();
@@ -84,11 +80,9 @@ class NotificationDaoTest extends AbstractDaoTest {
         notificationDao.save(n1);
         notificationDao.save(n2);
 
-        notificationDao.deleteAllByUserId(3L);
+        notificationDao.deleteAllByUserId(userId);
 
-        List<Notification> remaining = notificationDao.findAllByUserId(3L);
+        List<Notification> remaining = notificationDao.findAllByUserId(userId);
         assertTrue(remaining.isEmpty());
     }
 }
-
-

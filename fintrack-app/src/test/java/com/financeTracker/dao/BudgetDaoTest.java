@@ -4,45 +4,43 @@ import com.financeTracker.dao.impl.BudgetDaoImpl;
 import com.financeTracker.model.entity.Budget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+
 
 import java.util.Optional;
 
-import static com.financeTracker.constants.SqlTestConst.BUDGET_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.Assert.*;
 
-class BudgetDaoTest extends AbstractDaoTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class BudgetDaoTest extends AbstractDaoTest {
 
     private BudgetDaoImpl budgetDao;
+    private Long userId;
 
     @BeforeEach
-    void setUpDao() {
+    void setUp() {
         budgetDao = new BudgetDaoImpl(jdbcTemplate);
-    }
-
-    @Override
-    protected void setupSchema() {
-        jdbcTemplate.execute(BUDGET_SCHEMA_AND_TABLE_CREATE);
+        userId = super.insertTestUserWithRandomId();
     }
 
     @Test
     void save_shouldInsertAndReturnEntityWithId() {
         Budget budget = Budget.builder()
-                .userId(1L)
+                .userId(userId)
                 .limit(500.0)
                 .build();
 
         Budget saved = budgetDao.save(budget);
 
         assertNotNull(saved.getId());
-
-        assertEquals(Long.valueOf(1L), saved.getUserId());
+        assertEquals(userId, saved.getUserId());
         assertEquals(500.0, saved.getLimit(), 0.0001);
     }
 
     @Test
     void findById_shouldReturnSavedBudget() {
         Budget budget = Budget.builder()
-                .userId(2L)
+                .userId(userId)
                 .limit(300.0)
                 .build();
 
@@ -57,13 +55,13 @@ class BudgetDaoTest extends AbstractDaoTest {
     @Test
     void findByUserId_shouldReturnCorrectBudget() {
         Budget budget = Budget.builder()
-                .userId(999L)
+                .userId(userId)
                 .limit(700.0)
                 .build();
 
         budgetDao.save(budget);
 
-        Optional<Budget> found = budgetDao.findByUserId(999L);
+        Optional<Budget> found = budgetDao.findByUserId(userId);
 
         assertTrue(found.isPresent());
         assertEquals(700.0, found.get().getLimit(), 0.0001);
@@ -72,7 +70,7 @@ class BudgetDaoTest extends AbstractDaoTest {
     @Test
     void delete_shouldRemoveBudget() {
         Budget budget = Budget.builder()
-                .userId(123L)
+                .userId(userId)
                 .limit(100.0)
                 .build();
 
@@ -86,7 +84,7 @@ class BudgetDaoTest extends AbstractDaoTest {
     @Test
     void updateBudget_shouldChangeLimit() {
         Budget budget = Budget.builder()
-                .userId(321L)
+                .userId(userId)
                 .limit(200.0)
                 .build();
 
@@ -101,4 +99,3 @@ class BudgetDaoTest extends AbstractDaoTest {
         assertEquals(900.0, updated.get().getLimit(), 0.0001);
     }
 }
-

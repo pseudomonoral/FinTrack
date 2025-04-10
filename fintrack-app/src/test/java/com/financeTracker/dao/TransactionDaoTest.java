@@ -13,7 +13,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.Optional;
 
-import static com.financeTracker.constants.SqlTestConst.TRANSACTION_SCHEMA_AND_TABLE_CREATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
@@ -22,21 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TransactionDaoTest extends AbstractDaoTest {
 
     private TransactionDaoImpl transactionDao;
+    private Long userId;
 
     @BeforeEach
     void setUpDao() {
         transactionDao = new TransactionDaoImpl(jdbcTemplate);
-    }
-
-    @Override
-    protected void setupSchema() {
-        jdbcTemplate.execute(TRANSACTION_SCHEMA_AND_TABLE_CREATE);
+        userId = super.insertTestUserWithRandomId();
     }
 
     @Test
     void saveAndFindById_shouldWorkCorrectly() {
         Transaction tx = Transaction.builder()
-                .userId(1L)
+                .userId(userId)
                 .amount(150.75)
                 .category("Groceries")
                 .type(TransactionType.EXPENSE)
@@ -57,21 +53,20 @@ public class TransactionDaoTest extends AbstractDaoTest {
 
     @Test
     void findAllByUserId_shouldReturnCorrectList() {
-        Transaction t1 = Transaction.builder().userId(2L).amount(20.0).category("Food").type(TransactionType.EXPENSE).description("Snack").build();
-        Transaction t2 = Transaction.builder().userId(2L).amount(100.0).category("Utilities").type(TransactionType.EXPENSE).description("Electricity").build();
+        Transaction t1 = Transaction.builder().userId(userId).amount(20.0).category("Food").type(TransactionType.EXPENSE).description("Snack").build();
+        Transaction t2 = Transaction.builder().userId(userId).amount(100.0).category("Utilities").type(TransactionType.EXPENSE).description("Electricity").build();
 
         transactionDao.save(t1);
         transactionDao.save(t2);
 
-        List<Transaction> list = transactionDao.findAllByUserId(2L);
+        List<Transaction> list = transactionDao.findAllByUserId(userId);
         assertEquals(2, list.size());
     }
-
 
     @Test
     void updateTransaction_shouldUpdateValues() {
         Transaction tx = Transaction.builder()
-                .userId(4L)
+                .userId(userId)
                 .amount(50.0)
                 .category("Books")
                 .type(TransactionType.EXPENSE)
@@ -98,7 +93,7 @@ public class TransactionDaoTest extends AbstractDaoTest {
     @Test
     void delete_shouldRemoveTransaction() {
         Transaction tx = Transaction.builder()
-                .userId(5L)
+                .userId(userId)
                 .amount(80.0)
                 .category("ToDelete")
                 .type(TransactionType.EXPENSE)
