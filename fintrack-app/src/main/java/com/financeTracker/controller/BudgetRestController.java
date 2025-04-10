@@ -66,4 +66,3 @@ public class BudgetRestController {
         return ResponseEntity.ok(result);
     }
 }
-
