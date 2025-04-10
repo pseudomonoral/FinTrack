@@ -4,9 +4,11 @@ public interface TransactionSql {
     String FIND_BY_ID = """
             SELECT * FROM fintrack.transactions WHERE id = ?
             """;
+
     String FIND_ALL_BY_USER_ID = """
             SELECT * FROM fintrack.transactions WHERE user_id = ?
             """;
+
     String FIND_ALL = """
             SELECT * FROM fintrack.transactions
             """;
