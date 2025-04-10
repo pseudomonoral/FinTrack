@@ -1,10 +1,21 @@
 package com.financeTracker.constants;
 
 public interface UserSql {
-    String FIND_BY_LOGIN = "SELECT * FROM fintrack.users WHERE login = ?";
-    String FIND_BY_ID = "SELECT * FROM fintrack.users WHERE id = ?";
-    String FIND_ALL = "SELECT * FROM fintrack.users";
-    String DELETE = "DELETE FROM fintrack.users WHERE id = ?";
+    String FIND_BY_LOGIN = """
+            SELECT * FROM fintrack.users WHERE login = ?
+            """;
+
+    String FIND_BY_ID = """
+            SELECT * FROM fintrack.users WHERE id = ?
+            """;
+
+    String FIND_ALL = """
+            SELECT * FROM fintrack.users
+            """;
+
+    String DELETE = """
+            DELETE FROM fintrack.users WHERE id = ?
+            """;
 
     String INSERT = """
             INSERT INTO fintrack.users
@@ -19,4 +30,3 @@ public interface UserSql {
             WHERE id = ?
             """;
 }
-

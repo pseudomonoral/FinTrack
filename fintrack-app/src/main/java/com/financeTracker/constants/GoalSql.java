@@ -1,10 +1,21 @@
 package com.financeTracker.constants;
 
 public interface GoalSql {
-    String FIND_ALL_BY_USER_ID = "SELECT * FROM fintrack.goals WHERE user_id = ?";
-    String FIND_BY_NAME_AND_USER_ID = "SELECT * FROM fintrack.goals WHERE name = ? AND user_id = ?";
-    String FIND_BY_ID = "SELECT * FROM fintrack.goals WHERE id = ?";
-    String FIND_ALL = "SELECT * FROM fintrack.goals";
+    String FIND_ALL_BY_USER_ID = """
+            SELECT * FROM fintrack.goals WHERE user_id = ?
+            """;
+
+    String FIND_BY_NAME_AND_USER_ID = """
+            SELECT * FROM fintrack.goals WHERE name = ? AND user_id = ?
+            """;
+
+    String FIND_BY_ID = """
+            SELECT * FROM fintrack.goals WHERE id = ?
+            """;
+
+    String FIND_ALL = """
+            SELECT * FROM fintrack.goals
+            """;
 
     String INSERT = """
             INSERT INTO fintrack.goals
@@ -12,7 +23,9 @@ public interface GoalSql {
             VALUES (?, ?, ?, ?, ?, ?, now(), now()) RETURNING id
             """;
 
-    String DELETE = "DELETE FROM fintrack.goals WHERE id = ?";
+    String DELETE = """
+            DELETE FROM fintrack.goals WHERE id = ?
+            """;
 
     String UPDATE = """
             UPDATE fintrack.goals
@@ -20,4 +33,3 @@ public interface GoalSql {
             WHERE id = ?
             """;
 }
-

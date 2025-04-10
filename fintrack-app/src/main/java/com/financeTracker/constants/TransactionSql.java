@@ -1,9 +1,15 @@
 package com.financeTracker.constants;
 
 public interface TransactionSql {
-    String FIND_BY_ID = "SELECT * FROM fintrack.transactions WHERE id = ?";
-    String FIND_ALL_BY_USER_ID = "SELECT * FROM fintrack.transactions WHERE user_id = ?";
-    String FIND_ALL = "SELECT * FROM fintrack.transactions";
+    String FIND_BY_ID = """
+            SELECT * FROM fintrack.transactions WHERE id = ?
+            """;
+    String FIND_ALL_BY_USER_ID = """
+            SELECT * FROM fintrack.transactions WHERE user_id = ?
+            """;
+    String FIND_ALL = """
+            SELECT * FROM fintrack.transactions
+            """;
 
     String INSERT = """
             INSERT INTO fintrack.transactions
@@ -17,35 +23,36 @@ public interface TransactionSql {
             WHERE id = ?
             """;
 
-    String DELETE = "DELETE FROM fintrack.transactions WHERE id = ?";
+    String DELETE = """
+            DELETE FROM fintrack.transactions WHERE id = ?
+            """;
 
     String FIND_ALL_BY_USER_ID_AND_DATE = """
-        SELECT *
-        FROM fintrack.transactions
-        WHERE user_id = ?
-          AND created_at >= ?
-        """;
+            SELECT *
+            FROM fintrack.transactions
+            WHERE user_id = ?
+              AND created_at >= ?
+            """;
 
     String FIND_ALL_BY_USER_ID_AND_CATEGORY = """
-        SELECT *
-        FROM fintrack.transactions
-        WHERE user_id = ?
-          AND LOWER(category) = LOWER(?)
-        """;
+            SELECT *
+            FROM fintrack.transactions
+            WHERE user_id = ?
+              AND LOWER(category) = LOWER(?)
+            """;
 
     String FIND_ALL_BY_USER_ID_AND_TYPE = """
-        SELECT *
-        FROM fintrack.transactions
-        WHERE user_id = ?
-          AND type = ?
-        """;
+            SELECT *
+            FROM fintrack.transactions
+            WHERE user_id = ?
+              AND type = ?
+            """;
 
     String CALCULATE_TOTAL_FOR_PERIOD = """
-        SELECT COALESCE(SUM(amount), 0)
-        FROM fintrack.transactions
-        WHERE user_id = ?
-          AND type = ?
-          AND created_at BETWEEN ? AND ?
-        """;
+            SELECT COALESCE(SUM(amount), 0)
+            FROM fintrack.transactions
+            WHERE user_id = ?
+              AND type = ?
+              AND created_at BETWEEN ? AND ?
+            """;
 }
-
