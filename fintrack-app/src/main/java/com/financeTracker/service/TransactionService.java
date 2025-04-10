@@ -18,7 +18,7 @@ public interface TransactionService {
      * Creates a new transaction for the specified user.
      * Automatically updates the user's budget and goal progress if applicable.
      *
-     * @param userId the ID of the user making the transaction
+     * @param userId                the ID of the user making the transaction
      * @param transactionRequestDto the DTO containing transaction data
      * @return the created transaction as a response DTO
      */
@@ -36,8 +36,8 @@ public interface TransactionService {
      * Updates an existing transaction for the given user.
      * If the transaction type or amount changes, its effects on budget and goal will be adjusted accordingly.
      *
-     * @param userId the ID of the user who owns the transaction
-     * @param transactionId the ID of the transaction to update
+     * @param userId                the ID of the user who owns the transaction
+     * @param transactionId         the ID of the transaction to update
      * @param transactionRequestDto the DTO containing updated transaction data
      */
     void updateTransaction(Long userId, Long transactionId, TransactionRequestDto transactionRequestDto);
@@ -61,7 +61,7 @@ public interface TransactionService {
      * Retrieves all transactions made by a user from a specific date onward.
      *
      * @param userId the ID of the user
-     * @param date the starting date (inclusive)
+     * @param date   the starting date (inclusive)
      * @return a list of transaction response DTOs
      */
     List<TransactionResponseDto> getTransactionsByDate(Long userId, LocalDateTime date);
@@ -69,7 +69,7 @@ public interface TransactionService {
     /**
      * Retrieves all transactions by a specific user that match a given category.
      *
-     * @param userId the ID of the user
+     * @param userId   the ID of the user
      * @param category the transaction category to filter by
      * @return a list of transaction response DTOs
      */
@@ -79,7 +79,7 @@ public interface TransactionService {
      * Retrieves all transactions by a specific user that match a given type (INCOME or EXPENSE).
      *
      * @param userId the ID of the user
-     * @param type the transaction type to filter by
+     * @param type   the transaction type to filter by
      * @return a list of transaction response DTOs
      */
     List<TransactionResponseDto> getTransactionsByType(Long userId, String type);

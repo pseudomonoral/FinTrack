@@ -4,14 +4,11 @@ import com.financeTracker.dao.impl.BudgetDaoImpl;
 import com.financeTracker.model.entity.Budget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-
 
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BudgetDaoTest extends AbstractDaoTest {
 
     private BudgetDaoImpl budgetDao;

@@ -3,28 +3,30 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.dao.TransactionDao;
-import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.dto.transaction.TransactionRequestDto;
 import com.financeTracker.dto.transaction.TransactionResponseDto;
+import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.TransactionMapper;
 import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
-import com.financeTracker.service.*;
+import com.financeTracker.service.BudgetService;
+import com.financeTracker.service.NotificationService;
+import com.financeTracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static com.financeTracker.model.type.EntityName.*;
+import static com.financeTracker.model.type.EntityName.TRANSACTION;
 import static com.financeTracker.model.type.NotificationType.BUDGET_EXCEEDED;
 import static com.financeTracker.model.type.NotificationType.GOAL_ACHIEVED;
-import static com.financeTracker.model.type.TransactionType.*;
+import static com.financeTracker.model.type.TransactionType.EXPENSE;
+import static com.financeTracker.model.type.TransactionType.INCOME;
 
 @Service
 @Transactional(readOnly = true)
@@ -76,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
             newTransaction.setCreatedAt(old.get().getCreatedAt());
 
             if (!old.get().getType().equals(newTransaction.getType())
-            || old.get().getAmount() != newTransaction.getAmount()) {
+                    || old.get().getAmount() != newTransaction.getAmount()) {
                 applyTransaction(getDiffTransaction(old.get(), newTransaction));
             }
 
@@ -121,7 +123,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private Transaction mapToTransaction(Long userId, double amount, String category, String description,
-                                         TransactionType type){
+                                         TransactionType type) {
         return Transaction.builder()
                 .amount(amount)
                 .userId(userId)
@@ -131,7 +133,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .build();
     }
 
-    private void applyTransaction(Transaction transaction){
+    private void applyTransaction(Transaction transaction) {
         goalDao.findAllByUserId(transaction.getUserId()).stream()
                 .filter(Goal::isGoalActual)
                 .findFirst()
@@ -144,7 +146,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void applyTransactionToBudget(Transaction transaction) {
         Long userId = transaction.getUserId();
-        if(budgetService.isBudgetExceeded(userId).isExceeded()) {
+        if (budgetService.isBudgetExceeded(userId).isExceeded()) {
             notificationService.createNotification(BUDGET_EXCEEDED,
                     new TargetUserDto(userId));
         }
@@ -153,12 +155,12 @@ public class TransactionServiceImpl implements TransactionService {
     private void applyTransactionToGoal(Transaction transaction, Goal actualGoal) {
         Long userId = transaction.getUserId();
         double amount = transaction.getAmount();
-        if (transaction.getType().equals(EXPENSE)){
+        if (transaction.getType().equals(EXPENSE)) {
             amount = amount * -1;
         }
         actualGoal.setCurrentAmount(actualGoal.getCurrentAmount() + amount);
 
-        if (getGoalProgress(actualGoal) == 100.0){
+        if (getGoalProgress(actualGoal) == 100.0) {
             actualGoal.setGoalActual(false);
             actualGoal.onUpdate();
             notificationService.createNotification(GOAL_ACHIEVED,

@@ -15,7 +15,7 @@ public interface GoalService {
     /**
      * Creates a new goal for a specific user.
      *
-     * @param userId The ID of the user creating the goal.
+     * @param userId         The ID of the user creating the goal.
      * @param goalRequestDto The DTO containing goal creation data.
      * @return GoalResponseDto The created goal's response DTO.
      */
@@ -25,7 +25,7 @@ public interface GoalService {
      * Retrieves a specific goal by its name and user ID from a given DTO.
      *
      * @param goalResponseDto A DTO containing goal identification info (name).
-     * @param userId The ID of the user.
+     * @param userId          The ID of the user.
      * @return GoalResponseDto The retrieved goal response.
      */
     GoalResponseDto getGoal(GoalResponseDto goalResponseDto, Long userId);
@@ -48,7 +48,7 @@ public interface GoalService {
     /**
      * Updates an existing goal for a user.
      *
-     * @param userId The ID of the user.
+     * @param userId         The ID of the user.
      * @param goalRequestDto The DTO containing updated goal data.
      */
     void updateGoal(Long userId, GoalRequestDto goalRequestDto);

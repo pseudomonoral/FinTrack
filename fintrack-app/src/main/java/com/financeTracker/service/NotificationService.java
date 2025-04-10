@@ -16,7 +16,7 @@ public interface NotificationService {
      * Creates a new notification of the given type for the specified user.
      *
      * @param notificationType the type of notification to create.
-     * @param targetUserDto the DTO representing the user for whom the notification is created.
+     * @param targetUserDto    the DTO representing the user for whom the notification is created.
      */
     void createNotification(NotificationType notificationType, TargetUserDto targetUserDto);
 

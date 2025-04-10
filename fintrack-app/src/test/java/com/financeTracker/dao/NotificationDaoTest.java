@@ -1,8 +1,8 @@
 package com.financeTracker.dao;
 
-import com.financeTracker.model.type.NotificationType;
 import com.financeTracker.dao.impl.NotificationDaoImpl;
 import com.financeTracker.model.entity.Notification;
+import com.financeTracker.model.type.NotificationType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

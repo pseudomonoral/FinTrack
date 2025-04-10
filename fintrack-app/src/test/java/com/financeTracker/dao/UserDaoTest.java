@@ -6,19 +6,13 @@ import com.financeTracker.model.type.UserRole;
 import com.financeTracker.model.type.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.financeTracker.constants.SqlTestConst.USER_SCHEMA_AND_TABLE_CREATE;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Testcontainers
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserDaoTest extends AbstractDaoTest {
 
     private UserDaoImpl userDao;

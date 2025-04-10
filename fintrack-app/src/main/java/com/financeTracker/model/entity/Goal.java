@@ -1,7 +1,6 @@
 package com.financeTracker.model.entity;
 
 
-
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,15 +11,21 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-public class Goal{
+public class Goal {
 
-    /** Unique identifier of the entity. */
+    /**
+     * Unique identifier of the entity.
+     */
     private Long id;
 
-    /** Timestamp when the entity was created. */
+    /**
+     * Timestamp when the entity was created.
+     */
     private LocalDateTime createdAt;
 
-    /** Timestamp when the entity was last updated. */
+    /**
+     * Timestamp when the entity was last updated.
+     */
     private LocalDateTime updatedAt;
 
     /**
@@ -38,24 +43,36 @@ public class Goal{
         this.updatedAt = LocalDateTime.now();
     }
 
-    /** Identifier of the user who owns the goal. */
+    /**
+     * Identifier of the user who owns the goal.
+     */
     private Long userId;
 
-    /** Name of the goal. */
+    /**
+     * Name of the goal.
+     */
     private String name;
 
-    /** Target amount to achieve the goal. */
+    /**
+     * Target amount to achieve the goal.
+     */
     private double targetAmount;
 
-    /** Current saved amount towards the goal. Default is 0.0. */
+    /**
+     * Current saved amount towards the goal. Default is 0.0.
+     */
     @Builder.Default
     private double currentAmount = 0.0;
 
-    /** Flag indicating whether the goal has been completed. Default is false. */
+    /**
+     * Flag indicating whether the goal has been completed. Default is false.
+     */
     @Builder.Default
     private boolean goalCompleted = false;
 
-    /** Flag indicating whether the goal is currently active. Default is false. */
+    /**
+     * Flag indicating whether the goal is currently active. Default is false.
+     */
     @Builder.Default
     private boolean goalActual = false;
 }

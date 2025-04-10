@@ -28,8 +28,8 @@ public interface SecurityService {
      *
      * @param authRequestDto the DTO containing login and password for authorization.
      * @return the authorized {@link User}.
-     * @throws UserNotFoundException if the user with the specified login does not exist.
-     * @throws UserBlockedException if the user is blocked.
+     * @throws UserNotFoundException    if the user with the specified login does not exist.
+     * @throws UserBlockedException     if the user is blocked.
      * @throws InvalidPasswordException if the provided password is incorrect.
      */
     User authorize(AuthRequestDto authRequestDto);

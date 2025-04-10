@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.BUDGET;
-import static com.financeTracker.model.type.TransactionType.*;
+import static com.financeTracker.model.type.TransactionType.EXPENSE;
 
 @Service
 @RequiredArgsConstructor

@@ -6,18 +6,12 @@ import com.financeTracker.model.type.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.TestInstance;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Testcontainers
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TransactionDaoTest extends AbstractDaoTest {
 
     private TransactionDaoImpl transactionDao;

@@ -103,9 +103,9 @@ public class GoalServiceImpl implements GoalService {
         goalDao.findAllByUserId(userId).stream()
                 .filter(Goal::isGoalActual)
                 .findFirst().ifPresent(goal -> {
-            goal.setGoalActual(false);
-            goalDao.updateGoal(goal);
-        });
+                    goal.setGoalActual(false);
+                    goalDao.updateGoal(goal);
+                });
     }
 
     private Goal mapToGoal(Long userId, String nameGoal, double targetAmount, double currentAmount,

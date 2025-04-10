@@ -1,7 +1,8 @@
 package com.financeTracker.model.entity;
 
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -12,18 +13,28 @@ import java.time.LocalDateTime;
 @Builder
 public class Budget {
 
-    /** Identifier of the user associated with the budget. */
+    /**
+     * Identifier of the user associated with the budget.
+     */
     private Long userId;
 
-    /** Spending limit for the budget. */
+    /**
+     * Spending limit for the budget.
+     */
     private double limit;
-    /** Unique identifier of the entity. */
+    /**
+     * Unique identifier of the entity.
+     */
     private Long id;
 
-    /** Timestamp when the entity was created. */
+    /**
+     * Timestamp when the entity was created.
+     */
     private LocalDateTime createdAt;
 
-    /** Timestamp when the entity was last updated. */
+    /**
+     * Timestamp when the entity was last updated.
+     */
     private LocalDateTime updatedAt;
 
     /**

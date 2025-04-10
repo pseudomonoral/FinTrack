@@ -1,7 +1,8 @@
 package com.financeTracker.model.entity;
 
 import com.financeTracker.model.type.TransactionType;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -13,13 +14,19 @@ import java.time.LocalDateTime;
 @Builder
 public class Transaction {
 
-    /** Unique identifier of the entity. */
+    /**
+     * Unique identifier of the entity.
+     */
     private Long id;
 
-    /** Timestamp when the entity was created. */
+    /**
+     * Timestamp when the entity was created.
+     */
     private LocalDateTime createdAt;
 
-    /** Timestamp when the entity was last updated. */
+    /**
+     * Timestamp when the entity was last updated.
+     */
     private LocalDateTime updatedAt;
 
     /**
@@ -37,18 +44,28 @@ public class Transaction {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /** Identifier of the user who made the transaction. */
+    /**
+     * Identifier of the user who made the transaction.
+     */
     private Long userId;
 
-    /** Transaction amount. */
+    /**
+     * Transaction amount.
+     */
     private double amount;
 
-    /** Category of the transaction (e.g., "Food", "Entertainment"). */
+    /**
+     * Category of the transaction (e.g., "Food", "Entertainment").
+     */
     private String category;
 
-    /** Description of the transaction. */
+    /**
+     * Description of the transaction.
+     */
     private String description;
 
-    /** Type of the transaction (e.g., INCOME, EXPENSE). */
+    /**
+     * Type of the transaction (e.g., INCOME, EXPENSE).
+     */
     private TransactionType type;
 }

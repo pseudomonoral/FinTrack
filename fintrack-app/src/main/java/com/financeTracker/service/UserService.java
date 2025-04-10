@@ -42,10 +42,10 @@ public interface UserService {
     /**
      * Updates user information such as login, password, and name.
      *
-     * @param userId the ID of the user to update
+     * @param userId        the ID of the user to update
      * @param userUpdateDto the DTO containing the new user data
      * @throws EntityAlreadyExistException if the new login is already taken by another user
-     * @throws EntityNotFoundException if the user is not found
+     * @throws EntityNotFoundException     if the user is not found
      */
     void updateUser(Long userId, UserUpdateDto userUpdateDto);
 

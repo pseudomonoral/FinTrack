@@ -19,7 +19,8 @@ import java.time.LocalTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.financeTracker.model.type.TransactionType.*;
+import static com.financeTracker.model.type.TransactionType.EXPENSE;
+import static com.financeTracker.model.type.TransactionType.INCOME;
 
 @Service
 @Transactional(readOnly = true)
@@ -64,7 +65,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public GoalStatisticsResponseDto analyzeGoalsByUserId(Long userId){
+    public GoalStatisticsResponseDto analyzeGoalsByUserId(Long userId) {
         return statisticsMapper.toGoalStatisticsResponseDto(calculateCountOfCompletedGoal(userId),
                 calculateAverageGoalProgress(userId));
     }

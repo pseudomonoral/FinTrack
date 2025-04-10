@@ -15,10 +15,14 @@ import java.time.LocalDateTime;
 @Builder
 public class Notification {
 
-    /** Unique identifier of the notification entity. */
+    /**
+     * Unique identifier of the notification entity.
+     */
     private Long id;
 
-    /** Timestamp when the notification was created. */
+    /**
+     * Timestamp when the notification was created.
+     */
     private LocalDateTime createdAt;
 
     /**
@@ -30,13 +34,19 @@ public class Notification {
         this.createdAt = LocalDateTime.now();
     }
 
-    /** Identifier of the user associated with the notification. */
+    /**
+     * Identifier of the user associated with the notification.
+     */
     private Long userId;
 
-    /** The type of the notification, represented by {@link NotificationType}. */
+    /**
+     * The type of the notification, represented by {@link NotificationType}.
+     */
     private NotificationType type;
 
-    /** Indicates whether the notification has been read. Defaults to {@code false}. */
+    /**
+     * Indicates whether the notification has been read. Defaults to {@code false}.
+     */
     @Builder.Default
     private boolean read = false;
 }

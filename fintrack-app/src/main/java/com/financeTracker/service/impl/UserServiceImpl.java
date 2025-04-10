@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.financeTracker.model.type.EntityName.USER;
-import static com.financeTracker.model.type.UserStatus.*;
+import static com.financeTracker.model.type.UserStatus.ACTIVE;
+import static com.financeTracker.model.type.UserStatus.BLOCKED;
 
 @Service
 @Transactional(readOnly = true)
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
             userForUpdate.setName(userUpdateDto.getName());
 
             userDao.update(userForUpdate);
-        }else {
+        } else {
             throw new EntityNotFoundException(USER, userId);
         }
     }
