@@ -76,22 +76,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void deleteUserById_shouldDelete_whenUserExists() {
-        when(userDao.findById(userId)).thenReturn(Optional.of(user));
-
-        userService.deleteUserById(userId);
-
-        verify(userDao).delete(userId);
-    }
-
-    @Test
-    void deleteUserById_shouldThrow_whenNotFound() {
-        when(userDao.findById(userId)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> userService.deleteUserById(userId));
-    }
-
-    @Test
     void deleteAccountUserById_shouldDeleteWithoutCheckingExistence() {
         userService.deleteAccountUserById(userId);
         verify(userDao).delete(userId);

@@ -35,14 +35,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUserById(Long id) {
-        User user = userDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(USER, id));
-        userDao.delete(user.getId());
-    }
-
-    @Override
-    @Transactional
     public void deleteAccountUserById(Long userId) {
         userDao.delete(userId);
     }

@@ -23,15 +23,6 @@ public interface UserService {
     UserDto getUserById(Long id);
 
     /**
-     * Deletes a user by their ID.
-     * Used for admin-level deletion that may include checks.
-     *
-     * @param id the ID of the user to delete
-     * @throws EntityNotFoundException if the user is not found
-     */
-    void deleteUserById(Long id);
-
-    /**
      * Deletes a user account by their ID.
      * Used for direct account removal, for example, by the user themself.
      *

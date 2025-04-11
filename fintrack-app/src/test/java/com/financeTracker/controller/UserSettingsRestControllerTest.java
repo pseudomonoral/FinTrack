@@ -86,7 +86,7 @@ class UserSettingsRestControllerTest {
     @Test
     @DisplayName("DELETE /settings - should delete user and invalidate session")
     void deleteAccount_shouldDeleteAndInvalidateSession() throws Exception {
-        doNothing().when(userService).deleteUserById(mockUser.getId());
+        doNothing().when(userService).deleteAccountUserById(mockUser.getId());
 
         mockMvc.perform(delete("/settings")
                         .session(getSessionWithUser()))

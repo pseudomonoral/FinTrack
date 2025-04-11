@@ -56,7 +56,7 @@ public class UserSettingsRestController {
 
         UserDto user = (UserDto) session.getAttribute("user");
 
-        userService.deleteUserById(user.getId());
+        userService.deleteAccountUserById(user.getId());
         session.invalidate();
 
         return ResponseEntity.noContent().build();
