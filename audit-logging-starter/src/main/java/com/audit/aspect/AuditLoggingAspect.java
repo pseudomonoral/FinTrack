@@ -3,7 +3,6 @@ package com.audit.aspect;
 import com.audit.model.AuditLog;
 import com.audit.annotation.Auditable;
 import com.audit.dao.AuditLogDao;
-import com.audit.model.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
