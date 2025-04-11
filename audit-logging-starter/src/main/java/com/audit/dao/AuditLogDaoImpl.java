@@ -4,6 +4,7 @@ import com.audit.model.AuditLog;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuditLogDaoImpl implements AuditLogDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -20,6 +22,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Transactional
     @Override
     public void save(AuditLog entry) {
         jdbcTemplate.update("""
@@ -53,6 +56,7 @@ public class AuditLogDaoImpl implements AuditLogDao {
                 """, this::mapRow, ip);
     }
 
+    @Transactional
     @Override
     public void deleteAll() {
         jdbcTemplate.update("DELETE FROM fintrack.audit_log");
