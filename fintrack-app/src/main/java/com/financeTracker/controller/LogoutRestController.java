@@ -1,7 +1,7 @@
 package com.financeTracker.controller;
 
-import com.audit.Auditable;
-import com.audit.EventType;
+import com.audit.annotation.Auditable;
+import com.audit.model.EventType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;

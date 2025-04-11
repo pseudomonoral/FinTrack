@@ -1,7 +1,7 @@
 package com.financeTracker.controller;
 
-import com.audit.Auditable;
-import com.audit.EventType;
+import com.audit.annotation.Auditable;
+import com.audit.model.EventType;
 import com.financeTracker.dto.auth.AuthRequestDto;
 import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.mapper.UserMapper;

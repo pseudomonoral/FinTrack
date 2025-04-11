@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="create-audit-log-table" author="pseudomonoral">
+        <createTable tableName="audit_log" schemaName="fintrack">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="user_login" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="event_type" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="ip_address" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

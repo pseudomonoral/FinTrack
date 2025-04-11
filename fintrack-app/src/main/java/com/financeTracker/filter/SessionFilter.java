@@ -79,6 +79,13 @@ public class SessionFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Reject access to audit endpoints for non-admins
+        if (uri.startsWith("/audit") &&
+                (userDto == null || !"ADMIN".equals(userDto.getUserRole()))) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
+            return;
+        }
+
         // Allow the request to proceed
         filterChain.doFilter(request, response);
     }

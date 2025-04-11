@@ -1,1 +1,1 @@
-com.audit.AuditLoggingAutoConfiguration
+com.audit.configuration.AuditLoggingAutoConfiguration

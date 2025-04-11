@@ -1,4 +1,4 @@
-package com.audit;
+package com.audit.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

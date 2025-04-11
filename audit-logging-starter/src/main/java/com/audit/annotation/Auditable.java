@@ -1,4 +1,6 @@
-package com.audit;
+package com.audit.annotation;
+
+import com.audit.model.EventType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
