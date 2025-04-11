@@ -47,11 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
     public List<NotificationDto> getUnreadByUserId(TargetUserDto targetUserDto) {
         Long userId = targetUserDto.getUserId();
         List<Notification> unreadNotifications = notificationDao.findUnreadByUserId(userId);
-
-        for (Notification notification : unreadNotifications) {
-            notification.setRead(true);
-            notificationDao.save(notification);
-        }
+        notificationDao.readAllByUserId(userId);
 
         return unreadNotifications.stream()
                 .map(notificationMapper::toDto)

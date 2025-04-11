@@ -41,5 +41,12 @@ public interface NotificationDao {
      * @param userId the ID of the user whose notifications should be deleted.
      */
     void deleteAllByUserId(Long userId);
+
+    /**
+     * Marks all notifications as read for the specified user.
+     *
+     * @param userId the ID of the user whose notifications should be marked as read.
+     */
+    void readAllByUserId(Long userId);
 }
 

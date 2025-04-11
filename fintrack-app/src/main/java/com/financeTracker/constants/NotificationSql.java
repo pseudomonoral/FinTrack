@@ -21,4 +21,9 @@ public interface NotificationSql {
     WHERE user_id = ?
     """;
 
+    String READ_ALL_BY_USER_ID = """
+            UPDATE fintrack.notification
+            SET read = true
+            WHERE user_id = ?
+            """;
 }

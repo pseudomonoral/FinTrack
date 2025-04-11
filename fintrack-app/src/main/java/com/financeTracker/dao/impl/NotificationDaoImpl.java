@@ -44,6 +44,11 @@ public class NotificationDaoImpl implements NotificationDao {
         jdbcTemplate.update(NotificationSql.DELETE_BY_USER_ID, userId);
     }
 
+    @Override
+    public void readAllByUserId(Long userId) {
+        jdbcTemplate.update(NotificationSql.READ_ALL_BY_USER_ID, userId);
+    }
+
     private Notification mapToNotificationFromDatabase(ResultSet rs, int rowNum) throws SQLException {
         return Notification.builder()
                 .id(rs.getLong("id"))
