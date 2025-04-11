@@ -1,9 +1,9 @@
 package com.audit.aspect;
 
 import com.audit.model.AuditLog;
-import com.audit.model.UserDto;
 import com.audit.annotation.Auditable;
 import com.audit.dao.AuditLogDao;
+import com.audit.model.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Aspect that handles audit logging for servlet methods annotated with {@link Auditable}.
@@ -63,9 +64,11 @@ public class AuditLoggingAspect {
     public void audit(Auditable auditable) {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        UserDto user = (UserDto) request.getSession().getAttribute("user");
 
-        String login = (user != null) ? user.getLogin() : "Guest";
+        String login = Optional.ofNullable(request.getSession().getAttribute("userLogin"))
+                .map(Object::toString)
+                .orElse("Guest");
+
         String ip = request.getRemoteAddr();
         String event = auditable.eventType().getDescription();
 
@@ -74,4 +77,3 @@ public class AuditLoggingAspect {
         auditLogDao.save(new AuditLog(login, event, ip, LocalDateTime.now()));
     }
 }
-

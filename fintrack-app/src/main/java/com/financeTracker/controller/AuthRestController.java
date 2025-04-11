@@ -48,6 +48,7 @@ public class AuthRestController {
                                          @Parameter(hidden = true) HttpSession session) {
         UserDto authorizedUser = userMapper.toUserDto(securityService.authorize(authRequest));
         session.setAttribute("user", authorizedUser);
+        session.setAttribute("userLogin", authorizedUser.getLogin());
         return ResponseEntity.ok(authorizedUser);
     }
 }
