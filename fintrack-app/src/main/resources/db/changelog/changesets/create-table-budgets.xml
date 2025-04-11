@@ -17,7 +17,7 @@
             <column name="user_id" type="bigint">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="limit" type="decimal(10,2)">
+            <column name="limit_budget" type="decimal(10,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp"/>

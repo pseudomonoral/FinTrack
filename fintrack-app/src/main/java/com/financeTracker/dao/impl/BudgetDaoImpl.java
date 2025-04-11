@@ -21,7 +21,7 @@ public class BudgetDaoImpl implements BudgetDao {
     private final RowMapper<Budget> budgetRowMapper = (rs, rowNum) -> Budget.builder()
             .id(rs.getLong("id"))
             .userId(rs.getLong("user_id"))
-            .limit(rs.getBigDecimal("limit").doubleValue())
+            .limit(rs.getBigDecimal("limit_budget").doubleValue())
             .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
             .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
             .build();

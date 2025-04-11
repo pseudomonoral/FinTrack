@@ -15,13 +15,13 @@ public interface BudgetSql {
 
     String INSERT = """
             INSERT INTO fintrack.budgets
-            (user_id, `limit`, created_at, updated_at)
+            (user_id, limit_budget, created_at, updated_at)
             VALUES (?, ?, now(), now()) RETURNING id
             """;
 
     String UPDATE = """
             UPDATE fintrack.budgets
-            SET `limit` = ?, updated_at = now() WHERE id = ?
+            SET limit_budget = ?, updated_at = now() WHERE id = ?
             """;
 
     String DELETE = """

@@ -7,7 +7,7 @@
     <changeSet id="insert-budgets-data" author="pseudomonoral">
         <insert tableName="budgets" schemaName="fintrack">
             <column name="user_id" value="2"/>
-            <column name="limit" value="1000.00"/>
+            <column name="limit_budget" value="1000.00"/>
             <column name="created_at" valueDate="NOW()"/>
             <column name="updated_at" valueDate="NOW()"/>
         </insert>
