@@ -4,7 +4,12 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="create-audit-log-table" author="pseudomonoral">
+    <changeSet id="create-table-audit-log" author="pseudomonoral">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="audit_log" schemaName="fintrack"/>
+            </not>
+        </preConditions>
         <createTable tableName="audit_log" schemaName="fintrack">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>

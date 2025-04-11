@@ -10,7 +10,7 @@
     <include file="db/changelog/changesets/create-table-goals.xml"/>
     <include file="db/changelog/changesets/create-table-transactions.xml"/>
     <include file="db/changelog/changesets/create-table-notification.xml"/>
-    <include file="db/changelog/changesets/create-audit-log-table.xml"/>
+    <include file="/db/changelog/changesets/create-table-audit-log.xml"/>
     <include file="db/changelog/changesets/insert-into-table-users.xml"/>
     <include file="db/changelog/changesets/insert-into-table-goals.xml"/>
     <include file="db/changelog/changesets/insert-into-table-transactions.xml"/>
