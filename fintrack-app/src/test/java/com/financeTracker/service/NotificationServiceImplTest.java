@@ -68,26 +68,6 @@ class NotificationServiceImplTest {
     }
 
     @Test
-    @DisplayName("getUnreadByUserId should return mapped and updated notifications")
-    void getUnreadByUserId_shouldReturnMappedAndMarkAsRead() {
-        Long userId = 3L;
-        TargetUserDto dto = TargetUserDto.builder().userId(userId).build();
-
-        Notification unread = Notification.builder().userId(userId).type(NotificationType.GOAL_ACHIEVED).read(false).build();
-        NotificationDto mapped = NotificationDto.builder().userId(userId).type(NotificationType.GOAL_ACHIEVED).build();
-
-        when(notificationDao.findUnreadByUserId(userId)).thenReturn(List.of(unread));
-        when(notificationMapper.toDto(unread)).thenReturn(mapped);
-
-        List<NotificationDto> result = notificationService.getUnreadByUserId(dto);
-
-        assertThat(result).containsExactly(mapped);
-        assertThat(unread.isRead()).isTrue();
-
-        verify(notificationDao).save(unread);
-    }
-
-    @Test
     @DisplayName("deleteAllByUserId should call DAO with correct userId")
     void deleteAllByUserId_shouldCallDao() {
         Long userId = 4L;

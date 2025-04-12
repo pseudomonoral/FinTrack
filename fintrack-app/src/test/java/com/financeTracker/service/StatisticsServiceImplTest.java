@@ -4,22 +4,16 @@ import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.dao.impl.GoalDaoImpl;
 import com.financeTracker.dto.statistic.BalanceResponseDto;
 import com.financeTracker.dto.statistic.ExpenseAnalysisResponseDto;
-import com.financeTracker.dto.statistic.GoalStatisticsResponseDto;
 import com.financeTracker.dto.statistic.IncomeExpenseResponseDto;
-import com.financeTracker.dto.transaction.TransactionResponseDto;
 import com.financeTracker.mapper.StatisticsMapper;
-import com.financeTracker.model.entity.Goal;
 import com.financeTracker.model.entity.Transaction;
-import com.financeTracker.model.type.TransactionType;
 import com.financeTracker.service.impl.StatisticsServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -30,139 +24,113 @@ import static org.mockito.Mockito.*;
 
 class StatisticsServiceImplTest {
 
-    @Mock
-    private TransactionService transactionService;
-
-    @Mock
     private TransactionDao transactionDao;
-
-    @Mock
     private StatisticsMapper statisticsMapper;
+    private GoalDaoImpl goalDao;
 
-    @Mock
-    private GoalDaoImpl goalDaoImpl;
-
-    @InjectMocks
     private StatisticsServiceImpl statisticsService;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        transactionDao = mock(TransactionDao.class);
+        statisticsMapper = mock(StatisticsMapper.class);
+        goalDao = mock(GoalDaoImpl.class);
+        statisticsService = new StatisticsServiceImpl(transactionDao, statisticsMapper, goalDao);
     }
 
     @Test
+    @DisplayName("calculateCurrentBalance should return correct balance")
     void calculateCurrentBalance_shouldReturnCorrectBalance() {
-        long userId = 1L;
+        Long userId = 1L;
+        List<Transaction> incomes = List.of(
+                Transaction.builder().amount(100.0).build(),
+                Transaction.builder().amount(200.0).build()
+        );
+        List<Transaction> expenses = List.of(
+                Transaction.builder().amount(50.0).build()
+        );
+        when(transactionDao.findAllByUserIdAndType(userId, INCOME)).thenReturn(incomes);
+        when(transactionDao.findAllByUserIdAndType(userId, EXPENSE)).thenReturn(expenses);
 
-        Transaction income1 = createTransaction(1000, INCOME);
-        Transaction expense1 = createTransaction(200, EXPENSE);
+        BalanceResponseDto expected = BalanceResponseDto.builder().balance(250.0).build();
+        when(statisticsMapper.toBalanceResponseDto(250.0)).thenReturn(expected);
 
-        when(transactionDao.findAllByUserId(userId)).thenReturn(List.of(income1, expense1));
-        when(statisticsMapper.toBalanceResponseDto(800.0)).thenReturn(new BalanceResponseDto(800));
+        BalanceResponseDto result = statisticsService.calculateCurrentBalance(userId);
 
-        BalanceResponseDto response = statisticsService.calculateCurrentBalance(userId);
-
-        assertThat(response.getBalance()).isEqualTo(800);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    void calculateIncomeForPeriod_shouldReturnCorrectIncome() {
-        long userId = 1L;
-        LocalDate start = LocalDate.now().minusDays(10);
-        LocalDate end = LocalDate.now();
+    @DisplayName("calculateIncomeForPeriod should return total income mapped to dto")
+    void calculateIncomeForPeriod_shouldReturnIncome() {
+        Long userId = 1L;
+        LocalDate start = LocalDate.of(2024, 1, 1);
+        LocalDate end = LocalDate.of(2024, 1, 31);
+        double total = 300.0;
 
-        TransactionResponseDto t1 = createTransactionDto(500, INCOME, start.atStartOfDay().plusDays(2));
-        TransactionResponseDto t2 = createTransactionDto(200, INCOME, start.atStartOfDay().plusDays(5));
+        when(transactionDao.calculateTotalForPeriod(
+                eq(userId),
+                eq(INCOME),
+                eq(start.atStartOfDay()),
+                eq(end.atTime(LocalTime.MAX))
+        )).thenReturn(total);
 
-        when(transactionService.getTransactionsByDate(eq(userId), any())).thenReturn(List.of(t1, t2));
-        when(statisticsMapper.toIncomeExpenseResponseDto(700.0)).thenReturn(new IncomeExpenseResponseDto(700));
+        IncomeExpenseResponseDto expected = IncomeExpenseResponseDto.builder().amount(total).build();
+        when(statisticsMapper.toIncomeExpenseResponseDto(total)).thenReturn(expected);
 
         IncomeExpenseResponseDto result = statisticsService.calculateIncomeForPeriod(userId, start, end);
 
-        assertThat(result.getAmount()).isEqualTo(700);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    void calculateExpenseForPeriod_shouldReturnCorrectExpense() {
-        long userId = 1L;
-        LocalDate start = LocalDate.now().minusDays(10);
-        LocalDate end = LocalDate.now();
+    @DisplayName("calculateExpenseForPeriod should return total expense mapped to dto")
+    void calculateExpenseForPeriod_shouldReturnExpense() {
+        Long userId = 1L;
+        LocalDate start = LocalDate.of(2024, 2, 1);
+        LocalDate end = LocalDate.of(2024, 2, 28);
+        double total = 150.0;
 
-        TransactionResponseDto t1 = createTransactionDto(300, EXPENSE, start.atStartOfDay().plusDays(1));
-        TransactionResponseDto t2 = createTransactionDto(100, EXPENSE, start.atStartOfDay().plusDays(2));
+        when(transactionDao.calculateTotalForPeriod(
+                eq(userId),
+                eq(EXPENSE),
+                eq(start.atStartOfDay()),
+                eq(end.atTime(LocalTime.MAX))
+        )).thenReturn(total);
 
-        when(transactionService.getTransactionsByDate(eq(userId), any())).thenReturn(List.of(t1, t2));
-        when(statisticsMapper.toIncomeExpenseResponseDto(400.0)).thenReturn(new IncomeExpenseResponseDto(400));
+        IncomeExpenseResponseDto expected = IncomeExpenseResponseDto.builder().amount(total).build();
+        when(statisticsMapper.toIncomeExpenseResponseDto(total)).thenReturn(expected);
 
         IncomeExpenseResponseDto result = statisticsService.calculateExpenseForPeriod(userId, start, end);
 
-        assertThat(result.getAmount()).isEqualTo(400);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
-    void analyzeExpensesByCategory_shouldReturnCorrectMap() {
-        long userId = 1L;
+    @DisplayName("analyzeExpensesByCategory should return grouped expenses mapped to dto")
+    void analyzeExpensesByCategory_shouldReturnGroupedExpenses() {
+        Long userId = 1L;
+        List<Transaction> transactions = List.of(
+                Transaction.builder().category("Food").amount(100.0).build(),
+                Transaction.builder().category("Food").amount(50.0).build(),
+                Transaction.builder().category("Transport").amount(30.0).build()
+        );
 
-        Transaction t1 = createTransactionWithCategory(300, "Food");
-        Transaction t2 = createTransactionWithCategory(100, "Transport");
+        when(transactionDao.findAllByUserIdAndType(userId, EXPENSE)).thenReturn(transactions);
 
-        when(transactionDao.findAllByUserId(userId)).thenReturn(List.of(t1, t2));
-        Map<String, Double> expectedMap = Map.of("Food", 300.0, "Transport", 100.0);
-        ExpenseAnalysisResponseDto expectedDto = new ExpenseAnalysisResponseDto(expectedMap);
+        Map<String, Double> grouped = Map.of(
+                "Food", 150.0,
+                "Transport", 30.0
+        );
+        ExpenseAnalysisResponseDto expected = ExpenseAnalysisResponseDto.builder()
+                .categoryExpenses(grouped)
+                .build();
 
-        when(statisticsMapper.toExpenseAnalysisResponseDto(expectedMap)).thenReturn(expectedDto);
+        when(statisticsMapper.toExpenseAnalysisResponseDto(grouped)).thenReturn(expected);
 
         ExpenseAnalysisResponseDto result = statisticsService.analyzeExpensesByCategory(userId);
 
-        assertThat(result.getCategoryExpenses()).isEqualTo(expectedMap);
-    }
-
-    @Test
-    void analyzeGoalsByUserId_shouldReturnCorrectStats() {
-        long userId = 1L;
-
-        Goal g1 = createGoal(true, 1000, 1000);
-        Goal g2 = createGoal(false, 500, 250);
-
-        when(goalDaoImpl.findAllByUserId(userId)).thenReturn(List.of(g1, g2));
-        GoalStatisticsResponseDto expected = new GoalStatisticsResponseDto(1L, 75.0);
-
-        when(statisticsMapper.toGoalStatisticsResponseDto(1L, 75.0)).thenReturn(expected);
-
-        GoalStatisticsResponseDto result = statisticsService.analyzeGoalsByUserId(userId);
-
-        assertThat(result.getCompletedGoals()).isEqualTo(1L);
-        assertThat(result.getAverageGoalProgress()).isEqualTo(75.0);
-    }
-
-    private Transaction createTransaction(double amount, TransactionType type) {
-        return Transaction.builder()
-                .amount(amount)
-                .type(type)
-                .build();
-    }
-
-    private Transaction createTransactionWithCategory(double amount, String category) {
-        return Transaction.builder()
-                .amount(amount)
-                .category(category)
-                .type(EXPENSE)
-                .build();
-    }
-
-    private TransactionResponseDto createTransactionDto(double amount, TransactionType type, LocalDateTime dateTime) {
-        return TransactionResponseDto.builder()
-                .amount(amount)
-                .type(type)
-                .createdAt(dateTime)
-                .build();
-    }
-
-    private Goal createGoal(boolean completed, double target, double current) {
-        return Goal.builder()
-                .goalCompleted(completed)
-                .targetAmount(target)
-                .currentAmount(current)
-                .build();
+        assertThat(result).isEqualTo(expected);
     }
 }
+

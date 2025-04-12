@@ -149,8 +149,10 @@ class TransactionServiceImplTest {
 
     @Test
     void getTransactionsByType_shouldFilterCorrectly() {
-        when(transactionDao.findAll()).thenReturn(List.of(transaction));
-        when(transactionMapper.toResponseTransactionDto(transaction)).thenReturn(responseDto);
+        when(transactionDao.findAllByUserIdAndType(userId, TransactionType.EXPENSE))
+                .thenReturn(List.of(transaction));
+        when(transactionMapper.toResponseTransactionDto(transaction))
+                .thenReturn(responseDto);
 
         List<TransactionResponseDto> result = transactionService.getTransactionsByType(userId, "EXPENSE");
 
