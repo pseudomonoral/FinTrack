@@ -44,6 +44,7 @@ public class UserSettingsRestController {
         userService.updateUser(user.getId(), userUpdateDto);
         UserDto updatedUser = userService.getUserById(user.getId());
         session.setAttribute("user", updatedUser);
+        session.setAttribute("userLogin", updatedUser.getLogin());
 
         return ResponseEntity.noContent().build();
     }
