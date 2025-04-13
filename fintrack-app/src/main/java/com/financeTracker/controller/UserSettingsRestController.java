@@ -1,9 +1,8 @@
 package com.financeTracker.controller;
 
 import com.audit.annotation.Auditable;
-import com.audit.model.EventType;
 import com.financeTracker.dto.user.UserDto;
-import com.financeTracker.dto.user.UserUpdateDto;
+import com.financeTracker.dto.user.UserUpdateRequestDto;
 import com.financeTracker.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.audit.model.EventType.*;
 
 @RestController
 @RequestMapping("/settings")
@@ -33,15 +34,15 @@ public class UserSettingsRestController {
     }
 
     @Operation(summary = "Обновление профиля пользователя")
-    @Auditable(eventType = EventType.UPDATE_PROFILE)
+    @Auditable(eventType = UPDATE_PROFILE)
     @PutMapping
     public ResponseEntity<Void> updateUserProfile(
-            @Valid @RequestBody UserUpdateDto userUpdateDto,
+            @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto,
             @Parameter(hidden = true) HttpSession session) {
 
         UserDto user = (UserDto) session.getAttribute("user");
 
-        userService.updateUser(user.getId(), userUpdateDto);
+        userService.updateUser(user.getId(), userUpdateRequestDto);
         UserDto updatedUser = userService.getUserById(user.getId());
         session.setAttribute("user", updatedUser);
         session.setAttribute("userLogin", updatedUser.getLogin());
@@ -50,7 +51,7 @@ public class UserSettingsRestController {
     }
 
     @Operation(summary = "Удаление аккаунта пользователя")
-    @Auditable(eventType = EventType.DELETE_ACCOUNT)
+    @Auditable(eventType = DELETE_ACCOUNT)
     @DeleteMapping
     public ResponseEntity<Void> deleteAccount(
             @Parameter(hidden = true) HttpSession session) {

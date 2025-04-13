@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserUpdateDto {
+public class UserUpdateRequestDto {
 
     @Size(max = 50, message = "Имя не может быть длиннее 50 символов")
     private String name;

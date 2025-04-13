@@ -2,7 +2,7 @@ package com.financeTracker.service.impl;
 
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.dto.user.UserDto;
-import com.financeTracker.dto.user.UserUpdateDto;
+import com.financeTracker.dto.user.UserUpdateRequestDto;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.UserMapper;
@@ -41,17 +41,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUser(Long userId, UserUpdateDto userUpdateDto) {
+    public void updateUser(Long userId, UserUpdateRequestDto userUpdateRequestDto) {
         Optional<User> user = userDao.findById(userId);
         if (user.isPresent()) {
-            Optional<User> old = userDao.findByLogin(userUpdateDto.getLogin());
+            Optional<User> old = userDao.findByLogin(userUpdateRequestDto.getLogin());
             if (old.isPresent() && !old.get().getId().equals(userId)) {
                 throw new EntityAlreadyExistException(USER, userId);
             }
             User userForUpdate = user.get();
-            userForUpdate.setLogin(userUpdateDto.getLogin());
-            userForUpdate.setPassword(userUpdateDto.getPassword());
-            userForUpdate.setName(userUpdateDto.getName());
+            userForUpdate.setLogin(userUpdateRequestDto.getLogin());
+            userForUpdate.setPassword(userUpdateRequestDto.getPassword());
+            userForUpdate.setName(userUpdateRequestDto.getName());
 
             userDao.update(userForUpdate);
         } else {

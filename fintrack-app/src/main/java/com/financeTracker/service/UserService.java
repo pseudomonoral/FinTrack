@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
 import com.financeTracker.dto.user.UserDto;
-import com.financeTracker.dto.user.UserUpdateDto;
+import com.financeTracker.dto.user.UserUpdateRequestDto;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 
@@ -34,11 +34,11 @@ public interface UserService {
      * Updates user information such as login, password, and name.
      *
      * @param userId        the ID of the user to update
-     * @param userUpdateDto the DTO containing the new user data
+     * @param userUpdateRequestDto the DTO containing the new user data
      * @throws EntityAlreadyExistException if the new login is already taken by another user
      * @throws EntityNotFoundException     if the user is not found
      */
-    void updateUser(Long userId, UserUpdateDto userUpdateDto);
+    void updateUser(Long userId, UserUpdateRequestDto userUpdateRequestDto);
 
     /**
      * Blocks a user by their ID.

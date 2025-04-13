@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BudgetDto {
+public class BudgetRequestDto {
     @NotNull(message = "Лимит бюджета не может быть null")
     @Min(value = 0, message = "Лимит бюджета должен быть положительным числом")
     private Double limit;

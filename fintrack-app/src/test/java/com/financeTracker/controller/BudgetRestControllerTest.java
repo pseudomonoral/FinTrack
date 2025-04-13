@@ -2,7 +2,7 @@ package com.financeTracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.dto.budget.BudgetCheckResponseDto;
-import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.budget.BudgetRequestDto;
 import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.BudgetService;
 import org.junit.jupiter.api.DisplayName;
@@ -49,22 +49,22 @@ class BudgetRestControllerTest {
     @Test
     @DisplayName("POST /api/budget - should create budget and return 201")
     void createBudget_shouldReturnCreated() throws Exception {
-        BudgetDto budgetDto = BudgetDto.builder().limit(1000.0).build();
+        BudgetRequestDto budgetRequestDto = BudgetRequestDto.builder().limit(1000.0).build();
 
         mockMvc.perform(post("/api/budget")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(budgetDto))
+                        .content(objectMapper.writeValueAsString(budgetRequestDto))
                         .session(getSessionWithUser()))
                 .andExpect(status().isCreated());
 
-        verify(budgetService).createBudget(mockUser.getId(), budgetDto);
+        verify(budgetService).createBudget(mockUser.getId(), budgetRequestDto);
     }
 
     @Test
     @DisplayName("GET /api/budget - should return budget when present")
     void getBudget_shouldReturnOk() throws Exception {
-        BudgetDto budgetDto = BudgetDto.builder().limit(1000.0).build();
-        when(budgetService.getBudget(mockUser.getId())).thenReturn(Optional.of(budgetDto));
+        BudgetRequestDto budgetRequestDto = BudgetRequestDto.builder().limit(1000.0).build();
+        when(budgetService.getBudget(mockUser.getId())).thenReturn(Optional.of(budgetRequestDto));
 
         mockMvc.perform(get("/api/budget")
                         .session(getSessionWithUser()))
@@ -85,15 +85,15 @@ class BudgetRestControllerTest {
     @Test
     @DisplayName("PUT /api/budget - should update budget and return 200")
     void updateBudget_shouldReturnOk() throws Exception {
-        BudgetDto budgetDto = BudgetDto.builder().limit(2000.0).build();
+        BudgetRequestDto budgetRequestDto = BudgetRequestDto.builder().limit(2000.0).build();
 
         mockMvc.perform(put("/api/budget")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(budgetDto))
+                        .content(objectMapper.writeValueAsString(budgetRequestDto))
                         .session(getSessionWithUser()))
                 .andExpect(status().isOk());
 
-        verify(budgetService).updateBudget(mockUser.getId(), budgetDto);
+        verify(budgetService).updateBudget(mockUser.getId(), budgetRequestDto);
     }
 
     @Test

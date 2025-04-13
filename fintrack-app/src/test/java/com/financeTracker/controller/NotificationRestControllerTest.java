@@ -1,8 +1,8 @@
 package com.financeTracker.controller;
 
+import com.financeTracker.dto.notification.NotificationResponseDto;
 import com.financeTracker.dto.user.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financeTracker.dto.notification.NotificationDto;
 import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.model.type.NotificationType;
 import com.financeTracker.service.NotificationService;
@@ -53,13 +53,13 @@ class NotificationRestControllerTest {
     @Test
     @DisplayName("GET /api/notification/all - should return all notifications")
     void getAllNotifications_shouldReturnOk() throws Exception {
-        List<NotificationDto> notifications = List.of(
-                NotificationDto.builder()
+        List<NotificationResponseDto> notifications = List.of(
+                NotificationResponseDto.builder()
                         .createdAt(LocalDateTime.of(2025, 4, 10, 12, 0))
                         .userId(mockUser.getId())
                         .type(NotificationType.GOAL_ACHIEVED)
                         .build(),
-                NotificationDto.builder()
+                NotificationResponseDto.builder()
                         .createdAt(LocalDateTime.of(2025, 4, 10, 13, 0))
                         .userId(mockUser.getId())
                         .type(NotificationType.BUDGET_EXCEEDED)
@@ -80,8 +80,8 @@ class NotificationRestControllerTest {
     @Test
     @DisplayName("GET /api/notification/unread - should return unread notifications")
     void getUnreadNotifications_shouldReturnOk() throws Exception {
-        List<NotificationDto> unread = List.of(
-                NotificationDto.builder()
+        List<NotificationResponseDto> unread = List.of(
+                NotificationResponseDto.builder()
                         .createdAt(LocalDateTime.of(2025, 4, 10, 14, 0))
                         .userId(mockUser.getId())
                         .type(NotificationType.BUDGET_EXCEEDED)

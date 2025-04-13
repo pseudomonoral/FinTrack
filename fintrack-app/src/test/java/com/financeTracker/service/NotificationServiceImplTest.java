@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
 import com.financeTracker.dao.NotificationDao;
-import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.notification.NotificationResponseDto;
 import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.mapper.NotificationMapper;
 import com.financeTracker.model.entity.Notification;
@@ -55,14 +55,14 @@ class NotificationServiceImplTest {
         Notification n1 = Notification.builder().userId(userId).type(NotificationType.BUDGET_EXCEEDED).build();
         Notification n2 = Notification.builder().userId(userId).type(NotificationType.GOAL_ACHIEVED).build();
 
-        NotificationDto dto1 = NotificationDto.builder().userId(userId).type(NotificationType.BUDGET_EXCEEDED).build();
-        NotificationDto dto2 = NotificationDto.builder().userId(userId).type(NotificationType.GOAL_ACHIEVED).build();
+        NotificationResponseDto dto1 = NotificationResponseDto.builder().userId(userId).type(NotificationType.BUDGET_EXCEEDED).build();
+        NotificationResponseDto dto2 = NotificationResponseDto.builder().userId(userId).type(NotificationType.GOAL_ACHIEVED).build();
 
         when(notificationDao.findAllByUserId(userId)).thenReturn(List.of(n1, n2));
         when(notificationMapper.toDto(n1)).thenReturn(dto1);
         when(notificationMapper.toDto(n2)).thenReturn(dto2);
 
-        List<NotificationDto> result = notificationService.getAllByUserId(dto);
+        List<NotificationResponseDto> result = notificationService.getAllByUserId(dto);
 
         assertThat(result).containsExactly(dto1, dto2);
     }

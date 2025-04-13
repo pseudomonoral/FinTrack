@@ -1,7 +1,7 @@
 package com.financeTracker.controller;
 
 import com.financeTracker.dto.budget.BudgetCheckResponseDto;
-import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.budget.BudgetRequestDto;
 import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.BudgetService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,14 +27,14 @@ public class BudgetRestController {
     @PostMapping
     public ResponseEntity<Void> createBudget(
             @Parameter(hidden = true) @SessionAttribute("user") UserDto user,
-            @Valid @RequestBody BudgetDto budgetDto) {
-        budgetService.createBudget(user.getId(), budgetDto);
+            @Valid @RequestBody BudgetRequestDto budgetRequestDto) {
+        budgetService.createBudget(user.getId(), budgetRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "Получить бюджет пользователя")
     @GetMapping
-    public ResponseEntity<BudgetDto> getBudget(
+    public ResponseEntity<BudgetRequestDto> getBudget(
             @Parameter(hidden = true) @SessionAttribute("user") UserDto user) {
         return budgetService.getBudget(user.getId())
                 .map(ResponseEntity::ok)
@@ -45,8 +45,8 @@ public class BudgetRestController {
     @PutMapping
     public ResponseEntity<Void> updateBudget(
             @Parameter(hidden = true) @SessionAttribute("user") UserDto user,
-            @Valid @RequestBody BudgetDto budgetDto) {
-        budgetService.updateBudget(user.getId(), budgetDto);
+            @Valid @RequestBody BudgetRequestDto budgetRequestDto) {
+        budgetService.updateBudget(user.getId(), budgetRequestDto);
         return ResponseEntity.ok().build();
     }
 

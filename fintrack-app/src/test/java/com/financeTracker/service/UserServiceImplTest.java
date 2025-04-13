@@ -2,7 +2,7 @@ package com.financeTracker.service;
 
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.dto.user.UserDto;
-import com.financeTracker.dto.user.UserUpdateDto;
+import com.financeTracker.dto.user.UserUpdateRequestDto;
 import com.financeTracker.exceptions.entity.EntityAlreadyExistException;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.UserMapper;
@@ -83,7 +83,7 @@ class UserServiceImplTest {
 
     @Test
     void updateUser_shouldUpdate_whenValid() {
-        UserUpdateDto updateDto = new UserUpdateDto("Jane", "new@example.com", "newpass");
+        UserUpdateRequestDto updateDto = new UserUpdateRequestDto("Jane", "new@example.com", "newpass");
 
         when(userDao.findById(userId)).thenReturn(Optional.of(user));
         when(userDao.findByLogin(updateDto.getLogin())).thenReturn(Optional.empty());
@@ -100,14 +100,14 @@ class UserServiceImplTest {
     void updateUser_shouldThrow_whenUserNotFound() {
         when(userDao.findById(userId)).thenReturn(Optional.empty());
 
-        UserUpdateDto updateDto = new UserUpdateDto("Jane", "new@example.com", "newpass");
+        UserUpdateRequestDto updateDto = new UserUpdateRequestDto("Jane", "new@example.com", "newpass");
 
         assertThrows(EntityNotFoundException.class, () -> userService.updateUser(userId, updateDto));
     }
 
     @Test
     void updateUser_shouldThrow_whenLoginTakenByAnotherUser() {
-        UserUpdateDto updateDto = new UserUpdateDto("Jane", "duplicate@example.com", "newpass");
+        UserUpdateRequestDto updateDto = new UserUpdateRequestDto("Jane", "duplicate@example.com", "newpass");
         User anotherUser = User.builder().id(2L).login("duplicate@example.com").build();
 
         when(userDao.findById(userId)).thenReturn(Optional.of(user));

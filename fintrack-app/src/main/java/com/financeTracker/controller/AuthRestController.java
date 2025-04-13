@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
+import static com.audit.model.EventType.*;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -32,7 +34,7 @@ public class AuthRestController {
     private final SecurityService securityService;
     private final UserMapper userMapper;
 
-    @Auditable(eventType = EventType.REGISTER)
+    @Auditable(eventType = REGISTER)
     @Operation(summary = "Регистрация пользователя")
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@Valid @RequestBody AuthRequestDto authRequest) {
@@ -41,7 +43,7 @@ public class AuthRestController {
         return ResponseEntity.created(location).body(registeredUser);
     }
 
-    @Auditable(eventType = EventType.LOGIN)
+    @Auditable(eventType = LOGIN)
     @Operation(summary = "Авторизация пользователя")
     @PostMapping("/login")
     public ResponseEntity<UserDto> login(@Valid @RequestBody AuthRequestDto authRequest,

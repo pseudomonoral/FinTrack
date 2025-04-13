@@ -2,7 +2,7 @@ package com.financeTracker.service.impl;
 
 
 import com.financeTracker.dao.NotificationDao;
-import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.notification.NotificationResponseDto;
 import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.mapper.NotificationMapper;
 import com.financeTracker.model.entity.Notification;
@@ -35,7 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDto> getAllByUserId(TargetUserDto targetUserDto) {
+    public List<NotificationResponseDto> getAllByUserId(TargetUserDto targetUserDto) {
         Long userId = targetUserDto.getUserId();
         return notificationDao.findAllByUserId(userId)
                 .stream()
@@ -44,7 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDto> getUnreadByUserId(TargetUserDto targetUserDto) {
+    public List<NotificationResponseDto> getUnreadByUserId(TargetUserDto targetUserDto) {
         Long userId = targetUserDto.getUserId();
         List<Notification> unreadNotifications = notificationDao.findUnreadByUserId(userId);
         notificationDao.readAllByUserId(userId);

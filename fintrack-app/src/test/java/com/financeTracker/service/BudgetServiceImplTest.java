@@ -3,7 +3,7 @@ package com.financeTracker.service;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.dto.budget.BudgetCheckResponseDto;
-import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.budget.BudgetRequestDto;
 import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
 import com.financeTracker.model.entity.Transaction;
@@ -40,9 +40,9 @@ class BudgetServiceImplTest {
     @DisplayName("createBudget should save new budget")
     void createBudget_shouldSaveBudget() {
         Long userId = 1L;
-        BudgetDto budgetDto = BudgetDto.builder().limit(500.0).build();
+        BudgetRequestDto budgetRequestDto = BudgetRequestDto.builder().limit(500.0).build();
 
-        budgetService.createBudget(userId, budgetDto);
+        budgetService.createBudget(userId, budgetRequestDto);
 
         verify(budgetDao).save(argThat(budget ->
                 budget.getUserId().equals(userId) &&
@@ -54,12 +54,12 @@ class BudgetServiceImplTest {
     void getBudget_shouldReturnMappedDto() {
         Long userId = 1L;
         Budget budget = Budget.builder().userId(userId).limit(300.0).build();
-        BudgetDto dto = BudgetDto.builder().limit(300.0).build();
+        BudgetRequestDto dto = BudgetRequestDto.builder().limit(300.0).build();
 
         when(budgetDao.findByUserId(userId)).thenReturn(Optional.of(budget));
         when(budgetMapper.toBudgetDto(budget)).thenReturn(dto);
 
-        Optional<BudgetDto> result = budgetService.getBudget(userId);
+        Optional<BudgetRequestDto> result = budgetService.getBudget(userId);
 
         assertThat(result).contains(dto);
     }
@@ -68,12 +68,12 @@ class BudgetServiceImplTest {
     @DisplayName("updateBudget should update existing budget")
     void updateBudget_shouldUpdateExistingBudget() {
         Long userId = 1L;
-        BudgetDto budgetDto = BudgetDto.builder().limit(1000.0).build();
+        BudgetRequestDto budgetRequestDto = BudgetRequestDto.builder().limit(1000.0).build();
         Budget oldBudget = Budget.builder().id(5L).userId(userId).limit(500.0).build();
 
         when(budgetDao.findByUserId(userId)).thenReturn(Optional.of(oldBudget));
 
-        budgetService.updateBudget(userId, budgetDto);
+        budgetService.updateBudget(userId, budgetRequestDto);
 
         verify(budgetDao).updateBudget(argThat(updated ->
                 updated.getId().equals(5L) &&

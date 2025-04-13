@@ -1,6 +1,6 @@
 package com.financeTracker.service;
 
-import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.notification.NotificationResponseDto;
 import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.model.type.NotificationType;
 
@@ -24,17 +24,17 @@ public interface NotificationService {
      * Retrieves all notifications for the specified user.
      *
      * @param targetUserDto the DTO representing the user whose notifications are to be fetched.
-     * @return a list of all {@link NotificationDto} for the user.
+     * @return a list of all {@link NotificationResponseDto} for the user.
      */
-    List<NotificationDto> getAllByUserId(TargetUserDto targetUserDto);
+    List<NotificationResponseDto> getAllByUserId(TargetUserDto targetUserDto);
 
     /**
      * Retrieves only unread notifications for the specified user.
      *
      * @param targetUserDto the DTO representing the user whose unread notifications are to be fetched.
-     * @return a list of unread {@link NotificationDto} for the user.
+     * @return a list of unread {@link NotificationResponseDto} for the user.
      */
-    List<NotificationDto> getUnreadByUserId(TargetUserDto targetUserDto);
+    List<NotificationResponseDto> getUnreadByUserId(TargetUserDto targetUserDto);
 
     /**
      * Deletes all notifications for the specified user.

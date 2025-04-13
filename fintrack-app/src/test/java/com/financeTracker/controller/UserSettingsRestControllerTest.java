@@ -2,7 +2,7 @@ package com.financeTracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financeTracker.dto.user.UserDto;
-import com.financeTracker.dto.user.UserUpdateDto;
+import com.financeTracker.dto.user.UserUpdateRequestDto;
 import com.financeTracker.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class UserSettingsRestControllerTest {
     @Test
     @DisplayName("PUT /settings - should update user and update session")
     void updateUserProfile_shouldUpdateAndSetSession() throws Exception {
-        UserUpdateDto updateDto = UserUpdateDto.builder()
+        UserUpdateRequestDto updateDto = UserUpdateRequestDto.builder()
                 .name("Updated Name")
                 .login("newemail@example.com")
                 .password("newpass")

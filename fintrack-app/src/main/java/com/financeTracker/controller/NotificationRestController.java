@@ -1,6 +1,6 @@
 package com.financeTracker.controller;
 
-import com.financeTracker.dto.notification.NotificationDto;
+import com.financeTracker.dto.notification.NotificationResponseDto;
 import com.financeTracker.dto.user.TargetUserDto;
 import com.financeTracker.dto.user.UserDto;
 import com.financeTracker.service.NotificationService;
@@ -25,19 +25,19 @@ public class NotificationRestController {
 
     @Operation(summary = "Получить все уведомления пользователя")
     @GetMapping("/all")
-    public ResponseEntity<List<NotificationDto>> getAllNotifications(
+    public ResponseEntity<List<NotificationResponseDto>> getAllNotifications(
             @Parameter(hidden = true) @SessionAttribute("user") UserDto user) {
         TargetUserDto targetUserDto = new TargetUserDto(user.getId());
-        List<NotificationDto> notifications = notificationService.getAllByUserId(targetUserDto);
+        List<NotificationResponseDto> notifications = notificationService.getAllByUserId(targetUserDto);
         return ResponseEntity.ok(notifications);
     }
 
     @Operation(summary = "Получить только непрочитанные уведомления")
     @GetMapping("/unread")
-    public ResponseEntity<List<NotificationDto>> getUnreadNotifications(
+    public ResponseEntity<List<NotificationResponseDto>> getUnreadNotifications(
             @Parameter(hidden = true) @SessionAttribute("user") UserDto user) {
         TargetUserDto targetUserDto = new TargetUserDto(user.getId());
-        List<NotificationDto> unreadNotifications = notificationService.getUnreadByUserId(targetUserDto);
+        List<NotificationResponseDto> unreadNotifications = notificationService.getUnreadByUserId(targetUserDto);
         return ResponseEntity.ok(unreadNotifications);
     }
 

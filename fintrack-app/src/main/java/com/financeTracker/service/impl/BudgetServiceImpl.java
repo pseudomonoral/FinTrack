@@ -3,7 +3,7 @@ package com.financeTracker.service.impl;
 import com.financeTracker.dao.BudgetDao;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.dto.budget.BudgetCheckResponseDto;
-import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.budget.BudgetRequestDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 import com.financeTracker.mapper.BudgetMapper;
 import com.financeTracker.model.entity.Budget;
@@ -31,23 +31,23 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Transactional
     @Override
-    public void createBudget(Long userId, BudgetDto budgetDto) {
-        Budget budget = mapToBudget(userId, budgetDto.getLimit());
+    public void createBudget(Long userId, BudgetRequestDto budgetRequestDto) {
+        Budget budget = mapToBudget(userId, budgetRequestDto.getLimit());
 
         budget.onCreate();
         budgetDao.save(budget);
     }
 
     @Override
-    public Optional<BudgetDto> getBudget(long userId) {
+    public Optional<BudgetRequestDto> getBudget(long userId) {
         return budgetDao.findByUserId(userId)
                 .map(budgetMapper::toBudgetDto);
     }
 
     @Transactional
     @Override
-    public void updateBudget(Long userId, BudgetDto budgetDto) {
-        Budget newBudget = mapToBudget(userId, budgetDto.getLimit());
+    public void updateBudget(Long userId, BudgetRequestDto budgetRequestDto) {
+        Budget newBudget = mapToBudget(userId, budgetRequestDto.getLimit());
         Optional<Budget> oldBudget = budgetDao.findByUserId(userId);
         if (oldBudget.isPresent()) {
             newBudget.setId(oldBudget.get().getId());

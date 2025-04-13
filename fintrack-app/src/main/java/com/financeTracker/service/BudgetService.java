@@ -1,7 +1,7 @@
 package com.financeTracker.service;
 
 import com.financeTracker.dto.budget.BudgetCheckResponseDto;
-import com.financeTracker.dto.budget.BudgetDto;
+import com.financeTracker.dto.budget.BudgetRequestDto;
 import com.financeTracker.exceptions.entity.EntityNotFoundException;
 
 import java.util.Optional;
@@ -15,26 +15,26 @@ public interface BudgetService {
      * Creates a budget for the specified user.
      *
      * @param userId    the ID of the user for whom the budget is being created.
-     * @param budgetDto the DTO containing budget details such as the spending limit.
+     * @param budgetRequestDto the DTO containing budget details such as the spending limit.
      */
-    void createBudget(Long userId, BudgetDto budgetDto);
+    void createBudget(Long userId, BudgetRequestDto budgetRequestDto);
 
     /**
      * Retrieves the budget for the specified user.
      *
      * @param userId the ID of the user whose budget is to be retrieved.
-     * @return an {@link Optional} containing the {@link BudgetDto} if the budget exists, or empty if not.
+     * @return an {@link Optional} containing the {@link BudgetRequestDto} if the budget exists, or empty if not.
      */
-    Optional<BudgetDto> getBudget(long userId);
+    Optional<BudgetRequestDto> getBudget(long userId);
 
     /**
      * Updates the existing budget for the specified user.
      *
      * @param userId    the ID of the user whose budget is to be updated.
-     * @param budgetDto the DTO containing the updated budget information.
+     * @param budgetRequestDto the DTO containing the updated budget information.
      * @throws EntityNotFoundException if no budget exists for the given user.
      */
-    void updateBudget(Long userId, BudgetDto budgetDto);
+    void updateBudget(Long userId, BudgetRequestDto budgetRequestDto);
 
     /**
      * Deletes the budget for the specified user.

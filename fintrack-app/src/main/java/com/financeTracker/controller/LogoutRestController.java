@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.audit.model.EventType.*;
+
 @RestController
 @RequestMapping("/logout")
 @Tag(name = "Выход", description = "Завершение пользовательской сессии")
 public class LogoutRestController {
 
-    @Auditable(eventType = EventType.LOGOUT)
+    @Auditable(eventType = LOGOUT)
     @Operation(summary = "Выход пользователя из системы")
     @GetMapping
     public ResponseEntity<Void> logout(HttpSession session) {

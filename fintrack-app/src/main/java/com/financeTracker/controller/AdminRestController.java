@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.audit.model.EventType.*;
+
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class AdminRestController {
 
     @Operation(summary = "Заблокировать пользователя")
     @Secured(hasRole = "ADMIN")
-    @Auditable(eventType = EventType.BLOCK_ACCOUNT)
+    @Auditable(eventType = BLOCK_ACCOUNT)
     @PostMapping("/block")
     public ResponseEntity<Void> blockUser(
             @Valid @RequestBody TargetUserDto targetUserDto) {
@@ -58,7 +60,7 @@ public class AdminRestController {
 
     @Operation(summary = "Разблокировать пользователя")
     @Secured(hasRole = "ADMIN")
-    @Auditable(eventType = EventType.UNBLOCK_ACCOUNT)
+    @Auditable(eventType = UNBLOCK_ACCOUNT)
     @PostMapping("/unblock")
     public ResponseEntity<Void> unblockUser(
             @Valid @RequestBody TargetUserDto targetUserDto) {
