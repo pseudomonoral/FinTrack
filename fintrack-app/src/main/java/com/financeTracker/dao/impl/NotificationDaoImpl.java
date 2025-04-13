@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.financeTracker.constants.NotificationSql.*;
+
 @Repository
 @RequiredArgsConstructor
 public class NotificationDaoImpl implements NotificationDao {
@@ -20,7 +22,7 @@ public class NotificationDaoImpl implements NotificationDao {
 
     @Override
     public void save(Notification notification) {
-        jdbcTemplate.update(NotificationSql.INSERT,
+        jdbcTemplate.update(INSERT_NOTIFICATION_SQL,
                 notification.getCreatedAt(),
                 notification.getUserId(),
                 notification.getType().name(),
@@ -29,24 +31,24 @@ public class NotificationDaoImpl implements NotificationDao {
 
     @Override
     public List<Notification> findAllByUserId(Long userId) {
-        return jdbcTemplate.query(NotificationSql.FIND_ALL_BY_USER_ID,
+        return jdbcTemplate.query(FIND_ALL_NOTIFICATIONS_BY_USER_ID_SQL,
                 this::mapToNotificationFromDatabase, userId);
     }
 
     @Override
     public List<Notification> findUnreadByUserId(Long userId) {
-        return jdbcTemplate.query(NotificationSql.FIND_UNREAD_BY_USER_ID,
+        return jdbcTemplate.query(FIND_UNREAD_NOTIFICATIONS_BY_USER_ID_SQL,
                 this::mapToNotificationFromDatabase, userId);
     }
 
     @Override
     public void deleteAllByUserId(Long userId) {
-        jdbcTemplate.update(NotificationSql.DELETE_BY_USER_ID, userId);
+        jdbcTemplate.update(DELETE_NOTIFICATIONS_BY_USER_ID_SQL, userId);
     }
 
     @Override
     public void readAllByUserId(Long userId) {
-        jdbcTemplate.update(NotificationSql.READ_ALL_BY_USER_ID, userId);
+        jdbcTemplate.update(READ_ALL_NOTIFICATIONS_BY_USER_ID_SQL, userId);
     }
 
     private Notification mapToNotificationFromDatabase(ResultSet rs, int rowNum) throws SQLException {

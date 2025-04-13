@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import static com.financeTracker.constants.SchemaSql.CREATE_SCHEMA;
+import static com.financeTracker.constants.SchemaSql.CREATE_SCHEMA_SQL;
 
 /**
  * Initializes the database by:
@@ -41,8 +41,8 @@ public class DatabaseInitializer {
     }
 
     private void createSchemasIfNotExist() {
-        jdbcTemplate.execute(CREATE_SCHEMA + props.getServiceSchema());
-        jdbcTemplate.execute(CREATE_SCHEMA + props.getDefaultSchema());
+        jdbcTemplate.execute(CREATE_SCHEMA_SQL + props.getServiceSchema());
+        jdbcTemplate.execute(CREATE_SCHEMA_SQL + props.getDefaultSchema());
     }
 
     private void runLiquibase() {

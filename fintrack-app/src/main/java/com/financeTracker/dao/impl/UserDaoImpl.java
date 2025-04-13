@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.financeTracker.constants.UserSql.*;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -28,12 +30,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        return jdbcTemplate.query(UserSql.FIND_BY_LOGIN, this::mapToUser, login).stream().findFirst();
+        return jdbcTemplate.query(FIND_USER_BY_LOGIN_SQL, this::mapToUser, login).stream().findFirst();
     }
 
     @Override
     public void update(User user) {
-        jdbcTemplate.update(UserSql.UPDATE,
+        jdbcTemplate.update(UPDATE_USER_SQL,
                 user.getLogin(),
                 user.getPassword(),
                 user.getName(),
@@ -44,24 +46,24 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void delete(Long userId) {
-        jdbcTemplate.update(UserSql.DELETE, userId);
+        jdbcTemplate.update(DELETE_USER_SQL, userId);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return jdbcTemplate.query(UserSql.FIND_BY_ID, this::mapToUser, id).stream().findFirst();
+        return jdbcTemplate.query(FIND_USER_BY_ID_SQL, this::mapToUser, id).stream().findFirst();
     }
 
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query(UserSql.FIND_ALL, this::mapToUser);
+        return jdbcTemplate.query(FIND_ALL_USERS_SQL, this::mapToUser);
     }
 
     @Override
     public User save(User entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(UserSql.INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(INSERT_USER_SQL, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, entity.getLogin());
             stmt.setString(2, entity.getPassword());
             stmt.setString(3, entity.getName());

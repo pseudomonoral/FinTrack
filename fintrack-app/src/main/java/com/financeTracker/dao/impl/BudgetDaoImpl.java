@@ -12,43 +12,37 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static com.financeTracker.constants.BudgetSql.*;
+
 @Repository
 @RequiredArgsConstructor
 public class BudgetDaoImpl implements BudgetDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Budget> budgetRowMapper = (rs, rowNum) -> Budget.builder()
-            .id(rs.getLong("id"))
-            .userId(rs.getLong("user_id"))
-            .limit(rs.getBigDecimal("limit_budget").doubleValue())
-            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-            .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
-            .build();
-
     @Override
     public Optional<Budget> findByUserId(Long userId) {
-        return jdbcTemplate.query(BudgetSql.FIND_BY_USER_ID, budgetRowMapper, userId)
+        return jdbcTemplate.query(FIND_BUDGET_BY_USER_ID_SQL, budgetRowMapper, userId)
                 .stream()
                 .findFirst();
     }
 
     @Override
     public Optional<Budget> findById(Long id) {
-        return jdbcTemplate.query(BudgetSql.FIND_BY_ID, budgetRowMapper, id)
+        return jdbcTemplate.query(FIND_BUDGET_BY_ID_SQL, budgetRowMapper, id)
                 .stream()
                 .findFirst();
     }
 
     @Override
     public List<Budget> findAll() {
-        return jdbcTemplate.query(BudgetSql.FIND_ALL, budgetRowMapper);
+        return jdbcTemplate.query(FIND_ALL_BUDGETS_SQL, budgetRowMapper);
     }
 
     @Override
     public Budget save(Budget entity) {
         Long generatedId = jdbcTemplate.queryForObject(
-                BudgetSql.INSERT,
+                INSERT_BUDGET_SQL,
                 Long.class,
                 entity.getUserId(),
                 entity.getLimit()
@@ -59,11 +53,19 @@ public class BudgetDaoImpl implements BudgetDao {
 
     @Override
     public void delete(Long budgetId) {
-        jdbcTemplate.update(BudgetSql.DELETE, budgetId);
+        jdbcTemplate.update(DELETE_BUDGET_SQL, budgetId);
     }
 
     @Override
     public void updateBudget(Budget entity) {
-        jdbcTemplate.update(BudgetSql.UPDATE, entity.getLimit(), entity.getId());
+        jdbcTemplate.update(UPDATE_BUDGET_SQL, entity.getLimit(), entity.getId());
     }
+
+    private final RowMapper<Budget> budgetRowMapper = (rs, rowNum) -> Budget.builder()
+            .id(rs.getLong("id"))
+            .userId(rs.getLong("user_id"))
+            .limit(rs.getBigDecimal("limit_budget").doubleValue())
+            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+            .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
+            .build();
 }

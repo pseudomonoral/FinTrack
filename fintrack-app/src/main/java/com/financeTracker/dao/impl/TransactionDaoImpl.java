@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.financeTracker.constants.TransactionSql.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public void updateTransaction(Transaction transaction) {
-        jdbcTemplate.update(TransactionSql.UPDATE,
+        jdbcTemplate.update(UPDATE_TRANSACTIONS,
                 transaction.getAmount(),
                 transaction.getCategory(),
                 transaction.getType().name(),
@@ -38,30 +38,30 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public void delete(Long transactionId) {
-        jdbcTemplate.update(TransactionSql.DELETE, transactionId);
+        jdbcTemplate.update(DELETE, transactionId);
     }
 
     @Override
     public Optional<Transaction> findById(Long id) {
-        return jdbcTemplate.query(TransactionSql.FIND_BY_ID, this::mapToTransaction, id)
+        return jdbcTemplate.query(FIND_TRANSACTION_BY_ID_SQL, this::mapToTransaction, id)
                 .stream().findFirst();
     }
 
     @Override
     public List<Transaction> findAllByUserId(Long userId) {
-        return jdbcTemplate.query(TransactionSql.FIND_ALL_BY_USER_ID, this::mapToTransaction, userId);
+        return jdbcTemplate.query(FIND_ALL_TRANSACTIONS_BY_USER_ID_SQL, this::mapToTransaction, userId);
     }
 
     @Override
     public List<Transaction> findAll() {
-        return jdbcTemplate.query(TransactionSql.FIND_ALL, this::mapToTransaction);
+        return jdbcTemplate.query(FIND_ALL_TRANSACTIONS, this::mapToTransaction);
     }
 
     @Override
     public Transaction save(Transaction entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(TransactionSql.INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(INSERT_TRANSACTIONS, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, entity.getUserId());
             stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getAmount()));
             stmt.setString(3, entity.getCategory());
@@ -77,7 +77,7 @@ public class TransactionDaoImpl implements TransactionDao {
     @Override
     public List<Transaction> findAllByUserIdAndDate(Long userId, LocalDateTime date) {
         return jdbcTemplate.query(
-                TransactionSql.FIND_ALL_BY_USER_ID_AND_DATE,
+                FIND_ALL_TRANSACTIONS_BY_USER_ID_AND_DATE_SQL,
                 this::mapToTransaction,
                 userId, date
         );
@@ -86,7 +86,7 @@ public class TransactionDaoImpl implements TransactionDao {
     @Override
     public List<Transaction> findAllByUserIdAndCategory(Long userId, String category) {
         return jdbcTemplate.query(
-                TransactionSql.FIND_ALL_BY_USER_ID_AND_CATEGORY,
+                FIND_ALL_TRANSACTIONS_BY_USER_ID_AND_CATEGORY_SQL,
                 this::mapToTransaction,
                 userId, category
         );
@@ -95,7 +95,7 @@ public class TransactionDaoImpl implements TransactionDao {
     @Override
     public List<Transaction> findAllByUserIdAndType(Long userId, TransactionType type) {
         return jdbcTemplate.query(
-                TransactionSql.FIND_ALL_BY_USER_ID_AND_TYPE,
+                FIND_ALL_TRANSACTIONS_BY_USER_ID_AND_TYPE_SQL,
                 this::mapToTransaction,
                 userId, type.name()
         );
@@ -104,7 +104,7 @@ public class TransactionDaoImpl implements TransactionDao {
     @Override
     public double calculateTotalForPeriod(Long userId, TransactionType type, LocalDateTime from, LocalDateTime to) {
         return jdbcTemplate.queryForObject(
-                TransactionSql.CALCULATE_TOTAL_FOR_PERIOD,
+                CALCULATE_TOTAL_FOR_PERIOD_SQL,
                 Double.class,
                 userId, type.name(), Timestamp.valueOf(from), Timestamp.valueOf(to)
         );

@@ -1,6 +1,5 @@
 package com.financeTracker.dao.impl;
 
-import com.financeTracker.constants.GoalSql;
 import com.financeTracker.dao.GoalDao;
 import com.financeTracker.model.entity.Goal;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,8 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 
+import static com.financeTracker.constants.GoalSql.*;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -22,33 +23,33 @@ public class GoalDaoImpl implements GoalDao {
 
     @Override
     public List<Goal> findAllByUserId(Long userId) {
-        return jdbcTemplate.query(GoalSql.FIND_ALL_BY_USER_ID, this::mapToGoalFromDatabase, userId);
+        return jdbcTemplate.query(FIND_ALL_GOALS_BY_USER_ID_SQL, this::mapToGoalFromDatabase, userId);
     }
 
     @Override
     public Optional<Goal> findGoalByNameAndId(String goalName, Long userId) {
-        return jdbcTemplate.query(GoalSql.FIND_BY_NAME_AND_USER_ID, this::mapToGoalFromDatabase, goalName, userId)
+        return jdbcTemplate.query(FIND_GOALS_BY_NAME_AND_USER_ID_SQL, this::mapToGoalFromDatabase, goalName, userId)
                 .stream()
                 .findFirst();
     }
 
     @Override
     public Optional<Goal> findById(Long id) {
-        return jdbcTemplate.query(GoalSql.FIND_BY_ID, this::mapToGoalFromDatabase, id)
+        return jdbcTemplate.query(FIND_GOAL_BY_ID_SQL, this::mapToGoalFromDatabase, id)
                 .stream()
                 .findFirst();
     }
 
     @Override
     public List<Goal> findAll() {
-        return jdbcTemplate.query(GoalSql.FIND_ALL, this::mapToGoalFromDatabase);
+        return jdbcTemplate.query(FIND_ALL_GOALS_SQL, this::mapToGoalFromDatabase);
     }
 
     @Override
     public Goal save(Goal entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(GoalSql.INSERT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(INSERT_GOAL_SQL, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, entity.getUserId());
             stmt.setString(2, entity.getName());
             stmt.setBigDecimal(3, BigDecimal.valueOf(entity.getTargetAmount()));
@@ -64,12 +65,12 @@ public class GoalDaoImpl implements GoalDao {
 
     @Override
     public void delete(Long goalId) {
-        jdbcTemplate.update(GoalSql.DELETE, goalId);
+        jdbcTemplate.update(DELETE_GOAL_SQL, goalId);
     }
 
     @Override
     public void updateGoal(Goal entity) {
-        jdbcTemplate.update(GoalSql.UPDATE,
+        jdbcTemplate.update(UPDATE_GOAL_SQL,
                 entity.getName(),
                 entity.getTargetAmount(),
                 entity.getCurrentAmount(),
