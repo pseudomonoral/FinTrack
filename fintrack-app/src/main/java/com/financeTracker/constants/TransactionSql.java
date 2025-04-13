@@ -9,23 +9,23 @@ public interface TransactionSql {
             SELECT * FROM transactions WHERE user_id = ?
             """;
 
-    String FIND_ALL_TRANSACTIONS = """
+    String FIND_ALL_TRANSACTIONS_SQL = """
             SELECT * FROM transactions
             """;
 
-    String INSERT_TRANSACTIONS = """
+    String INSERT_TRANSACTION_SQL = """
             INSERT INTO transactions
             (user_id, amount, category, type, description, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, now(), now()) RETURNING id
             """;
 
-    String UPDATE_TRANSACTIONS = """
+    String UPDATE_TRANSACTION_SQL = """
             UPDATE transactions
             SET amount = ?, category = ?, type = ?, description = ?, updated_at = now()
             WHERE id = ?
             """;
 
-    String DELETE = """
+    String DELETE_TRANSACTION_SQL = """
             DELETE FROM transactions WHERE id = ?
             """;
 

@@ -1,7 +1,6 @@
 package com.financeTracker.dao.impl;
 
 
-import com.financeTracker.constants.TransactionSql;
 import com.financeTracker.dao.TransactionDao;
 import com.financeTracker.model.entity.Transaction;
 import com.financeTracker.model.type.TransactionType;
@@ -28,7 +27,7 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public void updateTransaction(Transaction transaction) {
-        jdbcTemplate.update(UPDATE_TRANSACTIONS,
+        jdbcTemplate.update(UPDATE_TRANSACTION_SQL,
                 transaction.getAmount(),
                 transaction.getCategory(),
                 transaction.getType().name(),
@@ -38,7 +37,7 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public void delete(Long transactionId) {
-        jdbcTemplate.update(DELETE, transactionId);
+        jdbcTemplate.update(DELETE_TRANSACTION_SQL, transactionId);
     }
 
     @Override
@@ -54,14 +53,14 @@ public class TransactionDaoImpl implements TransactionDao {
 
     @Override
     public List<Transaction> findAll() {
-        return jdbcTemplate.query(FIND_ALL_TRANSACTIONS, this::mapToTransaction);
+        return jdbcTemplate.query(FIND_ALL_TRANSACTIONS_SQL, this::mapToTransaction);
     }
 
     @Override
     public Transaction save(Transaction entity) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement stmt = con.prepareStatement(INSERT_TRANSACTIONS, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = con.prepareStatement(INSERT_TRANSACTION_SQL, Statement.RETURN_GENERATED_KEYS);
             stmt.setLong(1, entity.getUserId());
             stmt.setBigDecimal(2, BigDecimal.valueOf(entity.getAmount()));
             stmt.setString(3, entity.getCategory());
