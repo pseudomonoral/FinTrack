@@ -1,6 +1,5 @@
 package com.financeTracker.dao.impl;
 
-import com.financeTracker.constants.NotificationSql;
 import com.financeTracker.dao.NotificationDao;
 import com.financeTracker.model.entity.Notification;
 import com.financeTracker.model.type.NotificationType;

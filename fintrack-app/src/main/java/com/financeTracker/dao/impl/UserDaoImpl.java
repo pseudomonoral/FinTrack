@@ -1,6 +1,5 @@
 package com.financeTracker.dao.impl;
 
-import com.financeTracker.constants.UserSql;
 import com.financeTracker.dao.UserDao;
 import com.financeTracker.model.entity.User;
 import com.financeTracker.model.type.UserRole;
