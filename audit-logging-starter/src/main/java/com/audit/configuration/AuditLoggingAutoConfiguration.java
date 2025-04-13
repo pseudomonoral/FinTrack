@@ -3,7 +3,7 @@ package com.audit.configuration;
 import com.audit.aspect.AuditLoggingAspect;
 import com.audit.controller.AuditLogController;
 import com.audit.dao.AuditLogDao;
-import com.audit.dao.AuditLogDaoImpl;
+import com.audit.dao.impl.AuditLogDaoImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
