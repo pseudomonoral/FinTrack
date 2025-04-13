@@ -26,6 +26,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    implementation 'org.springframework:spring-context'
+
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
     implementation 'org.postgresql:postgresql'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'com.zaxxer:HikariCP'

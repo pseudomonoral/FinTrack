@@ -8,10 +8,10 @@
     <changeSet id="create-transactions-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="transactions" schemaName="fintrack"/>
+                <tableExists tableName="transactions"/>
             </not>
         </preConditions>
-        <createTable tableName="transactions" schemaName="fintrack">
+        <createTable tableName="transactions">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

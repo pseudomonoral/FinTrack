@@ -8,10 +8,10 @@
     <changeSet id="create-goals-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="goals" schemaName="fintrack"/>
+                <tableExists tableName="goals"/>
             </not>
         </preConditions>
-        <createTable tableName="goals" schemaName="fintrack">
+        <createTable tableName="goals">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

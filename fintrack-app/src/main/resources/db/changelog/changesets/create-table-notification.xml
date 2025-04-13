@@ -5,7 +5,12 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="create-notification-table" author="pseudomonoral">
-        <createTable tableName="notification" schemaName="fintrack">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification"/>
+            </not>
+        </preConditions>
+        <createTable tableName="notification">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

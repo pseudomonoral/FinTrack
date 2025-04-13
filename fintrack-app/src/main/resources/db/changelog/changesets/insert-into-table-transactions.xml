@@ -5,7 +5,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="insert-transactions-data" author="pseudomonoral">
-        <insert tableName="transactions" schemaName="fintrack">
+        <insert tableName="transactions">
             <column name="user_id" value="2"/>
             <column name="amount" value="50.75"/>
             <column name="category" value="Food"/>
@@ -14,7 +14,7 @@
             <column name="created_at" valueDate="NOW()"/>
             <column name="updated_at" valueDate="NOW()"/>
         </insert>
-        <insert tableName="transactions" schemaName="fintrack">
+        <insert tableName="transactions">
             <column name="user_id" value="2"/>
             <column name="amount" value="200.00"/>
             <column name="category" value="Salary"/>
@@ -23,7 +23,7 @@
             <column name="created_at" valueDate="NOW()"/>
             <column name="updated_at" valueDate="NOW()"/>
         </insert>
-        <insert tableName="transactions" schemaName="fintrack">
+        <insert tableName="transactions">
             <column name="user_id" value="2"/>
             <column name="amount" value="30.00"/>
             <column name="category" value="Entertainment"/>

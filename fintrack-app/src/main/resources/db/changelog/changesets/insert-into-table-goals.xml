@@ -5,7 +5,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="insert-goals-data" author="pseudomonoral">
-        <insert tableName="goals" schemaName="fintrack">
+        <insert tableName="goals">
             <column name="user_id" value="2"/>
             <column name="name" value="Vacation Trip"/>
             <column name="target_amount" value="3000.00"/>

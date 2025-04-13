@@ -7,10 +7,10 @@
     <changeSet id="create-budgets-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="budgets" schemaName="fintrack"/>
+                <tableExists tableName="budgets"/>
             </not>
         </preConditions>
-        <createTable tableName="budgets" schemaName="fintrack">
+        <createTable tableName="budgets">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

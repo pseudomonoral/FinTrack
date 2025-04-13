@@ -8,10 +8,10 @@
     <changeSet id="create-users-table" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="users" schemaName="fintrack"/>
+                <tableExists tableName="users"/>
             </not>
         </preConditions>
-        <createTable tableName="users" schemaName="fintrack">
+        <createTable tableName="users">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

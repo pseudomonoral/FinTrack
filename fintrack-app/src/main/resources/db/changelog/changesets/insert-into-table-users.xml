@@ -5,7 +5,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="insert-users-data" author="pseudomonoral">
-        <insert tableName="users" schemaName="fintrack">
+        <insert tableName="users">
             <column name="login" value="admin@gmail.com"/>
             <column name="password" value="admin"/>
             <column name="name" value="admin_user"/>
@@ -14,7 +14,7 @@
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>
-        <insert tableName="users" schemaName="fintrack">
+        <insert tableName="users">
             <column name="login" value="user@gmail.com"/>
             <column name="password" value="user"/>
             <column name="name" value="simple_user"/>

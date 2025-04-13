@@ -5,7 +5,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
 
     <changeSet id="insert-budgets-data" author="pseudomonoral">
-        <insert tableName="budgets" schemaName="fintrack">
+        <insert tableName="budgets">
             <column name="user_id" value="2"/>
             <column name="limit_budget" value="1000.00"/>
             <column name="created_at" valueDate="NOW()"/>

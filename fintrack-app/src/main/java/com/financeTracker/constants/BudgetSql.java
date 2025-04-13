@@ -2,25 +2,25 @@ package com.financeTracker.constants;
 
 public interface BudgetSql {
     String FIND_BY_USER_ID = """
-            SELECT * FROM fintrack.budgets WHERE user_id = ?
+            SELECT * FROM budgets WHERE user_id = ?
             """;
 
     String FIND_BY_ID = """
-            SELECT * FROM fintrack.budgets WHERE id = ?
+            SELECT * FROM budgets WHERE id = ?
             """;
 
     String FIND_ALL = """
-            SELECT * FROM fintrack.budgets
+            SELECT * FROM budgets
             """;
 
     String INSERT = """
-            INSERT INTO fintrack.budgets
+            INSERT INTO budgets
             (user_id, limit_budget, created_at, updated_at)
             VALUES (?, ?, now(), now()) RETURNING id
             """;
 
     String UPDATE = """
-            UPDATE fintrack.budgets
+            UPDATE budgets
             SET limit_budget = ?, updated_at = now() WHERE id = ?
             """;
 

@@ -1,11 +1,16 @@
 spring:
   datasource:
-    url: "jdbc:postgresql://localhost:5432/fintrack_db"
-    username: "pseudo"
+    url: jdbc:postgresql://localhost:5432/fintrack_db?currentSchema=fintrack
+    username: pseudo
     password: "0000"
-    hikari:
-      maximum-pool-size: 10
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: false
+
+app:
+  liquibase:
+    service-schema: liquibase
+    default-schema: fintrack
+    changelog-path: db/changelog/db.changelog-master.xml
+
 server:
   port: 8080

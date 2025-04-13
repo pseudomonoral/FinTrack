@@ -7,10 +7,10 @@
     <changeSet id="create-table-audit-log" author="pseudomonoral">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="audit_log" schemaName="fintrack"/>
+                <tableExists tableName="audit_log"/>
             </not>
         </preConditions>
-        <createTable tableName="audit_log" schemaName="fintrack">
+        <createTable tableName="audit_log">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true"/>
             </column>

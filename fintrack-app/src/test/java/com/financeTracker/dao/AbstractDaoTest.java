@@ -1,5 +1,11 @@
 package com.financeTracker.dao;
 
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.DatabaseFactory;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.postgresql.ds.PGSimpleDataSource;
@@ -10,12 +16,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import liquibase.Contexts;
-import liquibase.Liquibase;
-import liquibase.database.Database;
-import liquibase.database.DatabaseFactory;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import liquibase.database.jvm.JdbcConnection;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,32 +35,42 @@ public abstract class AbstractDaoTest {
 
     protected JdbcTemplate jdbcTemplate;
 
-
-
     @BeforeAll
     void initJdbcTemplate() throws Exception {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
+
         dataSource.setUrl(POSTGRES.getJdbcUrl());
         dataSource.setUser(POSTGRES.getUsername());
         dataSource.setPassword(POSTGRES.getPassword());
+        dataSource.setCurrentSchema("fintrack");
 
         jdbcTemplate = new JdbcTemplate(dataSource);
 
+        createSchemas();
         runLiquibaseMigrations(dataSource);
+    }
+
+
+    private void createSchemas() {
+        jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS liquibase");
+        jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS fintrack");
     }
 
     private void runLiquibaseMigrations(DataSource dataSource) throws Exception {
         try (Connection connection = dataSource.getConnection()) {
-            Database database = DatabaseFactory.getInstance()
+            var database = DatabaseFactory.getInstance()
                     .findCorrectDatabaseImplementation(new JdbcConnection(connection));
 
-            Liquibase liquibase = new Liquibase(
+            database.setLiquibaseSchemaName("liquibase");
+            database.setDefaultSchemaName("fintrack");
+
+            var liquibase = new Liquibase(
                     "db/changelog/db.changelog-master.xml",
                     new ClassLoaderResourceAccessor(),
                     database
             );
 
-            liquibase.update(new Contexts());
+            liquibase.update(new Contexts(), new LabelExpression());
         }
     }
 
