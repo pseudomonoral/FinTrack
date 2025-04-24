@@ -53,3 +53,4 @@ Thumbs.db
 # Maven & Gradle caches
 target/
 **/target/
+/logs/
